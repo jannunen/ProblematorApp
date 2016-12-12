@@ -10,7 +10,6 @@ var inviteMemberPageListenersInitialized = false;
 
 var indexController= {
   initializeIndexPage : function() { 
-    debugger;
     // Data is set in my-app preprocess -function
     mainView.router.load({
       url: 'static/dashboard.html',

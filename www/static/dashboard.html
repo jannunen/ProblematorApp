@@ -214,30 +214,32 @@
       </div>
     </div><!-- // climbinfo ends -->
 
+    <!--
     <div class="content-block bg-light nomargin">
       <div class="content-block-inner bg-light text-center center ">
         <span class="body-text-g">Uniq. this month: <span class="body-text-w">{$uniqs['boulder']|default:0}</span> boulder, <span class="body-text-w">{$uniqs['sport']|default:0}</span> sport<br />To beat: <span class="body-text-w">{$maxuniqs['boulder']|default:0}</span> boulder, <span class="body-text-w">{$maxuniqs['sport']|default:0}</span> sport</span> 
       </div>
     </div>
+    -->
     <div class="content-block bg-light nomargin"> <div class="content-block-inner bg-light text-center center ">
         <span class="text-w">Upcoming competitions</span> <br />
-        <small class="text-y">{$upcoming|@count} upcoming competition(s)<br /></small> 
-        {if $upcoming|@count > 0}
-        <a href="/t/problematormobile/upcoming_competitions/" class="upcoming_competitions button button-fill button-big color-yellow">OPEN COMP LIST</a><br />
-        {/if}
-        {if $comps|@count > 0}
+        <small class="text-y">{{sizeof upcoming}} upcoming competition(s)<br /></small> 
+        {{#js_compare "this.upcoming && this.upcoming.length> 0"}}
+        <a href="static/upcoming_competitions.html" class="upcoming_competitions button button-fill button-big color-yellow">OPEN COMP LIST</a><br />
+        {{/js_compare}}
+        {{#js_compare "this.comps && this.comps.length  > 0"}}
         <span class="text-w">Ongoing competitions</span> 
         <ul>
-          {foreach $comps as $comp}
+          {{#each comps}}
           {** Active comps come here **}
           <li class="item-content">
             <div class="item-inner">
-              <a href="#"  data-compid="{$comp.compid}" style="width : 100%" data-ignore-cache="true" data-reload="true" class="opencompetitionpage text-y button button-fill button-big color-yellow">OPEN {$comp.compname|strtoupper}</a>
+              <a href="#"  data-compid="{{compid}}" style="width : 100%" data-ignore-cache="true" data-reload="true" class="opencompetitionpage text-y button button-fill button-big color-yellow">OPEN {{compname}}</a>
             </div>
           </li>
-          {/foreach}
+          {{/each}}
         </ul>
-        {/if}
+        {{/js_compare}}
       </div>
     </div>
 
@@ -277,10 +279,10 @@
 
           <div class="row bg-light no-gutter padtop">
             <div class="col-50 shortcut-border">
-              <a href="static/groups.html" class="item-link body-text-w shortcut-button"> My groups <span class="fa fa-chevron-right"></span></a>
+              <a href="static/groups.html" class="item-link body-text-w shortcut-button">Groups <span class="fa fa-chevron-right"></span></a>
             </div>
             <div class="col-50 shortcut-border">
-              <a href="static/circuits.html" class="item-link body-text-w shortcut-button"><span class="badge bg-red">##NEW!##</span> ##Circuits## <span class="fa fa-chevron-right"></span></a>
+              <a href="static/circuits.html" class="item-link body-text-w shortcut-button"><span class="badge bg-red">NEW!</span> Circuits <span class="fa fa-chevron-right"></span></a>
             </div>
           </div>
 

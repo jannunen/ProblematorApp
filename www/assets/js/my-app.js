@@ -146,6 +146,17 @@ var myApp = new Framework7({
          var dataJSON = {group : JSON.parse(data)};
          next(compiledTemplate(dataJSON));
        });
+     } else if ((matches=url.match(/groups.html/))) {
+       // List group members
+       var url = window.api.apicallbase + "groups/";
+       $.jsonp(url, {}, function (data){
+         if (!Cookies.get("loginok")) {
+           return false;
+         }
+         var compiledTemplate = Template7.compile(content);
+         var html = compiledTemplate(data);
+         next(html);
+       });
      } else if ((matches=url.match(/list_group_members.html.*?(\d+)/))) {
        // List group members
        var groupid = matches[1];
@@ -201,7 +212,6 @@ var mainView = myApp.addView('.view-main', {
 $$(document).on('pageInit', function (e) {
 	// Check if login ok and go for dashboard init if is.
 	//
-  debugger;
 	if (!window.initialized) {
 		// If first initializing, add listeners to listen sidebar menu items
 		addIndexPageListeners("index");
@@ -607,7 +617,6 @@ $.jsonp = function(url,_data,callback,options) {
         withCredentials : true,
         complete : function(xhr,status) {
           console.log("back from jsonp with status "+status+", url: "+url);
-          debugger;
           if (!url.match(/dologin/)) {
             loginCheck(xhr.responseJSON);
           }

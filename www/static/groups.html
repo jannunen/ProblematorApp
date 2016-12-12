@@ -1,0 +1,148 @@
+<div class="navbar">
+  <div class="navbar-inner">
+    <div class="left sliding"><a name="pagetop" href="dashboard.html" class="link">
+        <span class="fa-stack fa-md">
+          <i class="fa fa-circle-thin fa-stack-2x"></i>
+          <i class="fa fa-chevron-left fa-stack-1x"></i>
+        </span>
+      </a></div>
+      <div class="center sliding"><h3>Groups</h3></div>
+      <div class="right">
+        <a href="#" class="link icon-only open-panel"> <i class="fa fa-bars"></i></a>
+      </div>
+  </div>
+</div>
+<!-- end of navbar -->
+<div class="page" data-page="grouplist">
+  <div class="page-content" id="grouplist">
+    <div class="content-block">
+      <div class="row">
+        <div class="col-75 problemator-border-underline">
+          <input type="text" autocomplete="off" size="5" class="problemator-textfield" id="newgroup" placeholder="Name the new group..." /> 
+        </div>
+        <div class="col-25">
+          <button type="button" class="button problemator-button" id="creategroup">Create</button>
+        </div>
+      </div>
+    </div>
+    <div class="list-block media-list grouplistcontainer">
+      <div class="content-block-title text-y">Invitations </div>
+      <ul>
+        <div id="mypendinginvitationslist">
+          <!-- Invitations start -->
+          {{#each pending}}
+          <li>
+            <a href="#" class="item-content item-link">
+              <div class="item-inner">
+                <div class="item-title-row">
+                  <div class="item-title">{{name}}</div>
+                  <div class="item-after"><span class="badge badge-yellow">{{userCount}}</div>
+                </div>
+                <div class="item-subtitle">Current leader, @Jarmo</div>
+                <div class="item-text">{{description}}</div>
+              </div>
+            </a>
+          </li>
+          {{else}}
+          <li>
+            <a href="#" class="item-content">
+              <div class="item-inner">
+                <div class="item-text">
+                  No invitations at the moment.
+                </div>
+              </div>
+            </a>
+          </li>
+          {{/each}}
+          <!-- // Invitations end -->
+        </div>
+      </ul>
+    </div>
+    <div class="list-block media-list">
+      <div class="content-block-title text-y">My Groups</div>
+      <ul id="mygrouplist">
+        {{#each groups}}
+        <li>
+          <a href="group.html?id={{id}}" data-group="{{id}}" class="item-content item-link"  data-ignore-cache="true">
+            <div class="item-inner">
+              <div class="item-title-row">
+                <div class="item-title text-w">{{name}}<small class="text-g">, {{usercount}} member(s)</small></div>
+              </div>
+              <div class="item-subtitle text-g">
+                {{#if leaderboulder}}
+                <div class="row">
+                  <div class="col-20">
+                    <span class="text-g">Boulder&nbsp;&nbsp; </span></div><div class="col-80"><span class="fa fa-trophy text-w"></span> {{leaderboulder.etunimi}} {{leaderboulder.sukunimi}} {{leaderboulder.rankpoints}}</div>
+                </div>
+                {{/if}}
+                {{#if leadersport}}
+                <div class="row">
+                  <div class="col-20">
+                    <span class="text-g">Sport </span>
+                  </div><div class="col-80">
+                    <span class="fa fa-trophy text-w"></span> {{leadersport.etunimi}} {{leadersport.sukunimi}} {{leadersport.rankpoints}}
+                  </div>
+                </div>
+                {{/if}}
+              </div>
+            </div>
+          </a>
+        </li>
+        {{/each}}
+
+      </ul>
+    </div>
+
+    <div id="allgrouplistcontainer" class="list-block media-list">
+      <div class="content-block-title text-y">Search groups</div>
+      <ul id="allgrouplist">
+        <li>
+          <div class="item-content">
+            <div class="item-inner">
+              <div class="item-input">
+                <input type="text" class="search_groups" placeholder="Search for groups">
+              </div>
+            </div>
+            <div class="item-after">
+              <i class="fa fa-search " style="color : white;"></i>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="list-block media-list">
+      <ul class="search_results">
+        <li>
+          <div class="item-content">
+            <div class="item-inner">
+              <div class="searching item-title text-w">
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="list-block ">
+      <div class="content-block-title text-y">Popular groups</div>
+      <ul>
+        {{#each popular}}
+        <li>
+          <a href="static/group.html?gid={{gid}}" data-group="{{gid}}" class="item-content item-link"  data-ignore-cache="true">
+            <div class="item-inner">
+              <div class="item-title-row">
+                <div class="item-title text-w">{{name}}<small class="text-g"> {{usercount}} member(s)</small></div>
+              </div>
+
+            </div>
+          </a>
+        </li>
+        {{/each}}
+      </ul>
+    </div>
+
+
+  </div><!-- //page-content-->
+
+
+</div>
