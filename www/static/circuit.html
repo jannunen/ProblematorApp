@@ -1,0 +1,94 @@
+<div data-page="competition-page" class="page cached">
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="left sliding"><a name="pagetop" href="#" class="back link">
+          <span class="fa-stack fa-md">
+            <i class="fa fa-circle-thin fa-stack-2x"></i>
+            <i class="fa fa-chevron-left fa-stack-1x"></i>
+          </span>
+      </a></div>
+      <div class="center sliding"><h3>Competition</h3></div>
+      <div class="right">
+        <a href="#" class="link icon-only open-panel"> <i class="fa fa-bars"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="page-content" id="problemlist">
+    <div class="text-w content-block">
+      <!-- Show time left -->
+      <div class="row bg-blue pad10">
+        <div class="col-10 ">
+          <span class="text-w fa fa-clock-o fa-2x"></span>
+        </div>
+        <div class="col-90 " style="padding : 2px;">
+          <span class="timeleft" data-ends="{{comp.timespan_end}}">00:00</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-33">
+          <small>done</small><br />
+          <span class="done">0/0</span> 
+        </div>
+        <div class="col-33 text-w">
+        </div>
+      </div>
+    </div>
+    <div class="list-block comp_problem_list">
+      <div class="content-block">
+        <input type="hidden" name="compid" id="compid" value="{{comp.id}}" />
+        <ul>
+          <li >
+          <div class="item-content">
+            <div class="item-media">
+              <span class="text-w">#</span>
+            </div>
+            <div class="item-inner">
+              <div class="item-title text-center ">
+                <span class="text-w" style="padding-left : 10px;">COLOUR</span>
+              </div> <!-- item-title -->
+              <div class="item-after">
+                <span class="text-w" style="padding-right : 40px;">Tries</span>
+              </div>
+            </div> <!--- item-inner -->
+          </div>
+          </li>
+          {{#each problems}}
+          <li >
+          <div class="item-content">
+            <div class="item-media">
+              <h5  problemid="{{problemid}}">{{num}}</h5>
+            </div>
+            <div class="item-inner">
+              <div class="item-title">
+                <span  class="square" style="background-color : {{code}};"></span>
+                {{#if tick}}
+                {{#if tick.pretick}}
+                <button style="" class="donestatus color-gray notdone button button-big button-fill ">NOT DONE</button>
+                {{else}}
+                <button style="" class="donestatus done  color-yellow  button button-big button-fill ">DONE</button>
+                {{/if}}
+                {{else}}
+                <button style="" class="donestatus color-gray notdone button button-big button-fill ">NOT DONE</button>
+                {{/if}}
+              </div> <!-- item-title -->
+              <div class="item-after">
+                <div class="triescontainer ">
+                  <button class="button button-round  color-yellow triesminus trieschange text-w" type="button"><span class="fa fa-minus"></span></button>
+                  {{#if tick}}
+                  <input type="number" min="1" max="100" class="form-control tries" data-pid="{{problemid}}"  aria-label="tries" value="{{#js_compare "this.tick.tries > 0"}}{{tick.tries}}{{else}}1{{/js_compare}}" style="width : 30px; display : inline;" />
+                  {{else}}
+                  <input type="number" min="1" max="100" class="form-control tries" data-pid="{{problemid}}"  aria-label="tries" value="1" style="width : 30px; display : inline;" />
+                  {{/if}}
+                  <button class="button button-round color-yellow triesplus trieschange text-w" type="button"><span class="fa fa-plus"></span></button>
+                </div>
+              </div>
+            </div> <!--- item-inner -->
+          </div>
+          </li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

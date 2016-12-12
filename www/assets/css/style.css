@@ -1,0 +1,1401 @@
+/*===============================================*/
+/* 1. RESET		 						 */
+/*===============================================*/
+@import "css/reset.css";
+
+body { 
+  background-color : #252623;
+  font-family : "Trebuchet MS";
+  font-style: normal;
+  font-variant: normal;
+}
+
+.page { 
+  background-color : #252623;
+ }
+.page-content { 
+  background-color : #252623;
+ }
+
+/** Sidebar **/
+.panel-left { 
+              background-color : #decc00;
+ }
+.list-nav{
+padding:20px 0 0 0px;
+width:100%;
+}
+.list-nav ul{
+width:94%;
+list-style:none;
+padding:0px;
+margin:0px 2%;
+display:block;
+}
+.list-nav ul li:first {
+                        color : white;
+                 }
+.list-nav ul li{
+list-style:none;
+padding:0 0 0 30px;
+margin:0px;
+display:block;
+height:35px;
+line-height:50px;
+
+}
+.list-nav ul li a{
+color: #636159;
+font-size:17px;
+font-weight:300;
+}
+
+#sidebarnav ul li a {
+ margin-left : 4px;
+}
+
+#sidebarnav ul li span {
+ width : 24px;
+color: #636159;
+}
+
+.gradedist li {
+		font-size : 10px;
+}
+
+.gradedist li div {
+		border : 1px solid black;
+		display : block;
+		float : left;
+}
+.gradedist li span {
+		display : block;
+float : left;
+}
+
+#dash_rank .col-33 {
+		border : 1px solid black;
+		text-align : center;
+		margin : 0px auto;
+		background-color : #aaeeff;
+}
+#dash_rank h1 {
+		background-color : #c0c0c0;
+		padding : 2px;
+		margin-bottom : 2px;
+}
+
+#dash_rank small {
+		font-size : 10px;
+}
+
+.back-to-top {
+ z-index: 9999;
+    width: 32px;
+    height: 32px;
+    text-align: center;
+    line-height: 30px;
+    background: #f5f5f5;
+    color: #444;
+    cursor: pointer;
+    border: 0;
+    border-radius: 2px;
+    text-decoration: none;
+    transition: opacity 0.2s ease-out;
+    opacity: 0;
+}	
+
+
+
+small { 
+        font-size : 0.8em;
+         }
+.navbar { 
+          color : #decc00;
+
+}
+.navbar a.link { 
+            color : white;
+ }
+.navbar-inner { 
+                background-color : #30312e;
+
+ }
+.navbar-inner  .fa-bars { 
+                        color : white;
+                   }
+
+.content-block.nopadding { 
+                         padding : 0;
+ }
+.content-block.nomargin { 
+                         margin : 0 0 16px 0;
+ }
+.nomargin { 
+                         margin : 0 0 0 0;
+ }
+
+.bg-light { 
+                         background-color : #30312e;
+ }
+.bg-dark { 
+                         background-color : #252623;
+ }
+.bg-boulder { 
+              background-color : #decc00;
+ }
+.bg-sport { 
+            background-color : white;
+}
+.fg-boulder { 
+              color : #decc00;
+ }
+.fg-sport { 
+            color : white;
+}
+.padtop { 
+          padding-top : 20px;
+          }
+
+.padtopmore { 
+          padding-top : 30px;
+          }
+
+form .button { 
+              border : 1px solid #decc00;
+              color : white;
+              padding : 14px;
+              text-align : center;
+              background : #decc00;
+               border-radius : 0;
+                     margin : 0;
+               width : 100%;
+               height : 100%;
+              
+ }
+.problemator-textfield { 
+                         width : 100%;
+                         border : 0;
+                         background-color : transparent;
+                         border-width : 0;
+                         border-color : #decc00;
+                         font-size : 16px;
+                         border-style : solid;
+                         height : 45px;;
+                         
+ }
+.problemator-border-underline { 
+                         border-width : 0 0 1px 0;
+                         border-color : #decc00;
+                         border-style : solid;
+ }
+.button.button-fill.color-yellow {
+              background-color : #decc00;
+            }
+
+.problemator-button { 
+              border : 1px solid #decc00;
+              color : white;
+              padding : 8px;
+              text-align : center;
+              background : #decc00;
+               border-radius : 0;
+                     margin : 0;
+               text-transform : uppercase;
+               width : 100%;
+               height : 100%;
+              
+ }
+
+.list-block .list-block-label { 
+               color : #636169;
+
+ }
+/** Ranking page **/
+.list-block .item-link .item-inner { 
+                        padding-right : 0;
+                                     content: '\f054';
+                        background-image : none;
+ }
+#ranking .item-media { 
+                       width : 30px;
+}
+#ranking .list-block-label { 
+                             margin : 10px 0 10px;
+                             }
+#rankinglistselect .item-after { 
+                       width : 100%;
+                       text-align : left;
+
+ }
+#rankinglistselect .item-after:after { 
+                                 font-family: FontAwesome;
+                                 content : '\f078'; /* fa-chevron-down */
+                                 font-size : 16px;
+                                 padding-left : 4px;
+                                 top : 0px;
+                                 position : absolute;
+                                       right : 20px;
+
+ }
+#rankingsmart { 
+max-width : 100%;
+ }
+#rankinglistselect .list-block .smart-select .item-after { 
+                                                   width : 100%;
+                                                           text-align : left;
+                                                           max-width : 100%;
+ }
+.smart-select .item-content { 
+                              background-color : #decc00;
+ }
+
+/** Problem list page **/
+
+.problems-accordion .grade { 
+                             width : 30px;
+ }
+.problems-accordion .white { 
+                             color : white;
+}
+.problems-accordion .item-after { 
+                                  width : 120px;
+}
+.problems-accordion .accordion-item-expanded { 
+                         background-color : #30312e;
+                                               
+ }
+.problems-accordion .list-block { 
+                                  margin : 5px 0 0 0;
+ }
+.problems-accordion span.likes { 
+                                 font-size : 12px;
+ }
+.problems-accordion span.fa { 
+                              font-size : 12px;
+                              margin-left : 3px;
+ }
+
+ .problems-accordion span.hidden {
+  visibility : hidden;
+} 
+.problems-accordion span.fa-thumbs-up { 
+  color : #decc00;
+}
+.problems-accordion span.fa-heart { 
+  color : red;
+}
+.problematorbadge { 
+                    margin : 6px 0 6px 0;
+                    width : 24px;
+    font-size: 13px;
+    display: inline-block;
+    color: #636159;
+    background: #decc00;
+    border-radius: 20px;
+    padding: 0 6px;
+    height: 20px;
+    line-height: 20px;
+    box-sizing: border-box;
+    text-align: center;
+}
+.list-block li li:last-child .item-inner:after,
+.list-block li:last-child li .item-inner:after {
+    background-color : none;
+    background : none;
+}
+/** Add some horizontal space for recycling sign **/
+.list-block li .item-after .fa-recycle {
+  padding-right : 6px;
+}
+/** Ticks today **/
+#tickstoday .item-after span { 
+                               margin-left : 4px;
+ }
+#tickstoday .item-media { 
+                                  width : 30px; 
+}
+/** Gyminfo pages **/
+
+/** Hides the smart select dropdown's default checked background image **/
+label.label-radio input[type=checkbox]:checked~.item-inner, label.label-radio input[type=radio]:checked~.item-inner { 
+  background-image : none;
+  background-color : #decc00;                                                                                                                    
+
+ }
+.picker-modal .toolbar { 
+                                background-color : #decc00;
+ }
+.close-picker { 
+                color : white;
+               text-transform : uppercase;
+               font-weight : normal;
+               font-size : 16px;
+               color : white;
+                }
+.picker-modal .toolbar:before { 
+             background-color : #decc00;
+ }
+.downcaret { 
+             display : block;
+             float : right;
+             margin-right : 8px;
+             color : white;
+ }
+.locul { 
+                width : 100%;
+ }
+
+/* Changes the smart select selected item to white, uppercased etc. **/
+
+/*
+.picker-modal .item-inner:after { 
+                         border-width : 0 0 1px 0;
+                         border-style : solid;
+                         border-color : #252623;
+
+                   }
+*/
+
+.list-block ul:after { 
+                         border : none;
+                         background-color : #30312e;
+
+ }
+.locpicker .item-after { 
+
+                         color : white;
+
+}
+.ranking-select-inner .item-inner { 
+                                 font-family: FontAwesome;
+                                 content : '\f078'; /* fa-chevron-down */
+                                 font-size : 20px;
+                                 padding-left : 4px;
+                                 top : -6px;
+                                    margin-left : -20px;
+
+}
+
+
+#gyminfo .col-50 { 
+
+                   border-width : 1px 1px 0 1px;
+                   border-style : solid;
+                   border-color : #2f302d;
+              padding : 25px 0 25px 0;
+              text-align : center;
+           
+ }
+#pie-gym-boulder { 
+                   height : 180px;
+                   color : #636159;
+                 -webkit-tap-highlight-color : #636159;
+                   fill : #636159;
+ }
+#pie-gym-sport { 
+                   height : 180px;
+                   color : #636159;
+                 -webkit-tap-highlight-color : #636159;
+                 fill : #636159;
+ }
+
+#gyminfo .row > .col-50:first-of-type { 
+                                        border-width : 1px 0 1px 1px;
+                                        border-color : #2f302d;
+                                        border-style : solid;
+
+                   }
+/** Password change screen **/
+.progress {
+  height: 20px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  background-color: #decc00;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 2px rgba(222, 204, 0, .1);
+          box-shadow: inset 0 1px 2px rgba(222, 204, 0, .1);
+}
+.progress-bar {
+  float: left;
+  width: 0;
+  height: 100%;
+  font-size: 12px;
+  line-height: 20px;
+  color: #fff;
+  text-align: center;
+  background-color: #428bca;
+  -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
+          box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
+  -webkit-transition: width .6s ease;
+          transition: width .6s ease;
+}
+.progress-striped .progress-bar {
+  background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+  background-image:         linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+  background-size: 40px 40px;
+}
+.progress.active .progress-bar {
+  -webkit-animation: progress-bar-stripes 2s linear infinite;
+          animation: progress-bar-stripes 2s linear infinite;
+}
+.progress-bar-success {
+  background-color: #5cb85c;
+}
+.progress-striped .progress-bar-success {
+  background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+  background-image:         linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+}
+.progress-bar-info {
+  background-color: #5bc0de;
+}
+.progress-striped .progress-bar-info {
+  background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+  background-image:         linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+}
+.progress-bar-warning {
+  background-color: #f0ad4e;
+}
+.progress-striped .progress-bar-warning {
+  background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+  background-image:         linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+}
+.progress-bar-danger {
+  background-color: #d9534f;
+}
+.progress-striped .progress-bar-danger {
+  background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+  background-image:         linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+}
+.password-verdict { 
+                    color : #decc00;
+ }
+/** Login screen customizations **/
+input[type=text] { 
+                               color : white !important;
+ }
+input:-webkit-autofill { 
+                         color : white !important;
+}
+.login-screen-content select { 
+                               background-color : #decc00;
+                               padding : 4px 0 4px 4px;
+                               color : white;
+                               text-transform : uppercase;
+ }
+.login-screen-content { 
+  background-color : #30312e;
+
+                background-image : url("/problemator/assets/images/problematorbg.png");
+background-repeat: no-repeat;
+
+    background-position: center; 
+-webkit-background-size: 100%; 
+    -moz-background-size: 100%; 
+    -o-background-size: 100%; 
+    background-size: 100%; 
+    -webkit-background-size: cover; 
+    -moz-background-size: cover; 
+    -o-background-size: cover; 
+    background-size: cover;
+ }
+input { 
+        color : white;
+ }
+
+/** Make input background transparent **/
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active { 
+    transition: background-color 5000s ease-in-out 0s;
+                         background-color : transparent;
+                         color : white;
+
+
+                                }
+
+input:-webkit-autofill { 
+    -webkit-text-fill-color: white;
+                         }
+
+input:-webkit-autofill:focus { 
+
+    -webkit-text-fill-color: white;
+                                
+                               }
+input:-webkit-autofill { 
+    transition: background-color 5000s ease-in-out 0s;
+                         background-color : transparent;
+                         color : white;
+ }
+
+input[type=checkbox].css-checkbox {
+                                    position:absolute; 
+                                    z-index:-1000; 
+                                    left:-1000px; 
+                                    overflow: hidden; 
+                                    clip: rect(0 0 0 0); height:1px; width:1px; margin:-1px; padding:0; border:0;
+}
+
+input[type=checkbox].css-checkbox + label.css-label {
+padding-left:35px;
+height:32px; 
+display:inline-block;
+line-height:30px;
+background-repeat:no-repeat;
+background-position: 0 0;
+font-size:16px;
+vertical-align:middle;
+cursor:pointer;
+
+}
+
+input[type=checkbox].css-checkbox:checked + label.css-label {
+background-position: 0 -30px;
+}
+label.css-label {
+background-image:url(https://csscheckbox.com/checkboxes/u/csscheckbox_3e7c116decab5f0bdc492fba26fa6d26.png);
+-webkit-touch-callout: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+
+}
+/** This nifty trick gets around all the webkit problems with input **/
+.list-block .item-inner:after {
+                                  background : transparent;
+ }
+.item-inner:after { 
+                         border-width : 0 0 1px 0;
+                         border-style : solid;
+                         border-color : #decc00;
+
+                   }
+
+.toolbar-bottom { 
+                  background-color : #decc00;
+                  }
+h1 { 
+                    font-size : 85px;
+                    color : white;
+                   text-transform : uppercase;
+                font-weight : normal;
+
+ }
+h2 { 
+                   color : #decc00;
+                   font-size : 26px;
+                   text-transform : uppercase;
+                   text-align : center;
+                   font-weight : normal;
+                }
+h3 { 
+                   color : #decc00;
+                   font-size : 25px;
+                   text-transform : uppercase;
+                   text-align : center;
+                   font-weight : normal;
+ }
+h4 { 
+                   color : #fff;
+                   font-size : 35px;
+                   text-transform : uppercase;
+                   text-align : center;
+                   font-weight : normal;
+ }
+h5 { 
+                   color : #decc00;
+                   font-size : 18px;
+                   text-transform : uppercase;
+                   text-align : center;
+                   font-weight : lighter;
+ }
+h6 { 
+                   color : white;
+                   font-size : 18px;
+                   text-transform : uppercase;
+                   text-align : center;
+                   font-weight : lighter;
+ }
+
+.text-left { 
+              text-align : left;
+ }
+.text-center { 
+              text-align : center;
+ }
+.text-right { 
+              text-align : right;
+ }
+.pad10 { 
+         padding : 10px;
+ }
+.pad20 { 
+         padding : 20px;
+ }
+li.li_separate { 
+               margin : 8px 0 8px 0 !important;
+ }
+.vcenter { 
+    vertical-align: middle;
+           }
+.shortcut-border { 
+                   border : 1px solid #636159;
+}
+.shortcut-button { 
+                   vertical-align : center;
+                   text-align : center;
+                   display : block;
+                      height : 40px;
+                   padding-top : 25px;
+
+                      width : 100%;
+
+ } 
+.problemator-link { 
+               text-transform : uppercase;
+               font-weight : normal;
+               font-size : 16px;
+               color : #decc00;
+ }
+.body-text { 
+               font-size : 14px;
+             text-transform : none;
+ }
+.body-text-w { 
+               text-transform : uppercase;
+               font-weight : normal;
+               font-size : 16px;
+               color : white;
+               
+
+ }
+.text-w { 
+               
+               color : white;
+ }
+.text-g { 
+               color : #636169;
+ }
+.text-y { 
+               color : #decc00;
+ }
+
+ .body-text-y {
+               color : #decc00;
+               text-transform : uppercase;
+ }
+.body-text-g { 
+               text-transform : uppercase;
+               font-weight : normal;
+               font-size : 16px;
+               color : #636169;
+ }
+/**
+* Sidebar
+*/
+#sidebarnav { 
+              background : #decc00;
+ }
+
+/**
+   * Overrides for framework 7
+**/
+.list-block ul { 
+                         background-color : #30312e;
+
+ }
+.buttons-row { 
+               text-transform : uppercase;
+ }
+.buttons-row .button { 
+                       border : none;
+                       color : white;
+}
+.buttons-row .button:first-child { 
+                                   border : none;
+                                   border-radius : 0;
+ }
+.buttons-row .button:last-child { 
+                                   border : none;
+                                   border-radius : 0;
+ }
+
+.buttons-row .button.active { 
+                              background-color : transparent;
+                              border-style : solid;
+                              border-width : 0 0 2px 0;
+                              border-color : #decc00;
+
+
+ }
+
+.navbar:after { 
+                display : none;
+                
+ }
+.content-block-inner:before { 
+                              display : none;
+}
+
+.content-block-inner:after { 
+                              display : none;
+}
+
+/** global list styles **/
+
+.list-block ul { 
+                         background-color : #30312e;
+                             /*
+                              * background-color : #252623;
+                              * */
+ }
+
+.list-block .item-inner:after {
+                                  background : transparent;
+ }
+.list-block ul:before { 
+                         border-width : 1px 0 0 0;
+                         border-style : solid;
+                         border-color : #30312e;
+ }
+.list-block ul:after { 
+                         border-width : 0 0 1px 0;
+                         border-style : solid;
+                         border-color : #30312e;
+
+ }
+ .list-block li.item-divider {
+                         background-color : #30312e;
+                         color : yellow;
+                                    text-transform : uppercase;
+
+ }
+.item-inner:after { 
+                         border-width : 0 0 1px 0;
+                         border-style : solid;
+                         border-color : #30312e;
+
+
+                   }
+.list-block ul:before { 
+                                    background-color : transparent;
+ }
+.smart-select-page li .item-inner { 
+                                    color : white;
+                     
+ }
+
+/**
+Settings page 
+**/
+#settings .list-block .item-title.label { 
+width : 100%;
+ }
+#settings .body-text-g { 
+                         display : block;
+                         padding-bottom : 16px;
+ }
+#settings a { 
+                           color : white;
+}
+#settings .body-text-w { 
+                         display : block;
+                         padding-left : 16px;
+                         }
+
+#default_gym { 
+                      color : white;
+               }
+
+#settings .label-switch input[type=checkbox]:checked+.checkbox { 
+                          background-color : #decc00;
+                          }
+
+
+#settings .label-switch .checkbox { 
+                                    border-radius : 0;
+
+ }
+
+#settings .label-switch .checkbox:after { 
+                                    border-radius : 0;
+ }
+#settings .toolbar .toolbar-inner { 
+                                                   background-color : #decc00;
+                                                   color : white;
+                                                   text-align : center;
+                                    text-transform : uppercase;
+
+                                                   }
+
+#settings .toolbar .toolbar-inner a { 
+                                      width : 100%;
+                                      text-align : center;
+                                      }
+#btn_savesettings { 
+                    display : block;
+              border : 1px solid #decc00;
+              color : white;
+              padding : 16px;
+              text-align : center;
+              background : #decc00;
+               border-radius : 0;
+                     margin : 10px auto;
+               text-transform : uppercase;
+               width : 90%;
+               height : 100%;
+ }
+#settings small a { 
+                    display : inline;
+                  }
+#settings small.body-text-g  { 
+                  display : inline;
+                  font-size : 12px;
+                  }
+
+/** Problem details / problem page **/
+.page-problem .row > .col-50:first-of-type { 
+                                        border-width : 1px 0 1px 0px;
+                                        border-color : #2f302d;
+                                        border-style : solid;
+
+                   }
+.page-problem .row:first-of-type { 
+                      height : 150px;
+ }
+.page-problem .row .savetickchange { 
+                                     padding-top : 16px;
+                                     }
+
+.page-problem .row.savetickagainrow { 
+                                 height : 100px;
+                                 }
+.page-problem .row.tickinforow { 
+                                 height : 100px;
+                                 }
+.page-problem .row.infoandtick { 
+
+                                 height : 120px;
+}
+.page-problem .row.triesandsuch { 
+                                  height : 100px;
+ }
+/* Morris **/
+.page-problem text[text-anchor="end"] { 
+  display:none;
+                                           }
+.page-problem .row.buttons { 
+                    height : 70px;         
+ }
+.page-problem .padtick { 
+                         padding-top : 8px;
+ }
+
+.page-problem div.spinner { 
+                             margin : 4px auto;
+                             display : block;
+ }
+.page-problem div.spinner span { 
+                                 font-size : 25px;
+                                 font-weight : bold;
+                                 position : relative;
+                                 top : -4px;
+ }
+.page-problem input.number { 
+                                   width : 45px;
+                                   height : 35px;
+                             border : none;
+                             font-size : 35px;
+                             text-align : center;
+                             color : white;
+                             padding : 4px 2px 4px 2px;
+                         background-color : #30312e;
+
+ }
+.page-problem .untick-button { 
+                             display : block;
+                             color : #decc00;
+                             padding : 4px 0 2px 0;
+   
+}
+.page-problem .save-button { 
+                             display : block;
+                             color : white;
+                             padding : 12px 0 12px 0;
+                             background-color : #decc00;
+                             
+ }
+ .page-problem .col-50, .page-problem .col-20, .page_problem .col-15 { 
+   height : 100%;
+   border-style : solid;
+   border-color : #30312e;
+   border-width : 1px 0 1px 1px;
+
+   margin : 0px auto;
+   padding : 20px 10px 10px 20px;
+
+}
+label.probattribute { 
+  display : block;
+  text-align : center;
+  text-transform : uppercase;
+  font-size : 10px;
+  padding-top : 8px;
+ }
+ .page-problem .prompt_link {
+   display : block;
+   height : 32px;
+ }
+.page-problem .starscol { 
+                          padding-top : 35px;
+}
+
+.page-problem h4 span { 
+                        font-size : 20px;
+ }
+.page-problem div.problemactionbuttons div.problemactionbutton {
+  text-align : center;
+}
+/* Place the icons nicely on the bottom of the page */
+.icon_container {
+   height : 40px;
+   padding-top : 8px;
+}
+/** Problem page smart select for grade opinion **/
+.grade_opinion_select { 
+                        margin : 0;
+
+}
+.grade_opinion_select ul:before { 
+                                      border : 0;
+
+ }
+.grade_opinion_select ul:after { 
+                                      border : 0;
+                                 border-style : none;
+
+ }
+
+.grade_opinion_select .item-after:after { 
+                                 font-family: FontAwesome;
+                                 content : '\f078'; /* fa-chevron-down */
+                                 font-size : 20px;
+                                 padding-left : 4px;
+                                 top : -6px;
+                                 position : relative;
+ }
+.grade_opinion_select .item-content { 
+                                      background-color : transparent;
+}
+.grade_opinion_select .item-inner .item-after { 
+                                                display : block;
+                                                color : white;
+                                                text-transform : uppercase;
+                                                font-size : 35px;
+                                                margin : 2px auto;
+                                                overflow : visible;
+}
+/** This is for the smart select opened in picker, show that it would show the selected elem highlighted **/
+div[data-select-name=grade_opinion] input:checked .item-inner { 
+                                                                background-color : #decc00;
+ }
+
+.row.ticked { 
+              font-size : 25px;
+ }
+
+/** Problem page checkboxes / radio buttons **/
+/** Thanks to http://codepen.io/jamesbarnett/pen/yILjk/ **/
+
+ /* to hide the checkbox itself */
+.page-problem input[type=checkbox] + label:before { 
+  font-family: FontAwesome;
+  display: inline-block;
+}                                
+.page-problem input[type=radio] + label:before { 
+  font-family: FontAwesome;
+  display: inline-block;
+}                                
+
+      
+.page-problem input[type=radio]#rating_ok {  display:none; }
+ /* unchecked icon */
+.page-problem input[type=radio]:checked#rating_ok + label:before {  letter-spacing: 5px; content: "\f164";  color : #decc00; font-size : 28px;}
+ /* checked icon */
+.page-problem input[type=radio]#rating_ok + label:before {  letter-spacing: 5px; content: "\f164"; color : white; font-size : 28px; }
+
+.page-problem input[type=radio]#rating_better {  display:none; }
+ /* unchecked icon */
+.page-problem input[type=radio]:checked#rating_better + label:before {  letter-spacing: 5px; content: "\f004";  color : #decc00; font-size : 28px;}
+ /* checked icon */
+.page-problem input[type=radio]#rating_better + label:before {  letter-spacing: 5px; content: "\f004"; color : white; font-size : 28px; }
+
+.page-problem input[type=radio]#rating_bad {  display:none; }
+ /* unchecked icon */
+.page-problem input[type=radio]:checked#rating_bad + label:before {  letter-spacing: 5px; content: "\f165";  color : #decc00; font-size : 28px;}
+ /* checked icon */
+.page-problem input[type=radio]#rating_bad + label:before {  letter-spacing: 5px; content: "\f165"; color : white; font-size : 28px; }
+
+
+
+/** Dashboard styles **/
+#dash_climbinfo .padleft { 
+                padding-left : 8px;
+                }
+/** Tick archive styles **/
+
+#tickarchive .picker-modal .toolbar { 
+                                      background : #30312e;
+}
+#tickContainer .item-media { 
+                             width : 35px;
+}
+.picker-calendar-day.picker-calendar-day-next, .picker-calendar-day.picker-calendar-day-prev { 
+                                                                     color : #40422e;
+ }
+/* Days with events... */
+.picker-calendar-day.picker-calendar-day-has-events span { 
+                                                           border : 2px solid #decc00;
+                                                            }
+.picker-calendar-day.picker-calendar-day-has-events span:after { 
+                                                                 background-color : none;
+                                                                 background : none;
+                                                                 }
+/** Replace default icon with font awesome chevron right **/
+.picker-calendar i.icon.icon-next:before { 
+                                           font-size : 20px;
+                                 font-family: FontAwesome;
+                                 content : '\f054'; /* fa-chevron-right */
+                                background-image : none;
+                                color : white;
+                                       position : relative;
+                                       top : -12px;
+ }
+
+.picker-calendar i.icon.icon-next { 
+background : none;
+ }
+.picker-calendar i.icon.icon-prev:before { 
+                                font-size : 20px;
+                                 font-family: FontAwesome;
+                                 content : '\f053'; /* fa-chevron-left */
+                                background-image : none;
+                                color : white;
+                                       position : relative;
+                                       top : -12px;
+ }
+
+.picker-calendar-day.picker-calendar-day-selected span { 
+                                                         background : #decc00;
+                                                         color : #30312e;
+ }
+.picker-calendar-day.picker-calendar-day-has-events span:after { 
+                                                                 }
+.picker-calendar-day { 
+                       color : white;
+ }
+.picker-calendar-day.picker-calendar-day-today span { 
+                                                      background-color : #bfb6a8;
+                                                      color : #30312e;
+ }
+.picker-modal.picker-modal-inline, .popover .picker-modal { 
+                   background : #252623;
+ }
+.picker-calendar-week-days { 
+                   color : white;
+                   background : #252623;
+ }
+.picker-calendar { 
+                   color : white;
+                   background : #252623;
+                                                
+ }
+/** Public ascent list styles **/
+.popover.ascents { 
+                   background-color : #30312e;
+                   color : white;
+                   
+ }
+.popover.ascents h1 { 
+                      color : #decc00;
+                      font-size : 16px;
+                   
+ }
+.popover-angle:after { 
+                       background-color : #30312e;
+ }
+ .lowercase {
+   text-transform : none;
+   
+ }
+#faq dt {
+  color : white;
+  padding-bottom : 6px;
+  padding-top : 6px;
+
+} 
+#faq dd {
+  padding-bottom : 16px;
+}
+#faq li {
+  padding-top : 6px;
+  color : white;
+}
+.photo-browser i.icon.icon-back { 
+  background : none;
+ }
+.photo-browser i.icon.icon-back:before { 
+                                font-size : 20px;
+                                 font-family: FontAwesome;
+                                 content : '\f053'; /* fa-chevron-left */
+                                background-image : none;
+                                color : white;
+                                       position : relative;
+                                       top : -12px;
+ }
+ .fa-circle-thin {
+   color : #30312e;
+ }
+ .modal {
+   border-radius : 0;
+
+ }
+ .modal-title {
+   text-transform : uppercase;
+ }
+ .modal-title + .modal-text {
+   margin-top : 10px;
+    font-weight : normal;
+    font-size : 14px;
+    padding-top : 8px;
+ }
+ .modal .modal-inner {
+   border-radius : 0;
+   color : white;
+    border : none;
+   background-color : #30312e;
+   border : 1px solid #decc00;
+
+ }
+ .modal .modal-buttons {
+   background-color : #decc00 !important;
+ }
+ .modal .modal-button {
+   border-radius : 0px;
+   background-color : #decc00;
+   color : #30312e;
+ }
+ input.modal-text-input {
+   border : 1px solid #decc00;
+   background-color : #30312e;
+ }
+
+ /** Change styles for action panel **/
+ .actions-modal-group {
+   border-radius : 0;
+   background-color : #30312e;
+
+ }
+ .actions-modal-label {
+   color : #decc00;
+   text-transform : uppercase;
+   font-size : 14px;
+   background : transparent;
+ }
+ .actions-modal-button {
+   background : transparent;
+ }
+ .actions-modal-label .del_betavideo {
+   color : #decc00;
+ }
+ .actions-modal-label .external {
+   color : #fff;
+   text-transform : none;
+   font-size : 12px;
+ }
+
+ .list-block .item-inner .item-after {
+   color : white !important;
+   text-align : center;
+   text-transform : uppercase;
+ }
+.ascent_type_select {
+   margin-top : 0px !important;
+   margin-bottom : 0px !important;
+}
+.ascent_type_label {
+  display : block !important;
+  padding-top : 8px !important;
+  padding-bottom : 0px !important;
+}
+
+.only_lead_counts small {
+  display : block;
+  padding-top : 8px;
+  padding-bottom : 6px;
+}
+/** Popover styles **/
+.popover .popover-inner {
+  background-color : #30312e;
+  color : #decc00;
+}
+.popover .popover-inner a {
+  color : #decc00 !important;
+  text-transform : uppercase !important;
+}
+
+/** Groups page **/
+.grouplistcontainer .item-inner {
+  color : white;
+}
+.tickdatepicker {
+  background-color : #252623;
+ border : none !important;
+ text-align : center;
+ font-size : 12px;
+
+   
+}
+hr {
+  border: 0; height: 1px;
+  background: #333;
+  background-image: linear-gradient(to right, #ccc, #333, #ccc);
+}
+.list-block input {
+  color : white !important;
+}
+.list-block textarea {
+  color : white;
+  border : 1px solid #decc00;
+  padding : 2px;
+  font-size : 12px;
+}
+.list-block .label-switch input[type=checkbox]:checked+.checkbox { 
+                          background-color : #decc00;
+                          }
+
+
+.list-block .label-switch .checkbox { 
+                                    border-radius : 0 !important;
+
+ }
+
+.list-block .label-switch .checkbox:after { 
+                                    border-radius : 0 !important;
+ }
+ .list-block.media-list .item-title-row {
+ }
+ .popup {
+  background-color : #252623;
+}
+.popup .item-title.label {
+  color : #decc00;
+}
+.popup-overlay{z-index: 111 !important;}
+.rankprogress {
+  height : 32px;
+}
+#ranking_progress {
+  display : block;
+  width : 100%;
+  height : 200px;
+}
+.groupdesc {
+  display : block;
+  margin-top : 8px;
+  padding-top : 8px;
+  margin-bottom : 8px;
+  padding-bottom : 8px;
+}
+.item-input input[type=text] {
+  border-color : #decc00;
+  border-style : solid;
+  border-width : 0 0 1px 0;
+  margin-bottom : 8px;
+}
+.manageticks {
+  padding-top : 8px;
+  display : block;
+}
+.tickdate {
+  padding-bottom : 8px;
+  display : block;
+}
+.actions-modal-label {
+  min-height : 30px;
+}
+.latest_tick_item {
+  padding-left : 0px !important;
+}
+#facebook-login{
+  background-color : #3b5998;
+  border : 0;
+}
+.comp_small {
+  font-size : 10px;
+}
+.picker-modal {
+  background-color : #252623;
+}
+
+#problemlist .square {
+ width : 24px;
+height : 24px;
+border : 2px solid #decc00;
+display : block;
+border-radius : 12px;
+float : left;
+margin : 2px;
+}
+#problemlist .item-media h5 {
+   width : 35px;
+   font-size : 20px;
+}
+button.donestatus {
+width : 100px;
+margin-left : 10px;
+padding : 0 10px 0 10px;
+display : inline;
+}
+.triescontainer {
+display : block;
+float : right;
+}
+.triescontainer button.trieschange {
+display : inline;
+border : 2px solid #decc00;
+margin-top : -5px;
+}
+input.tries {
+text-align : center;
+border : 1px solid white;
+}
+.padleft {
+  padding-left : 20px;
+}
+span.done {
+font-size : 45px;
+font-weight : bold;
+color : white;
+}
+span.timeleft {
+font-size : 23px;
+font-weight : bold;
+color : white;
+}
+.normal {
+  font-weight : normal;
+}
+.ofall {
+  font-size : 18px;
+}
+#problemlist .item-after {
+  max-height : none;
+}
+
+.strikethrough {
+  text-decoration : line-through;
+  text-decoration-colour : #decc00;
+}

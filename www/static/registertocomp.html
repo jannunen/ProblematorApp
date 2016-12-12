@@ -1,0 +1,60 @@
+<div data-page="registertocomp-page" class="page cached">
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="left sliding"><a name="pagetop" href="#" class="back link" data-reload="true" data-ignore-cache="true">
+          <span class="fa-stack fa-md">
+            <i class="fa fa-circle-thin fa-stack-2x"></i>
+            <i class="fa fa-chevron-left fa-stack-1x"></i>
+          </span>
+        </a></div>
+        <div class="center sliding"><h3>Register </h3></div>
+        <div class="right">
+          <a href="#" class="link icon-only open-panel"> <i class="fa fa-bars"></i></a>
+        </div>
+    </div>
+  </div>
+  <div class="page-content">
+    <div class="content-block">
+      <div class="content-block">
+        <div class="content-block-inner">
+          You have not registered to the competition (yet).<br /><br />
+          Worry not. Just choose a category
+          and click "Join the competition". If the competition has a competition fee, you will
+          get instructions how to pay the competition fee.<br /><br />
+          Otherwise you can use the competition point entry page to tick ascents. You can
+          also use the normal Problems page for ticking the problems.
+        </div>
+      </div>
+      <form id="registertocomp" action="" method="POST">
+        <div class="row">
+          <div class="col-40">
+            <span  class="body-text-w">Category:</span> 
+          </div>
+          <div class="col-60">
+            {{#if categories}}
+            {{#each categories}}
+            <input type="radio" name="category" data-maxparticipants="{{maxparticipants}}" data-price="{{price}}" data-info="{{info}}" class="regcategory" id="category" value="{{serieid}}" /> {{nimi}}<br />
+            {{/each}}
+            {{else}}
+            <label>No categories in the comp :/<br /><br />The registration is disabled if there are no categories added.</label>
+            {{/if}}
+          </div>
+        </div><!-- // row-->
+        <div id="catinfo">
+
+        </div>
+        <br /><br />
+        <div class="row">
+          <div class="col-100">
+            <input type="hidden" name="compid" value="{{comp.id}}" />
+            <a href="#"  data-compid="{{comp.compid}}" style="width : 100%" class=" body-text-w button button-fill joincomp color-yellow">Join the competition</a>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+</div>
+</div>
+

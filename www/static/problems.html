@@ -1,0 +1,114 @@
+<div data-page="problems-page" class="page cached">
+
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="left sliding"><a name="pagetop" href="#" class="back link">
+          <span class="fa-stack fa-md">
+            <i class="fa fa-circle-thin fa-stack-2x"></i>
+            <i class="fa fa-chevron-left fa-stack-1x"></i>
+          </span>
+        </a></div>
+        <div class="center sliding"><h3>Problems</h3></div>
+        <div class="right">
+          <a href="#" class="link icon-only open-panel"> <i class="fa fa-bars"></i></a>
+        </div>
+    </div>
+  </div>
+  <div class="page-content" id="problemlist">
+    <div class="content-block-title">
+      <div class="row">
+        <div class="col-75 problemator-border-underline">
+          <input type="text" autocomplete="off" size="5" class="problemator-textfield" id="quickproblems" placeholder="Add route number(s). eg. F99 or F99,F100" /> 
+        </div>
+        <div class="col-25">
+          <button type="button" class="button problemator-button" id="quicktick">Tick!</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-100 pad10">
+          Click problem to open the problem page.<br />swipe left to quick tick problem. 
+        </div>
+      </div>
+
+    </div>
+
+    <div class="list-block accordion-list custom-accordion problems-accordion">
+      <ul>
+        {{#each walls}}
+        <li class="accordion-item">
+          <a href="#" class="item-content item-link">
+            <div class="item-inner">
+              <div class="item-title">
+                <span class="problematorbadge">{{wallchar}}</span>
+                <span class="body-text-w">{{wallname}} {{#js_compare "this.soontoberemoved==1"}}<span class="text-y fa fa-recycle"></span> {{/js_compare}}</span>
+              </div>
+            </div>
+          </a>
+          <div class="accordion-item-content">
+            <div class="content-block">
+              <ul>
+                {{#js_compare "this.wallimage_exists==1"}}
+                <li>
+                <a href="#" data-href="/assets/wallimages/wall_{{gymid}}_{{wallid}}.jpg" class="item-link item-content see_wallimage" >
+                  <div class="item-media">
+                    <span class="fa fa-camera text-w fa-2x"></span>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title body-text-w">
+                      See picture of this wall
+                    </div>
+                    <div class="item-after">
+                      <span class="fa fa-chevron-right"></span>
+                    </div>
+                  </div> <!--- item-inner -->
+                </a>
+                </li>
+                {{/js_compare}}
+                {{#each problems}}
+                <li class="swipeout" id="swipe{{problemid}}">
+                  <div class="swipeout-content ">
+                    <a data-problemid="{{problemid}}" href="/t/problematormobile/problem/?id={{problemid}}" class="item-link item-content {{#js_compare "this.visible==0"}}strikethrough{{/js_compare}}" >
+                      <div class="item-media">
+                        <h5 tag="{{tagshort}}" problemid="{{problemid}}" class="probtitle {{#if tick}}text-y{{else}}text-w{{/if}} grade">{{gradename}}</h5>
+                      </div>
+                      <div class="item-inner">
+                        <div class="item-title">
+                          <span  class="fa fa-square" style="color : {{code}};"></span>
+                          <span class="body-text-w">{{tagshort}}</span> 
+                          {{#js_compare "this.visible==1"}}
+                          <small>| {{addedrelative}}</small>
+                          {{else}}
+                          <small>| <span style="color : red;">REMOVED</span></small>
+                          {{/js_compare}}
+                          {{#if tick}}
+                          <span class="fa fa-check problemator-link"></span>
+                          {{/if}}
+                        </div>
+                        <div class="item-after">
+                          {{#js_compare "this.soontoberemoved!=0"}}<span class="fa fa-recycle text-y"></span>{{/js_compare}}
+                          {{#js_compare "this.hasbetavideos==1"}}<span class="fa fa-video-camera text-w"></span>&nbsp;{{/js_compare}}
+                          <span class="body-text-w likes">
+                            <span data-count="{{c_like}}" class="fa fa-thumbs-up"></span> {{c_like}}
+                            <span data-count="{{c_love}}" class="fa fa-heart"></span> {{c_love}}
+                          </span>
+                          <span class="fa fa-chevron-right"></span>
+                        </div>
+
+                      </div> <!--- item-inner -->
+                    </a>
+                  </div> <!-- swipeout-content-->
+                  <div class="swipeout-actions-right">
+                    <a href="#" data-tag="{{tagshort}}" data-pid="{{problemid}}" class="swipetick action1">{{#if tick}}Re{{/if}}Tick!</a>
+                  </div>
+                </li>
+                {{/each}}
+              </ul>
+            </div>
+          </div>
+        </li><!-- end of accordion item -->
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+</div>
+

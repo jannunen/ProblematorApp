@@ -1,0 +1,154 @@
+<div data-page="circuits-page" class="page cached">
+
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="left sliding"><a name="pagetop" href="#" class="back link" data-reload="true" data-ignore-cache="true" >
+          <span class="fa-stack fa-md">
+            <i class="fa fa-circle-thin fa-stack-2x"></i>
+            <i class="fa fa-chevron-left fa-stack-1x"></i>
+          </span>
+        </a></div>
+        <div class="center sliding"><h3>Circuits</h3></div>
+        <div class="right">
+          <a href="#" class="link icon-only open-panel"> <i class="fa fa-bars"></i></a>
+        </div>
+    </div>
+  </div>
+
+  <div class="page-content" id="circuitlist">
+    <div class="list-block accordion-list custom-accordion problems-accordion">
+      <ul>
+        <li class="item-divider">Private circuits</li>
+        {{#each privatecircuits}}
+        <li class="accordion-item">
+          <a href="#" class="item-content item-link">
+            <div class="item-inner">
+              <div class="item-title">
+                <span class="problematorbadge">{{num}}</span>
+                <span class="body-text-w">{{circuitname}} <span style="color : {{code}}">{{colorname}}</span> {{problemcount}} problem(s)</span>
+              </div>
+            </div>
+          </a>
+          <div class="accordion-item-content">
+            <div class="content-block">
+              <ul>
+                <li>
+                   <div class="item-inner">
+                     <div class="item-title">{{#js_compare "this.userdone==this.problemcount"}}COMPLETED{{else}}Still couple of problems to go!{{/js_compare}}</div>
+                   </div>
+
+                </li>
+                {{#each problems}}
+                <li class="swipeout" id="swipe{{problemid}}">
+                  <div class="swipeout-content">
+                    <a data-problemid="{{problemid}}" href="/t/problematormobile/problem/?id={{problemid}}" class="item-link item-content" >
+                      <div class="item-media">
+                        <h5 tag="{{tagshort}}" problemid="{{problemid}}" class="probtitle {{#if tick}}text-y{{else}}text-w{{/if}} grade">{{gradename}}</h5>
+                      </div>
+                      <div class="item-inner">
+                        <div class="item-title">
+                          <span  class="fa fa-square" style="color : {{code}};"></span>
+                          <span class="body-text-w">{{tagshort}}</span> 
+                          <small>| {{addedrelative}}</small>
+                          {{#if tick}}
+                          <span class="fa fa-check problemator-link"></span>
+                          {{/if}}
+                        </div>
+                        <div class="item-after">
+                          {{#js_compare "this.soontoberemoved!=0"}}<span class="fa fa-recycle text-y"></span>{{/js_compare}}
+                          <span class="body-text-w likes">
+                            <span data-count="{{c_like}}" class="fa fa-thumbs-up"></span> {{c_like}}
+                            <span data-count="{{c_love}}" class="fa fa-heart"></span> {{c_love}}
+                          </span>
+                          <span class="fa fa-chevron-right"></span>
+                        </div>
+
+                      </div> <!--- item-inner -->
+                    </a>
+                  </div> <!-- swipeout-content-->
+                  <div class="swipeout-actions-right">
+                    <a href="#" data-tag="{{tagshort}}" data-pid="{{problemid}}" class="swipetick action1">{{#if tick}}Re{{/if}}Tick!</a>
+                  </div>
+                </li>
+                {{/each}}
+              </ul>
+            </div>
+          </div>
+        </li><!-- end of accordion item -->
+        {{else}}
+        <li>
+        <div class="item-inner">
+          <div class="item-title text-w">If you had a PT, you could have these =)</div>
+        </div>
+        </li>
+        {{/each}}
+
+        <li class="item-divider">Public circuits</li>
+        {{#each circuits}}
+        <li class="accordion-item">
+          <a href="#" class="item-content item-link">
+            <div class="item-inner">
+              <div class="item-title">
+                <span class="problematorbadge">{{num}}</span>
+                <span class="body-text-w">{{circuitname}} <span style="color : {{code}}">{{colorname}}</span> {{problemcount}} problem(s)</span>
+              </div>
+            </div>
+          </a>
+          <div class="accordion-item-content">
+            <div class="content-block">
+              <ul>
+                <li>
+                   <div class="item-inner">
+                     <div class="item-title">{{#js_compare "this.userdone==this.problemcount"}}COMPLETED{{else}}Still couple of problems to go!{{/js_compare}}</div>
+                   </div>
+
+                </li>
+                {{#each problems}}
+                <li class="swipeout" id="swipe{{problemid}}">
+                  <div class="swipeout-content">
+                    <a data-problemid="{{problemid}}" href="/t/problematormobile/problem/?id={{problemid}}" class="item-link item-content" >
+                      <div class="item-media">
+                        <h5 tag="{{tagshort}}" problemid="{{problemid}}" class="probtitle {{#if tick}}text-y{{else}}text-w{{/if}} grade">{{gradename}}</h5>
+                      </div>
+                      <div class="item-inner">
+                        <div class="item-title">
+                          <span  class="fa fa-square" style="color : {{code}};"></span>
+                          <span class="body-text-w">{{tagshort}}</span> 
+                          <small>| {{addedrelative}}</small>
+                          {{#if tick}}
+                          <span class="fa fa-check problemator-link"></span>
+                          {{/if}}
+                        </div>
+                        <div class="item-after">
+                          {{#js_compare "this.soontoberemoved!=0"}}<span class="fa fa-recycle text-y"></span>{{/js_compare}}
+                          <span class="body-text-w likes">
+                            <span data-count="{{c_like}}" class="fa fa-thumbs-up"></span> {{c_like}}
+                            <span data-count="{{c_love}}" class="fa fa-heart"></span> {{c_love}}
+                          </span>
+                          <span class="fa fa-chevron-right"></span>
+                        </div>
+
+                      </div> <!--- item-inner -->
+                    </a>
+                  </div> <!-- swipeout-content-->
+                  <div class="swipeout-actions-right">
+                    <a href="#" data-tag="{{tagshort}}" data-pid="{{problemid}}" class="swipetick action1">{{#if tick}}Re{{/if}}Tick!</a>
+                  </div>
+                </li>
+                {{/each}}
+              </ul>
+            </div>
+          </div>
+        </li><!-- end of accordion item -->
+        {{else}}
+        <li>
+        <div class="item-inner">
+          <div class="item-title text-w">No circuits, ask your gym staff to add some! =)</div>
+        </div>
+        </li>
+          {{/each}}
+      </ul>
+    </div>
+  </div>
+</div>
+
