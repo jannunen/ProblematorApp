@@ -54,7 +54,7 @@
           </div>
           <ul>
             <li class="text-w">&nbsp;&nbsp;{$smarty.session.climber.etunimi} {$smarty.session.climber.sukunimi}</li>
-            <li><span class="fa fa-home fa-1x"></span><a class="close-panel external" href="/t/problematormobile/index/">##Home##</a></li>
+            <li><span class="fa fa-home fa-1x"></span><a class="close-panel external" href="/t/problematormobile/index/">Home</a></li>
             <li><span  class="fa fa-list-ul fa-1x"></span><a href="/static/problems.html"  class="close-panel" >Problems</a></li>
             <li><span  class="fa fa-newspaper-o fa-1x"></span><a href="#new-problems-page"  class="close-panel" >New problems</a></li>
             {*					<li><span class="fa fa-area-chart fa-1x "></span><a href="#charts" class="close-panel" data-view=".chart-view" >Charts</a></li>*}
@@ -62,10 +62,10 @@
             <li><span  class="fa fa-check-square-o fa-1x"></span><a href="#tickstoday"  class="close-panel" >Ticks today</a> </li>
             <li><span  class="fa fa-calendar fa-1x"></span><a href="/t/problematormobile/_tickarchivepage/"  class="close-panel" >Tick archive</a></li>
             <li><span class="fa fa-signal fa-1x "></span><a href="/t/problematormobile/_ranking/" class="close-panel" >Ranking</a></li>
-            <li ><span   class="fa fa-users fa-1x"></span><a href="/t/problematormobile/groups/index/"  class="close-panel ">##My groups##</a></li>
-            <li ><span   class="fa fa-trophy fa-1x"></span><a href="/static/competitions.html"  class="close-panel ">##Competitions##</a></li>
-            <li ><span   class="fa fa-info fa-1x"></span><a href="#gyminfo"  class="close-panel ">##Gym info##</a></li>
-            <li ><span   class="fa fa-info fa-1x"></span><a href="#gyminfo"  class="close-panel ">##Change gym##</a></li>
+            <li ><span   class="fa fa-users fa-1x"></span><a href="/t/problematormobile/groups/index/"  class="close-panel ">My groups</a></li>
+            <li ><span   class="fa fa-trophy fa-1x"></span><a href="/static/competitions.html"  class="close-panel ">Competitions</a></li>
+            <li ><span   class="fa fa-info fa-1x"></span><a href="#gyminfo"  class="close-panel ">Gym info</a></li>
+            <li ><span   class="fa fa-info fa-1x"></span><a href="#gyminfo"  class="close-panel ">Change gym</a></li>
             <li><span class=" fa fa-cogs fa-1x"></span><a href="#settings"  class="close-panel">Settings</a></li>
             <li class=""><span class="fa fa-question fa-1x"></span><a href="#about" class="close-panel">About</a></li>
 
@@ -151,14 +151,14 @@
                   <li class="item-content">
                     <div class="item-inner">
                       <div class="item-input">
-                        <input type="text" name="username" placeholder="Your e-mail" value="{$smarty.get.preuser}"  />
+                        <input type="text" name="username" placeholder="Your e-mail" value=""  />
                       </div>
                     </div>
                   </li>
                   <li class="item-content">
                     <div class="item-inner">
                       <div class="item-input">
-                        <input type="password" name="password" id="password" placeholder="Your password" value="{$smarty.get.prepass}" />
+                        <input type="password" name="password" id="password" placeholder="Your password" value="" />
                       </div>
                     </div>
                   </li>
@@ -166,7 +166,7 @@
                     <div class="item-inner">
                       <div class="item-input">
                         <select name="problematorlocation" id="problematorlocation" >
-                          <option value="">## Choose a gym##</option>
+                          <option value=""> Choose a gym</option>
                           {{#each locations}}
                           <option value="{$locid}" {if $loc==$locinfo.name}selected="selected"{/if}>{$loc}</option>
                           {{/each}}
@@ -184,16 +184,16 @@
                 <div class="list-block-label">
                   <div class="row">
                     <div class="col-50 text-left">
-                      <button type="submit" class="button color-problematoryellow body-text-w">Log in</button>
+                      <button type="button" class="button loginbutton color-problematoryellow body-text-w">Log in</button>
                     </div>
                     <div class="col-50 text-center vcenter pad20">
-                      <span class="text-g">or</span> <a class="problemator-link external" href="/t/problematormobile/signup/">##Sign up##</a>
+                      <span class="text-g">or</span> <a class="problemator-link external" href="/t/problematormobile/signup/">Sign up</a>
                     </div>
                   </div>
 
                   <div class="row" style="margin-top : 10px;">
                     <div class="col-100 text-left ">
-                      <a href="https://www.facebook.com/dialog/oauth?client_id={$appid}&scope=email&redirect_uri={$idxurl}" id="facebook-login" class="external button color-facebook body-text-w">Facebook login</a>
+                      <a href="#" id="facebook-login" class="external button color-facebook body-text-w">Facebook login</a>
                     </div>
                   </div>
                   <div class="list-block">
@@ -204,7 +204,7 @@
                     </div>
                   </div>
                   <div class="row">
-                    <div class="col-100 text-left padtop"><a href="/t/problematormobile/forgotpassword/" class="external text-w ">##Forgot password?##</a></div>
+                    <div class="col-100 text-left padtop"><a href="/t/problematormobile/forgotpassword/" class="external text-w ">Forgot password?</a></div>
                   </div>
 
                 </div>

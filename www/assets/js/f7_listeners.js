@@ -1,8 +1,321 @@
-var   addProblemsPageListeners = function(pagename) {
-  if ("problems-page"==pagename) {
-     
+var singleProblemListenersInitialized = false;
+var problemsPageListenersInitialized = false;
+var dashBoardListenersInitialized = false;
+var loginPageListenersInitialized = false;
+var indexPageListenersInitialized = false;
+var groupPageListenersInitialized = false;
+var singleGroupPageListenersInitialized = false;
+var groupMemberPageListenersInitialized = false;
+var inviteMemberPageListenersInitialized = false;
+
+var indexController= {
+  initializeIndexPage : function() { 
+    debugger;
+    // Data is set in my-app preprocess -function
+    mainView.router.load({
+      url: 'static/dashboard.html',
+      ignoreCache : true,
+      reload : true
+    });
   }
 }
+var addDashBoardListeners = function(pagename) {
+  if ("dash"==pagename && !dashBoardListenersInitialized) {
+    debugger;
+    myApp.hidePreloader();
+    if (Cookies.get("whatsnew"+ver)==undefined) {
+      Cookies.set("whatsnew"+ver,true,{ expires: 7650 });
+      myApp.alert("1. Groups! You can add groups and invite your friends to groups and have a fun and friendly competition!.<br />2. It's easier to manage your ticks. Just click 'Manage Ticks' from a problem page.<br />3. You can change your tick date when saving a tick.<br />4. Ranking progress on dashboard. If you want to see how you progress (or regress) in your ranks :)","What's new?");
+    }  
+    if (!chartsInitialized) {
+      chartsInitialized = true;
+
+      var gradesArr = $.jStorage.get("grades");
+      var grades = [];
+      var grade;
+      for (var idx in gradesArr) {
+        grade = gradesArr[idx];
+        grades[grade.score*10]=grade.name;
+      }
+      window.ggrades = grades;
+
+
+      var url = window.api.apicallbase + "globalrankingprogress?jsonp=true";
+      $.jsonp(url,{uid:window.uid},function(_data) {
+        dashboardLineChart = Morris.Line({
+          element: 'ranking_progress',
+          data: _data,
+          xkey: 'y',
+          hideHover : 'always',
+          pointSize : 0,
+          lineColors : ['#decc00','#bfb6a8'],
+          lineWidth : "2px",
+          smooth : true,
+          yLabelFormat : function(y) {
+            return -y;
+          },
+
+          xLabelFormat : function(x) {
+            var objDate = new Date(x);
+            var locale = "en-us";
+            var short = objDate.toLocaleString(locale, { month: "short" });
+            return short.toUpperCase();
+
+          },
+          ykeys: ['a','b'],
+
+          labels: ['BOULDER','SPORT']
+        });
+      });
+      var url = window.api.apicallbase+"json_running6mo_both/";
+      $.jsonp(url,{uid : window.uid},function(_data) {
+
+        dashboardLineChart = Morris.Line({
+          element: 'running6mo',
+          data: _data,
+          xkey: 'y',
+          hideHover : 'always',
+          pointSize : 0,
+          yLabelFormat : function (x) { 
+            // ROund to nearest 500
+            var near = Math.round(x/500)*500;
+            near = window.ggrades[near];
+            if (near==undefined) {
+              return "";
+            }
+            return near;
+          },
+          lineColors : ['#decc00','#bfb6a8'],
+          lineWidth : "2px",
+          smooth : true,
+
+          xLabelFormat : function(x) {
+            var objDate = new Date(x);
+            var locale = "en-us";
+            var short = objDate.toLocaleString(locale, { month: "short" });
+            return short.toUpperCase();
+
+          },
+          ykeys: ['a','b'],
+
+          labels: ['BOULDER','SPORT']
+        });
+      }); // get
+
+      var barurl = window.api.apicallbase+"json_running6mogradebars_both/";
+      if ($("#running6mobars").length) {
+        $.jsonp(barurl,{uid : window.uid},function(back) {
+          dashboardBarChart = Morris.Bar({
+            element : 'running6mobars',
+            data : back,
+            'gridTextSize' : 8,
+            xLabelMargin: 0,
+
+            xkey : 'y',
+            hideHover : 'false',
+            stacked : true,
+            ykeys : ['a','b'],
+            labels : ['BOULDER','SPORT'],
+            barColors : ['#decc00','#bfb6a8'],
+          });
+        });
+      }
+    }
+    dashBoardListenersInitialized = true;
+  } // if pagename
+}
+
+var addDashBoardListeners = function(pagename) {
+  if ("dash"==pagename && !dashBoardListenersInitialized) {
+    debugger;
+    myApp.hidePreloader();
+    if (Cookies.get("whatsnew"+ver)==undefined) {
+      Cookies.set("whatsnew"+ver,true,{ expires: 7650 });
+      myApp.alert("1. Groups! You can add groups and invite your friends to groups and have a fun and friendly competition!.<br />2. It's easier to manage your ticks. Just click 'Manage Ticks' from a problem page.<br />3. You can change your tick date when saving a tick.<br />4. Ranking progress on dashboard. If you want to see how you progress (or regress) in your ranks :)","What's new?");
+    }  
+    if (!chartsInitialized) {
+      chartsInitialized = true;
+
+      var gradesArr = $.jStorage.get("grades");
+      var grades = [];
+      var grade;
+      for (var idx in gradesArr) {
+        grade = gradesArr[idx];
+        grades[grade.score*10]=grade.name;
+      }
+      window.ggrades = grades;
+
+
+      var url = window.api.apicallbase + "globalrankingprogress?jsonp=true";
+      $.jsonp(url,{uid:window.uid},function(_data) {
+        dashboardLineChart = Morris.Line({
+          element: 'ranking_progress',
+          data: _data,
+          xkey: 'y',
+          hideHover : 'always',
+          pointSize : 0,
+          lineColors : ['#decc00','#bfb6a8'],
+          lineWidth : "2px",
+          smooth : true,
+          yLabelFormat : function(y) {
+            return -y;
+          },
+
+          xLabelFormat : function(x) {
+            var objDate = new Date(x);
+            var locale = "en-us";
+            var short = objDate.toLocaleString(locale, { month: "short" });
+            return short.toUpperCase();
+
+          },
+          ykeys: ['a','b'],
+
+          labels: ['BOULDER','SPORT']
+        });
+      });
+      var url = window.api.apicallbase+"json_running6mo_both/";
+      $.jsonp(url,{uid : window.uid},function(_data) {
+
+        dashboardLineChart = Morris.Line({
+          element: 'running6mo',
+          data: _data,
+          xkey: 'y',
+          hideHover : 'always',
+          pointSize : 0,
+          yLabelFormat : function (x) { 
+            // ROund to nearest 500
+            var near = Math.round(x/500)*500;
+            near = window.ggrades[near];
+            if (near==undefined) {
+              return "";
+            }
+            return near;
+          },
+          lineColors : ['#decc00','#bfb6a8'],
+          lineWidth : "2px",
+          smooth : true,
+
+          xLabelFormat : function(x) {
+            var objDate = new Date(x);
+            var locale = "en-us";
+            var short = objDate.toLocaleString(locale, { month: "short" });
+            return short.toUpperCase();
+
+          },
+          ykeys: ['a','b'],
+
+          labels: ['BOULDER','SPORT']
+        });
+      }); // get
+
+      var barurl = window.api.apicallbase+"json_running6mogradebars_both/";
+      if ($("#running6mobars").length) {
+        $.jsonp(barurl,{uid : window.uid},function(back) {
+          dashboardBarChart = Morris.Bar({
+            element : 'running6mobars',
+            data : back,
+            'gridTextSize' : 8,
+            xLabelMargin: 0,
+
+            xkey : 'y',
+            hideHover : 'false',
+            stacked : true,
+            ykeys : ['a','b'],
+            labels : ['BOULDER','SPORT'],
+            barColors : ['#decc00','#bfb6a8'],
+          });
+        });
+      }
+    }
+    dashBoardListenersInitialized = true;
+  } // if pagename
+}
+var addLoginPageListeners = function(pagename) {
+  if (!loginPageListenersInitialized) {
+    $$('.loginbutton').on('click', function (e) {
+      if ($("#problematorlocation").val()=="") {
+        myApp.alert("Please select a gym","Gym not selected");
+        return false;
+      }
+      var username = $(this).parents("form").find('input[name="username"]').val();
+      var password = $(this).parents("form").find('input[name="password"]').val();
+      var loc = $(this).parents("form").find("#problematorlocation").val();
+      // Handle username and password
+      var url = window.api.apicallbase + "dologin?native=true"; 
+      $.jsonp(url,{"username": username,"password":password,"problematorlocation" : loc, "authenticate" : true},function(data) {
+        try {
+          debugger;
+          if (data && data.loc) {
+            // Set api-auth-token also
+            $.ajaxSetup({
+              headers : {'api-auth-token' : data.token}
+            });
+            $$.ajaxSetup({
+              headers : {'api-auth-token' : data.token}
+            });
+              
+            Cookies.set("nativeproblematorlocation",data.loc);
+            Cookies.set("loginok",true);
+            Cookies.set("uid",data.uid);
+            window.uid = data.uid;
+            // Initialize index page.
+            myApp.closeModal();
+            myApp.showPreloader('Hang on, initializing app.');
+            indexController.initializeIndexPage();
+          } else {
+            myApp.alert(data.message);
+          }
+        } catch(e) {
+          myApp.alert(data);
+        }
+      });
+    });
+    loginPageListenersInitialized = true;
+  }
+}
+var addIndexPageListeners = function(pagename,page) {
+  if ("index"==pagename && !indexPageListenersInitialized) {
+    $$(".btn_logout").on("click",function() {
+      debugger;
+      Cookies.remove("loginok");
+      Cookies.remove("uid");
+      window.uid = null;
+      $("#userid").val("");
+      myApp.closePanel();
+      myApp.loginScreen();
+
+    });
+    // Confirm terminate account
+    $$(".opt-out").on("click",function() {
+      myApp.confirm("This action cannot be undone! All your data will be lost.","Are you sure?",function() {
+        var url = window.api.apicallbase + "terminate_account";
+        $.get(url).done(function(back) {
+          myApp.alert(back);
+          setTimeout(function() {
+            document.location.href="/index.html";
+          },5000);
+        });
+      });
+    });
+    indexPageListenersInitialized = true;
+  }
+
+}
+
+
+
+
+var   addProblemsPageListeners = function(pagename) {
+
+  if ("problems-page"==pagename) {
+    if (!problemsPageListenersInitialized) {
+      problemsPageListenersInitialized = true;
+    }
+
+  }
+}
+
+
 var addCompetitionsPageListeners = function(pagename) {
   if ("competitions"==pagename) {
     $$(".search_competitions").on("keyup",function(e) {
@@ -168,6 +481,7 @@ var addSingleGroupPageListeners = function(pagename,url) {
   }
 }
 
+
 var addGroupLeaveJoinListeners = function() {
   $$(".join_group").on("click",function() {
     var gid = $(this).data("gid");
@@ -248,4 +562,203 @@ var addInviteMemberPageListeners = function(pagename) {
     });
   }
 };
+
+var addSingleProblemListeners = function(pagename) {
+
+  // If matches single problem
+  if ((matches=pagename.match(/problem(\d+)/)) && !singleProblemListenersInitialized) {
+    // Add listeners for dirty, dangerous and message.
+    var probid = matches[1];
+    (function(pid) {
+      // SHow global ascents
+      $(document).on("click",".show_global_ascents",function(e) {
+	var clickedLink = this;
+	var pid = $(this).data("id");
+	var url = window.api.apicallbase + "global_ascents/?pid="+pid;
+	$.jsonp(url,{pid : pid},function(back) {
+	  var tpl = $("script#global_ascents_popover").html();
+	  var ctpl = Template7.compile(tpl);
+	  var html = ctpl(back);    
+	  myApp.popover(html, clickedLink);
+
+	});
+      });
+      $(document).on("click",".spinnerminus",function() {
+	var cur = parseInt($(this).siblings("input").val());
+	cur--;
+	if (cur <= 0) {
+	  cur = 1;
+	}
+        $(this).siblings("input").val(cur);
+      });
+      $(document).on("click",".spinnerplus",function() {
+        var cur = parseInt($(this).siblings("input").val());
+        cur++;
+        $(this).siblings("input").val(cur);
+      });
+
+      $(document).on("click","#btn_savesettings",function() {
+        $("#frmsettings").ajaxSubmit(function(back) {
+          myApp.alert(back, 'Info');
+
+        });
+        return false;
+      });
+      $$(".mark_dangerous").on("click",function() {
+        // Ask reason and send straight.
+        myApp.prompt('What makes the problem dangerous?','Send feedback', function (value) {
+          var url = window.api.apicallbase + "savefeedback/?msgtype=dangerous";
+          $.jsonp(url,{"text" : value, "problemid":pid},function(back) {
+            myApp.alert(back,"Message");
+          });
+        });
+
+      });
+      $$(".mark_dirty").on("click",function() {
+        // Ask reason and send straight.
+        myApp.prompt('Describe dirtyness, if you can. It makes our life easier.','Send feedback', function (value) {
+          var url = window.api.apicallbase + "savefeedback/?msgtype=dirty";
+          $.jsonp(url,{"text" : value, "problemid":pid},function(back) {
+            myApp.alert(back,"Message");
+          });
+        });
+      });
+      $$('.prompt-feedback').on('click', function () {
+        myApp.prompt('You can enter your feedback about the problem, what problems you would like to have or something in general','Send feedback', function (value) {
+          var url = window.api.apicallbase + "savefeedback/?msgtype=message";
+          $.jsonp(url,{"text" : value, "pid":pid},function(back) {
+            myApp.alert(back);
+          });
+        });
+      });
+      $(document).on('click','.open_betavideos_actionsheet', function () {
+        var _pid = $(this).attr("pid");
+        $.jsonp(window.api.apicallbase+"betavideos/",{pid : _pid},function(betavideos) {
+          var buttons = [
+            {
+              text: 'Choose a betavideo',
+              label: true
+            },
+          ];
+          // ADd videos
+          for (var idx in betavideos) {
+            var v = betavideos[idx];
+            var txt = '<a href="'+v.video_url+'" class="external">'+v.video_url+'</a>';
+            if (v.userid == $("#userid").val()) {
+              txt += '&nbsp; <a class="del_betavideo" href="#" data-href="#">del</a>';
+            }
+
+            buttons.push({
+              text : txt,
+              label : true,
+            }); 
+          }
+
+          // Add cancel
+          buttons.push({
+            text: 'Cancel',
+            color: 'yellow'
+          });
+
+          myApp.actions(buttons);
+        });
+        return false;
+      }); 
+      $(document).on("click",".add_video",function() {
+        var pid = $(this).attr("pid");
+        myApp.prompt('Paste video url here. Note that you can link video starting from a certain point.<br /><br /><strong>Vimeo:</strong> Click share, click Link and add timecode if needed.<br /><br /><strong>Youtube:</strong> Right click and "Copy video at URL" or "Copy video URL at current time"','Add a betavideo', function (value) {
+          var url = window.api.apicallbase + "savebetavideo/";
+          $.jsonp(url,{"url" : value, "pid":pid},function(back) {
+            myApp.alert(back.message);
+            if (!JSON.stringify(back).match(/error/i)) {
+              mainView.router.refreshPage();
+            }
+          });
+        });
+        return false;
+      });
+      $(document).on('click','.del_betavideo', function () {
+        var url = window.api.apicallbase +"delbetavideo/";
+        $.jsonp(url,{},function(back) {
+          myApp.alert(back);
+          // Close the action sheet also
+          myApp.closeModal();
+          mainView.router.refreshPage();
+        }); 
+        return false;
+      });
+
+    })(probid);
+
+
+    var saveTickFunction = function(self,action, callback) {
+      var pid = $(self).attr("data-id");
+
+      var grade_opinion = $(self).parents(".page-problem").find(".grade_opinion").val();
+      var ascent_type = $(self).parents(".page-problem").find(".ascent_type").val();
+      var like = $(self).parents(".page-problem").find("input[name=rating]:checked").val();
+      var tickdate = $(self).parents(".page-problem").find(".tickdate").val();
+      var tries = $(self).parents(".page-problem").find(".tries").val();
+      var dislike = 0;
+      var love = 0;
+      if (like == 0) {
+        dislike = 1;
+      }
+      if (like == 2) {
+        love = 1;
+        like = 0;
+      }
+      if (like == undefined) {
+        like = 0;
+      }
+      if (action == undefined) {
+        action = "savetick";
+      }
+      var url = "/t/problematormobile/"+action+"/";
+      var data = {
+        "a_like" : like,
+        "a_love" : love,
+        "a_dislike": dislike,
+        "problemid": pid,
+        "grade_opinion" : grade_opinion,
+        "userid" : $("#userid").val(),
+        "tries" : tries,
+        "ascent_type" : ascent_type,
+        "tickdate" : tickdate,
+      };
+
+      $.get(url,data,function(back) {
+        if (callback != undefined) {
+          var likeContainer = $("#swipe"+pid+" .item-after .likes");
+          if (data.a_like> 0) {
+            // Update data-count
+            var curCount = likeContainer.find("span.fa-thumbs-up").data("count");
+            curCount = parseInt(curCount);
+            if (isNaN(curCount)) {
+              curCount = 0;
+            }
+            curCount += data.a_like;
+            likeContainer.find("span.fa-thumbs-up").data("count",curCount);
+            likeContainer.find("span.fa-thumbs-up").text(curCount);
+          } 
+          if (data.a_love > 0) {
+            // Update data-count
+            var curCount = likeContainer.find("span.fa-heart").data("count");
+            curCount = parseInt(curCount);
+            if (isNaN(curCount)) {
+              curCount = 0;
+            }
+            curCount += data.a_love;
+            likeContainer.find("span.fa-heart").data("count",curCount);
+            likeContainer.find("span.fa-heart").text(curCount);
+          }
+          callback(back,data);
+        }
+      });
+    };
+    singleProblemListenersInitialized = true;
+  }
+
+}
+
 

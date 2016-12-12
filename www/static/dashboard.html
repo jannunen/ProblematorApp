@@ -1,0 +1,298 @@
+
+<div class="navbar">
+  <div  class="navbar-inner">
+    <div class="left">
+      <a class="" href="#"><img src="assets/images/problemator_logo_small.svg" alt="logo" /></a>
+    </div>
+    <div class="center">
+      Problemator
+    </div>
+    <div class="right">
+      <a href="#" class="link icon-only open-panel"> <i class="fa fa-bars"></i></a>
+    </div>
+  </div>
+</div>
+<div data-page="dash" class="page ">
+  <div class="page-content">
+    <div id="status">
+      <div class="content-block bg-light nomargin">
+        <div class="content-block-inner bg-light">
+          <div class="row">
+            <div class="col-33 body-text-w">
+              <span id="curloc">{{#if locinfo}}{{locinfo.name}}{{/if}}</span>
+              <input type="hidden" name="location" id="location" value="{{#if locinfo}}{{locinfo.id}}{{/if}}" />
+            </div>
+            <div class="col-66 body-text-w text-right">
+              {{#if climber}}
+              {{climber.etunimi}} {{climber.sukunimi}} <small class="text-g">{{climber.id}}</small>
+              {{/if}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="dash_climbinfo">
+      <div class="content-block nomargin bg-dark">
+        <div class="content-block-inner bg-dark">
+          <div class="row" id="infoticks">
+            <div class="col-100">
+              <div class="buttons-row bg-dark">
+                <!-- Link to 1st tab, active -->
+                <a href="#tab1" class="tab-link active button">Today</a>
+                <!-- Link to 2nd tab -->
+                <a href="#tab2" class="tab-link button">Last 30 days</a>
+                <!-- Link to 3rd tab -->
+                <a href="#tab3" class="tab-link button">All time</a>
+              </div>
+              <div class="tabs">
+                <div class="tab active" id="tab1">
+                  <div class="row">
+                    <div class="col-50 text-center padtop">
+
+                      <h1>{{#if climbinfo.today}}{{climbinfo.today.ascentscombined}}{{else}}0{{/if}}</h1>
+                    </div>
+                    <div class="col-50 padtop">
+                      <span class="body-text-g">Total<br />ascents</span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-25 body-text-w text-right">
+                      {{#if climbinfo}}{{climbinfo.today.boulder.ascents}}{{/if}}
+                    </div>
+                    <div class="col-25 body-text-g ">
+                      Boulders
+                    </div>
+                    <div class="col-25 body-text-w padleft text-right">
+                      {{#if climbinfo}}{{climbinfo.today.sport.ascents}}{{/if}}
+                    </div>
+                    <div class="col-25 body-text-g ">
+                      Sport
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-25 body-text-w text-right" >
+                      {{#if climbinfo}}{{climbinfo.today.boulder.points}}{{/if}}
+                    </div>
+                      <div class="col-25 body-text-g ">
+                        Points
+                      </div>
+                      <div class="col-25 body-text-w padleft text-right">
+                        {{#if climbinfo}}{{climbinfo.today.sport.points}}{{/if}}
+                      </div>
+                      <div class="col-25 body-text-g ">
+                        Points
+                      </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-25 body-text-w text-right">
+                      {{#if climbinfo}}{{climbinfo.today.boulder.avgrade}}{{/if}}
+                    </div>
+                    <div class="col-25 body-text-g ">
+                      Av.&nbsp;Grade
+                    </div>
+                    <div class="col-25 body-text-w padleft text-right">
+                      {{#if climbinfo}}{{climbinfo.today.sport.avgrade}}{{/if}}
+                    </div>
+                    <div class="col-25 body-text-g ">
+                      Av.&nbsp;Grade
+                    </div>
+                  </div>
+                </div><!--end of tab1 -->
+                <div class="tab" id="tab2">
+                  <div class="row">
+                    <div class="col-50 text-center padtop">
+
+                      <h1>{{#if climbinfo.month}}{{climbinfo.month.ascentscombined}}{{else}}0{{/if}}</h1>
+                    </div>
+                    <div class="col-50 padtop">
+                      <span class="body-text-g">Total<br />ascents</span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-25 body-text-w text-right">
+                      {{#if climbinfo}}{{climbinfo.month.boulder.ascents}}{{/if}}
+                    </div>
+                    <div class="col-25 body-text-g ">
+                      Boulders
+                    </div>
+                    <div class="col-25 body-text-w padleft text-right">
+                      {{#if climbinfo}}{{climbinfo.month.sport.ascents}}{{/if}}
+                    </div>
+                    <div class="col-25 body-text-g ">
+                      Sport
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-25 body-text-w text-right" >
+                      {{#if climbinfo}}{{climbinfo.month.boulder.points}}{{/if}}
+                    </div>
+                      <div class="col-25 body-text-g ">
+                        Points
+                      </div>
+                      <div class="col-25 body-text-w padleft text-right">
+                        {{#if climbinfo}}{{climbinfo.month.sport.points}}{{/if}}
+                      </div>
+                      <div class="col-25 body-text-g ">
+                        Points
+                      </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-25 body-text-w text-right">
+                      {{#if climbinfo}}{{climbinfo.month.boulder.avgrade}}{{/if}}
+                    </div>
+                    <div class="col-25 body-text-g ">
+                      Av.&nbsp;Grade
+                    </div>
+                    <div class="col-25 body-text-w padleft text-right">
+                      {{#if climbinfo}}{{climbinfo.month.sport.avgrade}}{{/if}}
+                    </div>
+                    <div class="col-25 body-text-g ">
+                      Av.&nbsp;Grade
+                    </div>
+                  </div>
+                </div> <!-- end of tab2--> 
+
+                <div class="tab" id="tab3">
+                  <div class="row">
+                    <div class="col-50 text-center padtop">
+
+                      <h1>{{#if climbinfo.alltime}}{{climbinfo.alltime.ascentscombined}}{{else}}0{{/if}}</h1>
+                    </div>
+                    <div class="col-50 padtop">
+                      <span class="body-text-g">Total<br />ascents</span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-25 body-text-w text-right">
+                      {{#if climbinfo}}{{climbinfo.alltime.boulder.ascents}}{{/if}}
+                    </div>
+                    <div class="col-25 body-text-g ">
+                      Boulders
+                    </div>
+                    <div class="col-25 body-text-w padleft text-right">
+                      {{#if climbinfo}}{{climbinfo.alltime.sport.ascents}}{{/if}}
+                    </div>
+                    <div class="col-25 body-text-g ">
+                      Sport
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-25 body-text-w text-right" >
+                      {{#if climbinfo}}{{climbinfo.alltime.boulder.points}}{{/if}}
+                    </div>
+                      <div class="col-25 body-text-g ">
+                        Points
+                      </div>
+                      <div class="col-25 body-text-w padleft text-right">
+                        {{#if climbinfo}}{{climbinfo.alltime.sport.points}}{{/if}}
+                      </div>
+                      <div class="col-25 body-text-g ">
+                        Points
+                      </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-25 body-text-w text-right">
+                      {{#if climbinfo}}{{climbinfo.alltime.boulder.avgrade}}{{/if}}
+                    </div>
+                    <div class="col-25 body-text-g ">
+                      Av.&nbsp;Grade
+                    </div>
+                    <div class="col-25 body-text-w padleft text-right">
+                      {{#if climbinfo}}{{climbinfo.alltime.sport.avgrade}}{{/if}}
+                    </div>
+                    <div class="col-25 body-text-g ">
+                      Av.&nbsp;Grade
+                    </div>
+                  </div>
+                </div><!-- end of tab3 -->
+
+              </div><!-- end of tabs -->
+            </div><!-- end of col-100-->
+          </div><!-- end of row -->
+        </div>
+      </div>
+    </div><!-- // climbinfo ends -->
+
+    <div class="content-block bg-light nomargin">
+      <div class="content-block-inner bg-light text-center center ">
+        <span class="body-text-g">Uniq. this month: <span class="body-text-w">{$uniqs['boulder']|default:0}</span> boulder, <span class="body-text-w">{$uniqs['sport']|default:0}</span> sport<br />To beat: <span class="body-text-w">{$maxuniqs['boulder']|default:0}</span> boulder, <span class="body-text-w">{$maxuniqs['sport']|default:0}</span> sport</span> 
+      </div>
+    </div>
+    <div class="content-block bg-light nomargin"> <div class="content-block-inner bg-light text-center center ">
+        <span class="text-w">Upcoming competitions</span> <br />
+        <small class="text-y">{$upcoming|@count} upcoming competition(s)<br /></small> 
+        {if $upcoming|@count > 0}
+        <a href="/t/problematormobile/upcoming_competitions/" class="upcoming_competitions button button-fill button-big color-yellow">OPEN COMP LIST</a><br />
+        {/if}
+        {if $comps|@count > 0}
+        <span class="text-w">Ongoing competitions</span> 
+        <ul>
+          {foreach $comps as $comp}
+          {** Active comps come here **}
+          <li class="item-content">
+            <div class="item-inner">
+              <a href="#"  data-compid="{$comp.compid}" style="width : 100%" data-ignore-cache="true" data-reload="true" class="opencompetitionpage text-y button button-fill button-big color-yellow">OPEN {$comp.compname|strtoupper}</a>
+            </div>
+          </li>
+          {/foreach}
+        </ul>
+        {/if}
+      </div>
+    </div>
+
+    <div class="content-block bg-light nomargin">
+      <div class="content-block-inner bg-light">
+        <div class="body-text-w">Past 6 months</div>
+        <div id="running6mobars" style="height : 150px;"></div>
+        <div id="running6mo" style="height: 150px;"></div>
+        <div class="row">
+          <div class="col-50 text-right">
+            <span class="fa fa-circle fg-boulder"></span> <span class="body-text-g">Boulder</span>
+          </div>
+          <div class="col-50 text-left">
+            <span class="fa fa-circle fg-sport"></span> <span class="body-text-g">Sport</span>
+          </div>
+        </div><!-- end of row -->
+
+        <div class="content-block bg-dark nomargin">
+          <div class="content-block-inner bg-dark">
+            <div class="body-text-w">Ranking progress (weekly) past year</div>
+          </div>
+          <div class="row">
+            <div class="col-100 text-center">
+              <div id="ranking_progress" class="ranking_progress"></div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="content-block bg-light nomargin">
+
+          <div class="row bg-light no-gutter padtop">
+            <div class="col-100 shortcut-border">
+              <a href="/t/problemator/userstats/"  style="width : 100%" class="external text-y button button-fill button-big color-yellow">GIVE ME MORE STATISTICS</a>
+            </div> 
+          </div>
+
+          <div class="row bg-light no-gutter padtop">
+            <div class="col-50 shortcut-border">
+              <a href="static/groups.html" class="item-link body-text-w shortcut-button"> My groups <span class="fa fa-chevron-right"></span></a>
+            </div>
+            <div class="col-50 shortcut-border">
+              <a href="static/circuits.html" class="item-link body-text-w shortcut-button"><span class="badge bg-red">##NEW!##</span> ##Circuits## <span class="fa fa-chevron-right"></span></a>
+            </div>
+          </div>
+
+          <div class="row bg-light no-gutter padtop">
+            <div class="col-50 shortcut-border">
+              <a href="static/problems.html" class="item-link body-text-w shortcut-button">Problems <span class="fa fa-chevron-right"></span></a>
+            </div>
+          </div> <!-- end of row -->
+
+        </div>
+      </div>
+    </div>
+  </div><!-- end of page-content-->
+
+</div><!-- end of page -->

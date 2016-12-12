@@ -6,10 +6,16 @@ var pieSport = null;
 var pieBoulder = null;
 var data_opinions = []; // For problem page Morris chart.
 var tickSaved = false;
+window.initialized = false;
+Template7.registerHelper('stringify', function (context){
+	var str = JSON.stringify(context);
+	// Need to replace any single quotes in the data with the HTML char to avoid string being cut short
+	return str.split("'").join('&#39;');
+});
 var api = {
-  server : "https://"+window.location.hostname,
+  server : "http://beta.problemator.fi",
   api : "/t/problematorapi/",
-  version : "v01/",
+  version : "v02/",
 
 };
 window.api = api;
@@ -50,13 +56,28 @@ var myApp = new Framework7({
       * via API, compile the template and since it is an AJAX call,
       * one has to call next() to advance in the processing 
       */
-     if ((matches=url.match(/problematormobile\/group\/(\d+)/i))) {
+     if ((matches=url.match(/group.html.*?(\d+)/i))) {
        var groupid = matches[1];
        var url = window.api.apicallbase + "group/";
-       $.post(url, {id : groupid}, function (data){ 
+       $.jsonp(url, {id : groupid}, function (data){ 
+         if (!Cookies.get("loginok")) {
+           return false;
+         }
          var compiledTemplate = Template7.compile(content);
-         var dataJSON = {group : JSON.parse(data)};
+         var dataJSON = {group : data};
          next(compiledTemplate(dataJSON));
+       });
+     } else if ((matches=url.match(/dashboard.html/))) {
+       $.jsonp(window.api.apicallbase+"dashinfo/?id="+Cookies.get("uid"),{},function(data) {
+         if (!Cookies.get("loginok")) {
+           return false;
+         }
+         loginCheck(data);
+         myApp.hidePreloader();
+         $.jStorage.set("grades",data.grades);
+         var compiledTemplate = Template7.compile(content);
+         var html = compiledTemplate(data);
+         next(html);
        });
      } else if ((matches=url.match(/competition.html.*?(\d+)/))) {
        // Load problems page data and compile the template
@@ -136,6 +157,19 @@ var myApp = new Framework7({
          next(html);
        });
        
+     } else if ((matches=url.match(/problem.html.*?(\d+)/))) {
+       // List group members
+       var pid = matches[1];
+       var url = window.api.apicallbase + "problem";
+       $.jsonp(url, {id : pid}, function (data){ 
+         if (!Cookies.get("loginok")) {
+           return false;
+         }
+         var compiledTemplate = Template7.compile(content);
+         data.grades = $.jStorage.get("grades");
+         var html = compiledTemplate(data);
+         next(html);
+       });
 
      } else {
        if (content ==  null || content == "") {
@@ -149,6 +183,7 @@ var myApp = new Framework7({
   precompileTemplates: true,
   // Enabled pages rendering using Template7
   swipeBackPage: true,
+  modalTitle : "Problemator",
   pushState: true,
   template7Pages: true,
   init: false //Disable App's automatica initialization
@@ -161,116 +196,66 @@ var $$ = Dom7;
 var mainView = myApp.addView('.view-main', {
   // Disable dynamic Navbar
   dynamicNavbar: false,
-  domCache : true,
-
-});
-$$("#frm_forgot").on("submitted",function(e) {
-  var xhr = e.detail.xhr; // actual XHR object
-  var data = e.detail.data; 
-  myApp.alert(data, 'Info');
 });
 
-
-$$("#frm_signup").on("submitted",function(e) {
-  var xhr = e.detail.xhr; // actual XHR object
-  var data = e.detail.data; 
-  myApp.alert(data, 'Info');
+$$(document).on('pageInit', function (e) {
+	// Check if login ok and go for dashboard init if is.
+	//
+  debugger;
+	if (!window.initialized) {
+		// If first initializing, add listeners to listen sidebar menu items
+		addIndexPageListeners("index");
+		if (Cookies.get("loginok")) {
+			myApp.closeModal(".login-screen");
+			var uid = Cookies.get("uid");
+			$("#userid").val(uid);
+			window.uid = uid;
+		  // Go here only if the page is empty or it is dashboard...
+		  var uri = e.target.baseURI;
+		  if (uri.match(/\d+\.\d+.\d+\.\d+.*?\//) || uri.match(/localho.*\//) || uri.match(/dashboard/i)) {
+		    indexController.initializeIndexPage();
+		  }
+		} else {
+			addLoginPageListeners();
+			myApp.loginScreen();
+		}
+		window.initialized = true;
+	} 
 });
-$$("#frmsettings").on("submitted",function(e) {
-  var xhr = e.detail.xhr; // actual XHR object
-  var data = e.detail.data; 
-  myApp.alert(data, 'Info');
-});
+myApp.init(); // init app manually after you've attached all handlers
+myApp.onPageInit("*",function(page) {
+  var pagename = page.name;
+  var matches = null;
 
-
-$$("#check-user").on("beforeSubmit",function(e) {
-  // Nokia's Lumia phones don't really care about html5's required="required" -attribute, so 
-  // the selected gym has to be checked manually.
-  if ($("#problematorlocation").val()=="") {
-    myApp.alert("Please select a gym","Gym not selected");
-    var xhr = e.detail.xhr; 
-    xhr.abort();
+  if (!Cookies.get("loginok")) {
     return false;
   }
-});
+  console.log("Initi: "+pagename);
+  addGroupMemberListeners(pagename);
+  addInviteMemberPageListeners(pagename);
+  addSingleGroupPageListeners(pagename,page.url);
+  addGroupPageListeners(pagename);
+  addSingleProblemListeners(pagename);
+  addProblemsPageListeners(pagename);
+  addDashBoardListeners(pagename);
+  addCompetitionsPageListeners(pagename);
 
-$$("#check-user").on("submitted",function(e) {
-
-  var xhr = e.detail.xhr; // actual XHR object
-  var data = e.detail.data; 
-  if (data.match(/^\d+$/)) {
-    document.location.href="/t/problematormobile/index/"+data+"/";
-  } else {
-    myApp.alert(data, 'Info');
-  }
-});
-
-
-myApp.onPageReinit('gyminfo', function(page) {
-  //initPieChartsForGymInfo();
-});
-myApp.onPageBeforeInit('gyminfo', function(page) {
-  initPieChartsForGymInfo();
 });
 
 
-var initPieChartsForGymInfo = function() {
+document.addEventListener("deviceready", function(){
+	console.log("Device is ready... :)");
+},true);
 
-  // For gym info donut
-  if (pieBoulder == null && $("#pie-gym-boulder").length) {
-    pieBoulder = Morris.Donut({
-      element: 'pie-gym-boulder',
-      labelColor : "#636159",
-      data: [
-        {label: "Done", value: boulderdone},
-        {label: "Total", value: boulderall}
-      ],
-      colors : ["#decc00","#636159"]
-    }); // Morris
-  }
 
-  if (pieSport == null && $("#pie-gym-sport").length) {
-    pieSport = Morris.Donut({
-      element: 'pie-gym-sport',
-      labelColor : "#636159",
-      data: [
-        {label: "Done", value: sportdone},
-        {label: "Total", value: sportall}
-      ],
-      colors : ["#decc00","#636159"]
-
-    }); // Morris
-  }
-
-  pieSport.redraw();
-  pieBoulder.redraw();
-
-}
 myApp.onPageInit("competition-page",function(page) {
   $(document).ready(function() {
     window.setupTimeLeftTimer();
     window.updateDoneAmount();
   });
 });
-myApp.onPageInit("*",function(page) {
-  var pagename = page.name;
-  var matches = null;
-  addGroupMemberListeners(pagename);
-  addInviteMemberPageListeners(pagename);
-  addSingleGroupPageListeners(pagename,page.url);
-  addGroupPageListeners(pagename);
-  addProblemsPageListeners(pagename);
-  addCompetitionsPageListeners(pagename);
-  
-});
-  // If page name is group/x, then load data
 
-myApp.onPageBeforeAnimation('*', function (page) {
-  var pagename = page.name;
-  var matches = null;
-
-});
-
+/*
 myApp.onPageBack('*', function(page) {
   var pagename = page.name;
   var matches = null;
@@ -336,9 +321,11 @@ myApp.onPageInit('tickarchive',function(page) {
   });//getJSON
 
 });
+*/
 /*
  * Page init function for groups page
  */
+/*
 myApp.onPageInit('grouplist', function(page) {
   // Fetch group list
   var reloadMyGroups = function() {
@@ -591,125 +578,46 @@ myApp.onPageInit('index', function (page) {
 
 });
 
-// Option 1. Using page callback for page (for "about" page in this case) (recommended way):
-myApp.onPageInit('about', function (page) {
-  // Do something here for "about" page
+*/
 
-});
-
-var loadGradeDist = function(page) {
-  if (page.name == null) {
-    return;
-  }
-  /** Loads the grade distribution for selected problem page **/
-  var pagename = page.name;
-  var matches = null;
-  // If matches single problem
-  if ((matches=pagename.match(/problem(\d+)/))) {
-    // Add listeners for dirty, dangerous and message.
-    var probid = matches[1];
-    (function(pid) {
-
-      $$(".mark_dangerous").on("click",function() {
-        // Ask reason and send straight.
-        myApp.prompt('What makes the problem dangerous?','Send feedback', function (value) {
-          var url = "/t/problematormobile/savefeedback/?msgtype=dangerous";
-          $.post(url,{"text" : value, "problemid":pid},function(back) {
-            myApp.alert(back,"Message");
-          });
-        });
-
-      }); 
-      $$(".mark_dirty").on("click",function() {
-        // Ask reason and send straight.
-        myApp.prompt('Describe dirtyness, if you can. It makes our life easier.','Send feedback', function (value) {
-          var url = "/t/problematormobile/savefeedback/?msgtype=dirty";
-          $.post(url,{"text" : value, "problemid":pid},function(back) {
-            myApp.alert(back,"Message");
-          });
-        });
-      }); 
-    })(probid);
-    var calendarDefault = myApp.calendar({
-          input: '#tickdate',
-          dateFormat: 'dd.mm.yyyy',
-          closeByOutsideClick : true,
-          closeOnSelect : true,
-    });  
-    tickSaved = false;
-    var probid = matches[1];
-    (function(pid) {
-    $$('.prompt-feedback').on('click', function () {
-      myApp.prompt('You can enter your feedback about the problem, what problems you would like to have or something in general','Send feedback', function (value) {
-        var url = "/t/problematormobile/savefeedback/?msgtype=message";
-        $.post(url,{"text" : value, "problemid":pid},function(back) {
-          myApp.alert(back,"All is golden");
-        });
-      });
-    })
-    })(probid);
-    var url = "/t/problematormobile/gradedist/?id="+probid;
-    $.getJSON(url,{},function(data_opinions) {
-
-      Morris.Bar({
-        element: 'opinions'+probid,
-        hideHover : 'always',
-        'gridTextSize' : 10,
-        xLabelMargin: 2,
-        axes : true,
-        grid : false,
-        barColors : ['#decc00'],
-        data: data_opinions,
-        xkey: 'y',
-        ykeys: ['a'],
-        labels: ['Grade opinions']
-      });
-    });
+var loginCheck = function(data) {
+  data = JSON.stringify(data);
+  if (data && data.match(/Login.failed/i)) {
+    myApp.alert("Session expired");
+    //mainView.router.load("#index");
+    window.uid = null;
+    Cookies.remove("loginok");
+    myApp.loginScreen();
+  }  else {
+    window.uid =          Cookies.get("uid");
+    $("#userid").val(window.uid);
   }
 }
-
-myApp.onPageBeforeInit('*',function(page) {
-  loadGradeDist(page);
-});
-
-//And now we initialize app
-myApp.init();
-$$(".popup-problem").on("open",function(tgt) {
-  var tdiv = $(tgt.target);
-  var pid = $(tdiv).attr("data-id");
-  var grade = $(tdiv).attr("data-grade");
-
-  // Instantiate grade rating picker
-  var pickerDevice = myApp.picker({
-    input: '#problemstars_'+pid,
-    cols: [
-      {
-        textAlign: 'center',
-        values: ['Nothing Special', 'Climbs a-ok', 'Better than average', 'Very good, unique, excellent', 'One of the best problems ever!']
-      }
-    ],
-    onOpen : function (picker) {
-      var col0 = picker.cols[0].values;
-      picker.setValue(['Climbs a-ok']);
-    }
-  });
-
-
-  // Instantiate grade opinion picker.
-  var pickerDevice = myApp.picker({
-    input: '#grade_opinion['+pid+']',
-    cols: [
-      {
-        textAlign: 'center',
-        values: ['4', '4+', '5', '5+', '6a', '6a+', '6b', '6b+', '6c', '6c+', '7a', '7a+','7b','7b+','7c','7c+','8a','8a+','8b','8b+','8c','8c+','9a','9a+','9b','9b+','9c']
-      }
-    ],
-    onOpen : function (picker) {
-      var col0 = picker.cols[0].values;
-      picker.setValue([grade]);
-    }
-  });
-});
-
-
-
+$.jsonp = function(url,_data,callback,options) {
+  var _method = 'GET';
+  if (options && options.method) {
+    _method = options.method;
+  }
+ $.ajax({
+   method : _method,
+        url : url,
+        jsonp : 'callback',
+        dataType : 'jsonp',
+        data : _data,
+        withCredentials : true,
+        complete : function(xhr,status) {
+          console.log("back from jsonp with status "+status+", url: "+url);
+          debugger;
+          if (!url.match(/dologin/)) {
+            loginCheck(xhr.responseJSON);
+          }
+          if (callback != undefined) {
+          callback(xhr.responseJSON);
+          }
+        },
+        error : function(data, status, thrown) {
+          debugger;
+          console.log("back from jsonp with ERROR "+thrown.message+", url: "+url);
+        }
+ });
+}
