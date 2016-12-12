@@ -1,0 +1,260 @@
+
+<div class="page" data-page="singlegroup" class="singlegroup">
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="left sliding"><a name="pagetop" href="static/groups.html" class="link">
+          <span class="fa-stack fa-md">
+            <i class="fa fa-circle-thin fa-stack-2x"></i>
+            <i class="fa fa-chevron-left fa-stack-1x"></i>
+          </span>
+        </a></div>
+        <div class="center sliding"><h3 class="groupname">{{group.name}}</h3></div>
+        <div class="right">
+          <a href="#" class="link icon-only open-panel"> 
+            <i class="fa fa-bars"></i>
+          </a>
+        </div>
+    </div>
+  </div>
+  <div class="page-content" id="single_group">
+
+    <div class="content-block bg-light nomargin">
+      <div class="content-block-inner bg-light">
+        <div class="row">
+          <div class="col-90 body-text-w text-left">
+            <a href="/list_group_members.html?group={{group.id}}" class="text-y">{{group.membercount}} member(s)</a> 
+| {{#js_compare "this.group.public==1"}}<span data-groupid="{{group.id}}"  data-public="1" class="public fa fa-eye text-w"> </span> public{{else}}<span data-groupid="{{group.id}}" data-public="0" class="public text-y fa fa-eye-slash"></span> private/unlisted{{/js_compare}}
+{{#if group.me}}{{#js_compare "this.group.me.isadmin==1"}}|&nbsp;<span class="body-text-w">admin</span>{{/js_compare}}{{/if}}
+
+
+          </div>
+          <div class="col-10 body-text-w text-right">
+            <a href="#" class="text-w groupmenu-open" data-gid="{{group.id}}" data-iscreator="{{#if group.me}}{{group.me.iscreator}}{{/if}}" data-isadmin="{{#if group.me}}{{group.me.isadmin}}{{/if}}" data-me="{{group.me}}" ><span class="fa fa-cogs fa-1x"></span></a>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-100">
+            <br /><br />
+          <span class="body-text-w">Group description</span><br />
+            <span class="groupdesc text-w">{{#if group.groupdesc}}{{group.groupdesc}}{{else}}No description yet.{{/if}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="content-block  nomargin">
+      <div class="list-block  ">
+      <ul>
+      {{#if group.me}}
+        <a href="/invite_member.html?groupid={{group.id}}" class="button problemator-button text-w">
+          <div class="item-title ">Invite a new member...</div>
+        </a>
+        <a href="#" class="leave_group button problemator-button text-w" data-gid="{{group.id}}">
+          <div class="item-title ">Leave group</div>
+        </a>
+      {{else}}
+      <a href="#" class="join_group button problemator-button text-w" data-gid="{{group.id}}">
+          <div class="item-title ">Join Group</div>
+        </a>
+      {{/if}}
+      </div>
+      </ul>
+    </div>
+
+      <div class="list-block accordion-list custom-accordion problems-accordion nomargin">
+        <ul>
+          <li class="accordion-item accordion-item-expanded">
+            <a href="#" class="item-content item-link">
+              <div class="item-inner">
+                <div class="item-title">
+                  <span class="body-text-w">Leaderboard (boulder)</span>
+                </div>
+              </div>
+            </a>
+            <div class="accordion-item-content">
+              <div class="content-block">
+                <ul>
+                  <li class="body-text-g">
+                    <div class="item-content">
+                        <div class="item-title">
+                          My ranking: <span class="text-w"><span class="fa fa-hashtag"></span>{{#if group.me}}{{#if group.me.rank}}{{group.me.rank}}{{/if}}{{/if}}</span>
+                        </div>
+                    </div>
+                  </li>
+                  {{#if group.membersboulder}}
+                  {{#each group.membersboulder}}
+                  <li>
+                   <div  class="item-content">
+                     <div class="item-media"><h5 class="rankingnumber">{{#if rank}}{{#if rank.rank}}{{rank.rank}}.{{else}}?.{{/if}}{{/if}}</h5></div>
+                     <div class="item-inner">
+                       <div class="item-title body-text-w">{{etunimi}} {{sukunimi}}</div>
+                       <div class="item-after body-text-g"><span class="body-text-g">{{#if rank}}{{rank.rankpoints}}{{/if}}</span></div>
+                     </div>
+                   </div>
+                  </li>
+                  {{else}}
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title">No ticks yet, so no ranking.</div>
+                    </div>
+                  </li>
+                  {{/each}}
+                  {{/if}}
+                </ul>
+              </div>
+            </div>
+          </li><!-- end of accordion item -->
+
+          <li class="accordion-item">
+            <a href="#" class="item-content item-link">
+              <div class="item-inner">
+                <div class="item-title">
+                  <span class="body-text-w">Leaderboard (sport)</span>
+                </div>
+              </div>
+            </a>
+            <div class="accordion-item-content">
+              <div class="content-block">
+                <ul>
+                  <li class="body-text-g">
+                    <div class="item-content">
+                        <div class="item-title">
+                          My ranking: <span class="text-w"><span class="fa fa-hashtag"></span>{{#if group.me}}{{#if group.me.ranksport}}{{group.me.ranksport}}{{/if}}{{/if}}</span>
+                        </div>
+                    </div>
+                  </li>
+                  {{#if group.memberssport}}
+                  {{#each group.memberssport}}
+                  <li class="item-content">
+                    <div class="item-media"><h5 class="rankingnumber">{{#if this.rank.rank}}{{this.rank.rank}}.{{else}}?.{{/if}}</h5></div>
+                    <div class="item-inner">
+                      <div class="item-title body-text-w">{{etunimi}} {{sukunimi}}</div>
+                      <div class="item-after"><span class="body-text-g">{{rank.rankpoints}}</span></div>
+                    </div>
+                  </li>
+                  {{else}}
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title">No ticks yet, so no ranking.</div>
+                    </div>
+                  </li>
+                  {{/each}}
+                  {{/if}}
+                </ul>
+              </div>
+            </div>
+          </li><!-- end of accordion item -->
+
+
+          <li class="accordion-item">
+            <a href="#" class="item-content item-link">
+              <div class="item-inner">
+                <div class="item-title">
+                  <span class="body-text-w">Latest ticks</span>
+                </div>
+              </div>
+            </a>
+            <div class="accordion-item-content">
+              <div class="content-block">
+                <ul>
+                  {{#if group.latestticks}}
+                  {{#each group.latestticks}}
+                  <li class="item-content latest_tick_item">
+                    <a data-problemid="{{problemid}}" href="/t/problematormobile/problem/?id={{problemid}}" class="item-link " >
+                      <div class="item-inner">
+                        <div class="item-title-row">
+                          <div class="item-title">
+                        <span tag="{{tagshort}}" problemid="{$p.problemid}" class="probtitle text-y grade">{{gradename}}</span>  
+                          <span  class="fa fa-square" style="color : {{colourcode}};"></span>
+                          <span class="text-w">{{tagshort}}</span> 
+                          | <small class="text-w">{{etunimi}} {{sukunimi}}</small>
+                          </div>
+                        </div>
+                        <div class="item-subtitle">
+                          | <small >{{gymname}}</small>
+                        </div>
+                      </div>
+                    </a>
+                  </li>
+                  {{else}}
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title">No latest ticks.</div>
+                    </div>
+                  </li>
+                  {{/each}}
+                  {{/if}}
+
+                </ul>
+              </div>
+            </div>
+          </li><!-- end of accordion item -->
+
+
+
+        </ul>
+      </div>
+      <!-- accordion ends ehre -->
+
+
+  </div><!-- end of page contenet -->
+
+  <div class="popup popup-groupsettings">
+    <div class="content-block">
+      <p><a href="#" class="problemator-link close-popup"><span class="fa fa-chevron-left"> </span></a></p>
+
+      <div class="content-block-title"><h4>Group settings</h4></div>
+      <div class="list-block">
+        <form method="POST" action="" class="frm_groupsettings ajax-submit">
+          <input type="hidden" name="groupid" class="fld_groupid" value="" />
+          <ul>
+            <!-- Text inputs -->
+            <li>
+              <div class="item-content">
+                <div class="item-inner">
+                  <div class="item-title label">Name</div>
+                  <div class="item-input">
+                    <input name="name" class="fld_name" value="" type="text" />
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="item-content">
+                <div class="item-inner">
+                  <div class="item-title label">Description</div>
+                  <div class="item-input">
+                    <textarea name="groupdesc" class="fld_groupdesc"></textarea>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="item-content">
+                <div class="item-inner">
+                  <div class="item-title label">Public?</div>
+                  <div class="item-input">
+                    <label class="label-switch">
+                      <input type="checkbox" name="public" class="fld_public" value="1" >
+                      <div class="checkbox"></div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="item-content">
+                <div class="item-inner">
+                  <div class="item-title label">&nbsp;</div>
+                  <div class="item-input">
+                    <button type="submit" class="problemator-button">Save settings</button>
+                  </div>
+                </div> 
+              </div>
+            </li>
+          </ul>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

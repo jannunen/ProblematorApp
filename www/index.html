@@ -53,11 +53,9 @@
             </div>
           </div>
           <ul>
-            <li class="text-w">&nbsp;&nbsp;{$smarty.session.climber.etunimi} {$smarty.session.climber.sukunimi}</li>
-            <li><span class="fa fa-home fa-1x"></span><a class="close-panel external" href="/t/problematormobile/index/">Home</a></li>
+            <li><span class="fa fa-home fa-1x"></span><a class="close-panel" href="static/dashboard.html">Home</a></li>
             <li><span  class="fa fa-list-ul fa-1x"></span><a href="/static/problems.html"  class="close-panel" >Problems</a></li>
             <li><span  class="fa fa-newspaper-o fa-1x"></span><a href="#new-problems-page"  class="close-panel" >New problems</a></li>
-            {*					<li><span class="fa fa-area-chart fa-1x "></span><a href="#charts" class="close-panel" data-view=".chart-view" >Charts</a></li>*}
             <li><span  class="fa fa-info fa-1x"></span><a href="#faq"  class="close-panel" >FAQ</a> </li>
             <li><span  class="fa fa-check-square-o fa-1x"></span><a href="#tickstoday"  class="close-panel" >Ticks today</a> </li>
             <li><span  class="fa fa-calendar fa-1x"></span><a href="/t/problematormobile/_tickarchivepage/"  class="close-panel" >Tick archive</a></li>
@@ -223,13 +221,38 @@
 
     <input type="hidden" name="_gymid" id="gymid" value="{$smarty.session.problematorlocation}" />		
     <input type="hidden" name="_ver" id="ver" value="{$ver}" />		
-    <!-- add other popups -->
-    {include file="problemator/mobile/minio/_popups.tpl"}
 
-    <!-- add wall choose popups -->
-    {include file="problemator/mobile/minio/_walls_popups.tpl"}
 
-    {include file="problemator/mobile/minio/_templates.tpl"}
+  <!--------------------------->
+  <!--   TEMPLATES SECTION  --->
+  <!--------------------------->
+
+    <!-- Template from single search result item -->
+    <script id="search_groups_hit_item" type="text/template7">
+{{#if groups}}
+{{#each groups}}
+<li>
+  <a href="static/group.html?id={{id}}" data-group="{{id}}" class="item-content item-link">
+<div class="item-inner">
+<div class="item-title-row">
+<div class="item-title text-w">{{name}}</div>
+<div class="item-after"><span class="fa fa-users"></span>{{usercount}}</div>
+</div>
+</div>
+</a>
+</li>
+{{else}}
+<li>
+<div class="item-content">
+<div class="item-inner">
+<div class="item-title text-w">No search results...</div>
+</div>
+</div>
+</li>
+{{/each}}
+{{/if}}
+    </script>
+
 
     <!-- Path to Framework7 Library JS-->
     <script type="text/javascript" src="bower_components/framework7/dist/js/framework7.min.js"></script>

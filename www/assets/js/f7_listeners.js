@@ -342,17 +342,12 @@ var addGroupPageListeners = function(pagename) {
     $$(".search_groups").on("keyup",function(e) {
       var val = $(this).val();
       val = val.trim();
-      /*
-      if (e.which == 27) {
-         $(this).val("");
-         return;
-      }
-      */
       if (val != "" && val.length > 1) {
         $(".searching").html('<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>');
         // Do a search
         var url = window.api.apicallbase+"search_groups";
-        $.getJSON(url,{text : val},function(back) {
+        debugger;
+        $.jsonp(url,{text : val},function(back) {
           var tpl = $("script#search_groups_hit_item").html();
           var ctpl = Template7.compile(tpl);
           var html = ctpl({groups : back});    
@@ -373,7 +368,7 @@ var addGroupMemberListeners = function(pagename) {
         var url = window.api.apicallbase + "remove_user_from_group";
         var gid = self.data("gid");
         var uid = self.data("userid");
-        $$.post(url,{gid : gid,uid : uid},function(back) {
+        $.jsonp(url,{gid : gid,uid : uid},function(back) {
           myApp.alert(back);
           if (back.match(/removed from/i)) {
             // Remove from the list
@@ -436,7 +431,7 @@ var addSingleGroupPageListeners = function(pagename,url) {
                   var gid = $(this).data("gid");
                   myApp.confirm("ALL the members, rankings etc. will be deleted.<br /><br />This action cannot be undone.","Are you sure?",function(back) {
                     var url = window.api.apicallbase +"delete_group";
-                    $$.post(url,{gid : gid},function(back) {
+                    $.jsonp(url,{gid : gid},function(back) {
                       myApp.alert(back,"Message",function() {
                         mainView.router.back();
                       });
@@ -471,7 +466,7 @@ var addSingleGroupPageListeners = function(pagename,url) {
     $$(".frm_groupsettings").on("submit",function(e) {
        var data = myApp.formToJSON(this);
        var url = window.api.apicallbase + "save_groupsettings";
-       $$.post(url,data,function(back) {
+       $.jsonp(url,data,function(back) {
          myApp.alert(back,"Message");
          mainView.router.refreshPage();
        });
@@ -486,7 +481,7 @@ var addGroupLeaveJoinListeners = function() {
     var gid = $(this).data("gid");
     var url = window.api.apicallbase + "join_group";
     myApp.confirm("Are you sure you want to join this group?",function() {
-      $$.post(url,{gid : gid},function(back) {
+      $.jsonp(url,{gid : gid},function(back) {
         myApp.closeModal();
         myApp.alert(back,"Message");
         mainView.router.refreshPage();
@@ -498,7 +493,7 @@ var addGroupLeaveJoinListeners = function() {
     var gid = $(this).data("gid");
     var url = window.api.apicallbase + "leave_group";
     myApp.confirm("Are you sure you want to leave this group?",function() {
-      $$.post(url,{gid : gid},function(back) {
+      $.jsonp(url,{gid : gid},function(back) {
         myApp.closeModal();
         myApp.alert(back,"Message",function() {
           mainView.router.back();
@@ -551,7 +546,7 @@ var addInviteMemberPageListeners = function(pagename) {
           var msg = $(".invite_msg").val();
           var add_admin = $(".add_admin_rights").is(":checked") ? "1" : "0";
           var groupid = $("#groupid").val();
-          $.post(url,{groupid: groupid, emails : emails,msg : msg, add_admin : add_admin}).done(function(back) {
+          $.jsonjsonp(url,{groupid: groupid, emails : emails,msg : msg, add_admin : add_admin}).done(function(back) {
             var dataJSON =  JSON.parse(back);
             myApp.alert(dataJSON.msg,"Message");
             // Go back 
