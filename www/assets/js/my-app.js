@@ -44,7 +44,6 @@ var myApp = new Framework7({
   animateNavBackIcon: true,
   // Enable templates auto precompilation
    preprocess: function (content, url, next) {
-     debugger;
      var host = window.location.host;
 
      var pos = -1;
@@ -200,7 +199,7 @@ var myApp = new Framework7({
        return resultContent; 
      }
    },
-  precompileTemplates: true,
+  //precompileTemplates: true,
   modalTitle : "Problemator",
   pushState: true,
   template7Pages: true,
@@ -632,7 +631,6 @@ $.jsonp = function(url,_data,callback,options) {
           }
         },
         error : function(data, status, thrown) {
-          debugger;
           console.log("back from jsonp with ERROR "+thrown.message+", url: "+url);
         }
  });

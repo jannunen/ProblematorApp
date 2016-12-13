@@ -566,139 +566,143 @@ var addInviteMemberPageListeners = function(pagename) {
 
 var addSingleProblemListeners = function(pagename) {
 
+  // If matches single problem
+  if ((matches=pagename.match(/problem(\d+)/))) {
+    // This has to be loaded every time a problem page is loaded.
    var calendarDefault = myApp.calendar({
                input: '#tickdate',
                dateFormat: 'dd.mm.yyyy',
                closeByOutsideClick : true,
                closeOnSelect : true,
          });
-  // If matches single problem
-  if (!singleProblemListenersInitialized) {
-    console.log("SINGLE PROBLEM LISTENERS ADDED ONCE");
-    // Add listeners for dirty, dangerous and message.
-    // SHow global ascents
-    $(document).on("click",".show_global_ascents",function(e) {
-      var clickedLink = this;
-      var pid = $(this).data("id");
-      var url = window.api.apicallbase + "global_ascents/?pid="+pid;
-      $.jsonp(url,{pid : pid},function(back) {
-        var tpl = $("script#global_ascents_popover").html();
-        var ctpl = Template7.compile(tpl);
-        var html = ctpl(back);    
-        myApp.popover(html, clickedLink);
+    if (!singleProblemListenersInitialized) {
 
-      });
-    });
-    $(document).on("click",".spinnerminus",function() {
-      var cur = parseInt($(this).siblings("input").val());
-      cur--;
-      if (cur <= 0) {
-        cur = 1;
-      }
-      $(this).siblings("input").val(cur);
-    });
-    $(document).on("click",".spinnerplus",function() {
-      console.log("spinner plus");
-      var cur = parseInt($(this).siblings("input").val());
-      cur++;
-      $(this).siblings("input").val(cur);
-    });
+      console.log("SINGLE PROBLEM LISTENERS ADDED ONCE");
+      // Add listeners for dirty, dangerous and message.
+      // SHow global ascents
+      $(document).on("click",".show_global_ascents",function(e) {
+        var clickedLink = this;
+        var pid = $(this).data("id");
+        var url = window.api.apicallbase + "global_ascents/?pid="+pid;
+        $.jsonp(url,{pid : pid},function(back) {
+          var tpl = $("script#global_ascents_popover").html();
+          var ctpl = Template7.compile(tpl);
+          var html = ctpl(back);    
+          myApp.popover(html, clickedLink);
 
-    $(document).on("click","#btn_savesettings",function() {
-      $("#frmsettings").ajaxSubmit(function(back) {
-        myApp.alert(back, 'Info');
-
-      });
-      return false;
-    });
-    $$(document).on("click",".mark_dangerous",function() {
-      // Ask reason and send straight.
-      var pid = $(this).data("pid");
-      myApp.prompt('What makes the problem dangerous?','Send feedback', function (value) {
-        var url = window.api.apicallbase + "savefeedback/?msgtype=dangerous";
-        $.jsonp(url,{"text" : value, "pid":pid},function(back) {
-          myApp.alert(back,"Message");
         });
       });
-    });
-    $$(document).on("click",".mark_dirty",function() {
-      // Ask reason and send straight.
-      var pid = $(this).data("pid");
-      myApp.prompt('Describe dirtyness, if you can. It makes our life easier.','Send feedback', function (value) {
-        var url = window.api.apicallbase + "savefeedback/?msgtype=dirty";
-        $.jsonp(url,{"text" : value, "pid":pid},function(back) {
-          myApp.alert(back);
-        });
-      });
-    });
-    $$(document).on("click",'.prompt-feedback', function () {
-      var pid = $(this).data("pid");
-      myApp.prompt('You can enter your feedback about the problem, what problems you would like to have or something in general','Send feedback', function (value) {
-        var url = window.api.apicallbase + "savefeedback/?msgtype=message";
-        $.jsonp(url,{"text" : value, "pid":pid},function(back) {
-          myApp.alert(back);
-        });
-      });
-    });
-    $(document).on('click','.open_betavideos_actionsheet', function () {
-      var _pid = $(this).attr("pid");
-      $.jsonp(window.api.apicallbase+"betavideos/",{pid : _pid},function(betavideos) {
-        var buttons = [
-          {
-            text: 'Choose a betavideo',
-            label: true
-          },
-        ];
-        // ADd videos
-        for (var idx in betavideos) {
-          var v = betavideos[idx];
-          var txt = '<a href="'+v.video_url+'" class="external">'+v.video_url+'</a>';
-          if (v.userid == $("#userid").val()) {
-            txt += '&nbsp; <a class="del_betavideo" href="#" data-vid="'+v.id+'" data-href="#">del</a>';
-          }
-
-          buttons.push({
-            text : txt,
-            label : true,
-          }); 
+      $(document).on("click",".spinnerminus",function() {
+        var cur = parseInt($(this).siblings("input").val());
+        cur--;
+        if (cur <= 0) {
+          cur = 1;
         }
-
-        // Add cancel
-        buttons.push({
-          text: 'Cancel',
-          color: 'yellow'
-        });
-
-        myApp.actions(buttons);
+        $(this).siblings("input").val(cur);
       });
-      return false;
-    }); 
-    $(document).on("click",".add_video",function() {
-      var pid = $(this).attr("pid");
-      myApp.prompt('Paste video url here. Note that you can link video starting from a certain point.<br /><br /><strong>Vimeo:</strong> Click share, click Link and add timecode if needed.<br /><br /><strong>Youtube:</strong> Right click and "Copy video at URL" or "Copy video URL at current time"','Add a betavideo', function (value) {
-        var url = window.api.apicallbase + "savebetavideo/";
-        $.jsonp(url,{"url" : value, "pid":pid},function(back) {
-          myApp.alert(back.message);
-          if (!JSON.stringify(back).match(/error/i)) {
-            mainView.router.refreshPage();
+      $(document).on("click",".spinnerplus",function() {
+        console.log("spinner plus");
+        var cur = parseInt($(this).siblings("input").val());
+        cur++;
+        $(this).siblings("input").val(cur);
+      });
+
+      $(document).on("click","#btn_savesettings",function() {
+        $("#frmsettings").ajaxSubmit(function(back) {
+          myApp.alert(back, 'Info');
+
+        });
+        return false;
+      });
+      $$(document).on("click",".mark_dangerous",function() {
+        // Ask reason and send straight.
+        var pid = $(this).data("pid");
+        myApp.prompt('What makes the problem dangerous?','Send feedback', function (value) {
+          var url = window.api.apicallbase + "savefeedback/?msgtype=dangerous";
+          $.jsonp(url,{"text" : value, "pid":pid},function(back) {
+            myApp.alert(back,"Message");
+          });
+        });
+      });
+      $$(document).on("click",".mark_dirty",function() {
+        // Ask reason and send straight.
+        var pid = $(this).data("pid");
+        myApp.prompt('Describe dirtyness, if you can. It makes our life easier.','Send feedback', function (value) {
+          var url = window.api.apicallbase + "savefeedback/?msgtype=dirty";
+          $.jsonp(url,{"text" : value, "pid":pid},function(back) {
+            myApp.alert(back);
+          });
+        });
+      });
+      $$(document).on("click",'.prompt-feedback', function () {
+        var pid = $(this).data("pid");
+        myApp.prompt('You can enter your feedback about the problem, what problems you would like to have or something in general','Send feedback', function (value) {
+          var url = window.api.apicallbase + "savefeedback/?msgtype=message";
+          $.jsonp(url,{"text" : value, "pid":pid},function(back) {
+            myApp.alert(back);
+          });
+        });
+      });
+      $(document).on('click','.open_betavideos_actionsheet', function () {
+        var _pid = $(this).attr("pid");
+        $.jsonp(window.api.apicallbase+"betavideos/",{pid : _pid},function(betavideos) {
+          var buttons = [
+            {
+              text: 'Choose a betavideo',
+              label: true
+            },
+          ];
+          // ADd videos
+          for (var idx in betavideos) {
+            var v = betavideos[idx];
+            var txt = '<a href="'+v.video_url+'" class="external">'+v.video_url+'</a>';
+            if (v.userid == $("#userid").val()) {
+              txt += '&nbsp; <a class="del_betavideo" href="#" data-vid="'+v.id+'" data-href="#">del</a>';
+            }
+
+            buttons.push({
+              text : txt,
+              label : true,
+            }); 
           }
-        });
-      });
-      return false;
-    });
-    $(document).on('click','.del_betavideo', function () {
-      var url = window.api.apicallbase +"delbetavideo/";
-      var vid = $(this).data("vid");
-      $.jsonp(url,{vid : vid},function(back) {
-        // Close the action sheet also
-        myApp.closeModal();
-        myApp.alert(back);
-        mainView.router.refreshPage();
-      }); 
-      return false;
-    });
 
-    singleProblemListenersInitialized = true;
+          // Add cancel
+          buttons.push({
+            text: 'Cancel',
+            color: 'yellow'
+          });
+
+          myApp.actions(buttons);
+        });
+        return false;
+      }); 
+      $(document).on("click",".add_video",function() {
+        var pid = $(this).attr("pid");
+        myApp.prompt('Paste video url here. Note that you can link video starting from a certain point.<br /><br /><strong>Vimeo:</strong> Click share, click Link and add timecode if needed.<br /><br /><strong>Youtube:</strong> Right click and "Copy video at URL" or "Copy video URL at current time"','Add a betavideo', function (value) {
+          var url = window.api.apicallbase + "savebetavideo/";
+          $.jsonp(url,{"url" : value, "pid":pid},function(back) {
+            myApp.alert(back.message);
+            if (!JSON.stringify(back).match(/error/i)) {
+              mainView.router.refreshPage();
+            }
+          });
+        });
+        return false;
+      });
+      $(document).on('click','.del_betavideo', function () {
+        var url = window.api.apicallbase +"delbetavideo/";
+        var vid = $(this).data("vid");
+        $.jsonp(url,{vid : vid},function(back) {
+          // Close the action sheet also
+          myApp.closeModal();
+          myApp.alert(back);
+          mainView.router.refreshPage();
+        }); 
+        return false;
+      });
+
+      singleProblemListenersInitialized = true;
+    }
   }
 
 }
@@ -744,7 +748,7 @@ var saveTickFunction = function(self,action, callback) {
       /*
       var likeContainer = $("#swipe"+pid+" .item-after .likes");
       if (data.a_like> 0) {
-        // Update data-count
+      // Update data-count
         var curCount = likeContainer.find("span.fa-thumbs-up").data("count");
         curCount = parseInt(curCount);
         if (isNaN(curCount)) {
@@ -755,7 +759,7 @@ var saveTickFunction = function(self,action, callback) {
         likeContainer.find("span.fa-thumbs-up").text(curCount);
       } 
       if (data.a_love > 0) {
-        // Update data-count
+      // Update data-count
         var curCount = likeContainer.find("span.fa-heart").data("count");
         curCount = parseInt(curCount);
         if (isNaN(curCount)) {
