@@ -168,9 +168,11 @@
                       <div class="item-input">
                         <select name="problematorlocation" id="problematorlocation" >
                           <option value=""> Choose a gym</option>
+                          {{if locations}}
                           {{#each locations}}
                           <option value="{$locid}" {if $loc==$locinfo.name}selected="selected"{/if}>{$loc}</option>
                           {{/each}}
+                          {{/if}}
                           <option value="3">Isatis</option>
                         </select>
                         <input type="hidden" name="authenticate" value="true" />
@@ -226,6 +228,21 @@
   <!--------------------------->
   <!--   TEMPLATES SECTION  --->
   <!--------------------------->
+
+<!--
+  Template for single invited email
+-->
+<script id="single_invited_email" type="text/template7">
+<div>
+<li class="invited_email">
+              <div class="item-inner">
+                <div class="item-title">email address</div>
+                <div class="item-after"><span class="fa fa-minus-square remove_invite_email"></span></div>
+              </div>
+
+            </li>
+</div>
+</script>
 
     <!-- Template from single search result item -->
     <script id="search_groups_hit_item" type="text/template7">

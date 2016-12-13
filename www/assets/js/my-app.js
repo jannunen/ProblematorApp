@@ -1,4 +1,3 @@
-
 var chartsInitialized = false;
 var dashboardLineChart = null;
 var dashboardBarChart = null;
@@ -12,6 +11,7 @@ Template7.registerHelper('stringify', function (context){
 	// Need to replace any single quotes in the data with the HTML char to avoid string being cut short
 	return str.split("'").join('&#39;');
 });
+
 var api = {
   server : "http://beta.problemator.fi",
   api : "/t/problematorapi/",
@@ -44,6 +44,17 @@ var myApp = new Framework7({
   animateNavBackIcon: true,
   // Enable templates auto precompilation
    preprocess: function (content, url, next) {
+     debugger;
+     var host = window.location.host;
+
+     var pos = -1;
+     if ((pos=url.indexOf(host))>0) {
+       var remainder = url.substr(pos+host.length);
+       if (remainder == "" || remainder=="/") {
+         return;
+       }
+     }
+
      var matches = null;
      if (url == null) {
        if (next != null) {
@@ -75,6 +86,7 @@ var myApp = new Framework7({
          loginCheck(data);
          myApp.hidePreloader();
          $.jStorage.set("grades",data.grades);
+         $.jStorage.set("locations",data.locations);
          var compiledTemplate = Template7.compile(content);
          var html = compiledTemplate(data);
          next(html);
@@ -141,10 +153,10 @@ var myApp = new Framework7({
      } else if ((matches=url.match(/invite_member.html.*?(\d+)/))) {
        var groupid = matches[1];
        var url = window.api.apicallbase + "group/";
-       $.post(url, {id : groupid}, function (data){ 
+       $.jsonp(url, {id : groupid}, function (data){ 
          var compiledTemplate = Template7.compile(content);
-         var dataJSON = {group : JSON.parse(data)};
-         next(compiledTemplate(dataJSON));
+         //var dataJSON = {group : JSON.parse(data)};
+         next(compiledTemplate({"group" : data}));
        });
      } else if ((matches=url.match(/groups.html/))) {
        // List group members
@@ -161,10 +173,9 @@ var myApp = new Framework7({
        // List group members
        var groupid = matches[1];
        var url = window.api.apicallbase + "list_group_members/";
-       $.post(url, {id : groupid}, function (data){ 
+       $.jsonp(url, {id : groupid}, function (data){ 
          var compiledTemplate = Template7.compile(content);
-         var dataJSON = {"group" : JSON.parse(data)};
-         var html = compiledTemplate(dataJSON);
+         var html = compiledTemplate({"group" : data});
          next(html);
        });
        
@@ -191,9 +202,7 @@ var myApp = new Framework7({
        return resultContent; 
      }
    },
-  precompileTemplates: true,
-  // Enabled pages rendering using Template7
-  swipeBackPage: true,
+  //precompileTemplates: true,
   modalTitle : "Problemator",
   pushState: true,
   template7Pages: true,
@@ -206,7 +215,7 @@ var $$ = Dom7;
 // Add main View
 var mainView = myApp.addView('.view-main', {
   // Disable dynamic Navbar
-  dynamicNavbar: false,
+  dynamicNavbar: true,
 });
 
 $$(document).on('pageInit', function (e) {

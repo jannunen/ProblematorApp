@@ -20,7 +20,6 @@ var indexController= {
 }
 var addDashBoardListeners = function(pagename) {
   if ("dash"==pagename && !dashBoardListenersInitialized) {
-    debugger;
     myApp.hidePreloader();
     if (Cookies.get("whatsnew"+ver)==undefined) {
       Cookies.set("whatsnew"+ver,true,{ expires: 7650 });
@@ -126,7 +125,6 @@ var addDashBoardListeners = function(pagename) {
 
 var addDashBoardListeners = function(pagename) {
   if ("dash"==pagename && !dashBoardListenersInitialized) {
-    debugger;
     myApp.hidePreloader();
     if (Cookies.get("whatsnew"+ver)==undefined) {
       Cookies.set("whatsnew"+ver,true,{ expires: 7650 });
@@ -243,7 +241,6 @@ var addLoginPageListeners = function(pagename) {
       var url = window.api.apicallbase + "dologin?native=true"; 
       $.jsonp(url,{"username": username,"password":password,"problematorlocation" : loc, "authenticate" : true},function(data) {
         try {
-          debugger;
           if (data && data.loc) {
             // Set api-auth-token also
             $.ajaxSetup({
@@ -275,7 +272,6 @@ var addLoginPageListeners = function(pagename) {
 var addIndexPageListeners = function(pagename,page) {
   if ("index"==pagename && !indexPageListenersInitialized) {
     $$(".btn_logout").on("click",function() {
-      debugger;
       Cookies.remove("loginok");
       Cookies.remove("uid");
       window.uid = null;
@@ -339,6 +335,21 @@ var addCompetitionsPageListeners = function(pagename) {
 
 var addGroupPageListeners = function(pagename) {
   if ("grouplist"==pagename) {
+    $$("#creategroup").on("click",function() {
+      var gname = $("#newgroup").val();
+      //var uid = $("#userid").val();
+      var url = window.api.apicallbase + "addgroup";
+      $.jsonp(url,{name : gname},function(back) {
+        if (!back.error) {
+          //  inform about group creation
+          myApp.alert(back.message);
+          mainView.router.refreshPage();
+        } else {
+          myApp.alert(back.message);
+        }
+      });
+
+    });
     $$(".search_groups").on("keyup",function(e) {
       var val = $(this).val();
       val = val.trim();
@@ -346,7 +357,6 @@ var addGroupPageListeners = function(pagename) {
         $(".searching").html('<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>');
         // Do a search
         var url = window.api.apicallbase+"search_groups";
-        debugger;
         $.jsonp(url,{text : val},function(back) {
           var tpl = $("script#search_groups_hit_item").html();
           var ctpl = Template7.compile(tpl);
@@ -406,7 +416,7 @@ var addSingleGroupPageListeners = function(pagename,url) {
                   '<div class="popover-inner">'+
                   '<div class="list-block">'+
                   '<ul>';
-                  popoverHTML += '<li><a href="/list_group_members.html?group='+gid+'" class="item-link list-button  close-popover" >Show members</a></li>';
+                  popoverHTML += '<li><a href="static/list_group_members.html?group='+gid+'" class="item-link list-button  close-popover" >Show members</a></li>';
        if (isadmin) {
                   popoverHTML += '<li><a href="#" class="item-link list-button  open-groupsettings close-popover" >Edit group</a></li>';
        }
@@ -414,17 +424,12 @@ var addSingleGroupPageListeners = function(pagename,url) {
                   popoverHTML += '<li><a href="#" class="item-link list-button  delete_group close-popover" data-gid="'+gid+'">Delete group</a></li>';
        }
 
-        if (isme) {
-                  popoverHTML += '<li><a href="#" class="item-link list-button leave_group close-popover"  data-gid="'+gid+'">Leave group</a></li>';
-        } else {
-                  popoverHTML += '<li><a href="#" class="item-link list-button join_group close-popover" data-gid="'+gid+'">Join group</a></li>';
-        }
-                    popoverHTML += '<li><a href="#" class="item-link list-button close-popover">Close menu</a></li>'+
                   '</ul>'+
                   '</div>'+
                   '</div>'+
                   '</div>'
               myApp.popover(popoverHTML, clickedLink);
+
               var addGroupMenuPopoverListeners = function() {
                 addGroupLeaveJoinListeners();
                 $$(".delete_group").on("click",function() {
@@ -467,7 +472,7 @@ var addSingleGroupPageListeners = function(pagename,url) {
        var data = myApp.formToJSON(this);
        var url = window.api.apicallbase + "save_groupsettings";
        $.jsonp(url,data,function(back) {
-         myApp.alert(back,"Message");
+         myApp.alert(back.message);
          mainView.router.refreshPage();
        });
        return false;
@@ -483,7 +488,7 @@ var addGroupLeaveJoinListeners = function() {
     myApp.confirm("Are you sure you want to join this group?",function() {
       $.jsonp(url,{gid : gid},function(back) {
         myApp.closeModal();
-        myApp.alert(back,"Message");
+        myApp.alert(back.message);
         mainView.router.refreshPage();
 
       });  
@@ -495,11 +500,11 @@ var addGroupLeaveJoinListeners = function() {
     myApp.confirm("Are you sure you want to leave this group?",function() {
       $.jsonp(url,{gid : gid},function(back) {
         myApp.closeModal();
-        myApp.alert(back,"Message",function() {
+        myApp.alert(back.message,"Problemator",function() {
           mainView.router.back();
         });
         mainView.router.refreshPage();
-        mainView.router.refreshPreviousPage();
+        //mainView.router.refreshPreviousPage();
 
       });  
     });
@@ -546,11 +551,12 @@ var addInviteMemberPageListeners = function(pagename) {
           var msg = $(".invite_msg").val();
           var add_admin = $(".add_admin_rights").is(":checked") ? "1" : "0";
           var groupid = $("#groupid").val();
-          $.jsonjsonp(url,{groupid: groupid, emails : emails,msg : msg, add_admin : add_admin}).done(function(back) {
-            var dataJSON =  JSON.parse(back);
-            myApp.alert(dataJSON.msg,"Message");
-            // Go back 
-            mainView.router.back();
+          $.jsonp(url,{groupid: groupid, emails : emails,msg : msg, add_admin : add_admin},function(back) {
+            myApp.alert(back.message,"Problemator");
+            if (!back.error) {
+              // Go back 
+              mainView.router.back();
+            }
           });
        }
     });

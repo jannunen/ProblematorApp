@@ -1,0 +1,80 @@
+<div class="page" data-page="list_group_members">
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="left sliding"><a name="pagetop" href="static/group.html?id={{group.id}}" class="link">
+          <span class="fa-stack fa-md">
+            <i class="fa fa-circle-thin fa-stack-2x"></i>
+            <i class="fa fa-chevron-left fa-stack-1x"></i>
+          </span>
+        </a></div>
+        <div class="center sliding"><h3>{{group.name}} members</h3></div>
+        <div class="right">
+          <a href="#" class="link icon-only open-panel"> 
+            <i class="fa fa-bars"></i>
+          </a>
+        </div>
+    </div>
+  </div>
+  <div class="page-content single_group" id="single_group">
+    <div id="status">
+      <div class="content-block bg-light nomargin">
+        <div class="content-block-inner bg-light">
+          <div class="row">
+            <div class="col-80 body-text-w text-left">
+              <a href="list_group_members.html" class="problemator-link list_group_members"><span class="text-y" >{{group.name}} {{sizeof group.members}} member(s)</span></a>  
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content-block bg-light nomargin">
+      <div class="content-block-inner bg-light">
+        <div class="list-block nomargin">
+          <ul>
+            <li>
+              <div class="item-content">
+                <div class="item-inner">
+                  <div class="item-input">
+                    <input type="text" name="search" id="filter_members" placeholder="Search in this group..." class="form-control filter_members clearable search-box" />
+                  </div>
+                  <div class="item-after">
+                    <i class="fa fa-search " style="color : white;"></i>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="content-block nomargin groupmembers">
+        <div class="list-block">
+          <ul>
+            {{#if group.me}}
+            <div class="content-block  nomargin">
+              <div class="list-block  nomargin">
+                <a href="static/invite_member.html?groupid={{group.id}}" class="button problemator-button text-w">
+                  <div class="item-title ">Invite a new member...</div>
+                </a>
+              </div>
+            </div>
+            {{/if}}
+            <li class="item-divider"></li>
+            {{#each group.members}}
+            <li class="item-content">
+              <div class="item-inner">
+                <div class="item-title text-w username">{{etunimi}} {{sukunimi}} 
+                  {{#js_compare "this.iscreator==1"}}<span class="body-text-g">founder</span>{{/js_compare}}
+                  {{#js_compare "this.isadmin==1"}}<span class="body-text-g">admin</span>{{/js_compare}}
+                </div>
+                {{#js_compare "this.currentuserisadmin==1"}}
+                <div class="item-after"><span data-gid="{{gid}}" data-userid="{{uid}}" class="remove_user_from_group fa fa-user-times"></span></div>
+                {{/js_compare}}
+              </div>
+            </li>
+            {{/each}}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

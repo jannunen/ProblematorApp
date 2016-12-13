@@ -1,0 +1,86 @@
+<div>
+<div class="page" data-page="invite_group_member">
+<div class="navbar">
+  <div class="navbar-inner">
+    <div class="left sliding"><a name="pagetop" href="#" class="back link">
+        <span class="fa-stack fa-md">
+          <i class="fa fa-circle-thin fa-stack-2x"></i>
+          <i class="fa fa-chevron-left fa-stack-1x"></i>
+        </span>
+      </a></div>
+      <div class="center sliding"><h3>Invite a climber</h3></div>
+      <div class="right">
+        <a href="#" class="link icon-only open-panel"> 
+          <i class="fa fa-bars"></i>
+        </a>
+      </div>
+  </div>
+</div>
+<div class="page-content single_group bg-light" id="single_group">
+  <input type="hidden" name="groupid" value="{{group.id}}" class="groupid" id="groupid" />
+    <div class="content-block bg-light nomargin groupmembers">
+      <div class="content-block-title text-w">Emails to invite</div>
+
+        <div class="list-block">
+          <ul class="bg-light">
+            <li>
+              <div class="item-content">
+                <div class="item-inner">
+                  <div class="item-input">
+                    <input class="invite_email" type="email" placeholder="email">
+                  </div>
+                  <div class="item-after">
+                    <span class="add_invite_email fa fa-plus-square" class="add_email"></span>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+          <ul class="invited_emails_list">
+            <li class="no_emails_yet">
+              <div class="item-inner">
+                <div class="item-title">No email addresses added (yet)</div>
+              </div>
+
+            </li>
+          </ul>
+          <div class="content-block-title text-w">Message and options</div>
+          <ul>
+
+            <li class="align-top">
+              <div class="item-content">
+                <div class="item-inner">
+                  <div class="item-input">
+                    <textarea name="msg" class="invite_msg">I would like to invite you to our climbing group {{group.name}}</textarea>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="item-content">
+                <div class="item-inner">
+                  <div class="item-title ">
+                    <span class="body-text-g">Add admin rights?</span>
+                    <label class="label-switch body-text-w">
+                      <input type="checkbox" name="add_admin_rights" class="add_admin_rights" value="1" />
+                      <div class="checkbox"></div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li class="align-top">
+              <div class="item-content">
+                <div class="item-inner">
+                  <div class="item-input">
+                    <a href="#" class="send_invitations button button-fill button-big color-yellow">Send invitation(s)</a>
+                  </div>
+                </div>
+              </div>
+            </li>
+
+          </ul>
+  </div>
+</div>
+</div>
+</div>
