@@ -156,19 +156,19 @@
         </div>
         <div class="col-15 problemactionbutton">
           <div class="icon_container">
-            <a id="dirty" type="button" name="dirty" class="mark_dirty dirty body-text-w prompt_link"><span class="fa fa-wrench fa-2x"></span></a>
+            <a id="dirty" type="button" data-pid="{{problem.problemid}}" name="dirty" class="mark_dirty dirty body-text-w prompt_link"><span class="fa fa-wrench fa-2x"></span></a>
             <label for="dirty" class="mark_dirty probattribute text-g">Dirty</label>
           </div>
         </div>
         <div class="col-15 problemactionbutton">
           <div class="icon_container">
-            <a id="dangerous" type="button" name="dangerous" class="mark_dangerous dangerous body-text-w prompt_link"><span class="fa fa-warning fa-2x"></span></a>
+            <a id="dangerous" data-pid="{{problem.problemid}}" type="button" name="dangerous" class="mark_dangerous dangerous body-text-w prompt_link"><span class="fa fa-warning fa-2x"></span></a>
             <label for="dangerous" class="mark_dangerous probattribute text-g">Danger</label>
           </div>
         </div>
         <div class="col-15 problemactionbutton">
           <div class="icon_container feedback" >
-            <a id="feedback" type="button" name="feedback"  class="prompt-feedback body-text-w prompt_link"><span class="fa fa-comment fa-2x"></span></a>
+            <a id="feedback"  data-pid="{{problem.problemid}}" type="button" name="feedback"  class="prompt-feedback body-text-w prompt_link"><span class="fa fa-comment fa-2x"></span></a>
             <label for="feedback" class="probattribute text-g">Feedback</label>
           </div>
         </div>

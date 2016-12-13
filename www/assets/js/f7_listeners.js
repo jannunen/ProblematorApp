@@ -249,7 +249,7 @@ var addLoginPageListeners = function(pagename) {
             $$.ajaxSetup({
               headers : {'api-auth-token' : data.token}
             });
-              
+
             Cookies.set("nativeproblematorlocation",data.loc);
             Cookies.set("loginok",true);
             Cookies.set("uid",data.uid);
@@ -325,7 +325,7 @@ var addCompetitionsPageListeners = function(pagename) {
           var ctpl = Template7.compile(tpl);
           var html = ctpl({groups : back});    
           $(".search_results").empty().append(html);
-           
+
         });
       }
     });
@@ -362,11 +362,11 @@ var addGroupPageListeners = function(pagename) {
           var ctpl = Template7.compile(tpl);
           var html = ctpl({groups : back});    
           $(".search_results").empty().append(html);
-           
+
         });
       }
     });
-     
+
   }
 }
 var addGroupMemberListeners = function(pagename) {
@@ -391,8 +391,8 @@ var addGroupMemberListeners = function(pagename) {
       // 
       var val = $(this).val();
       if (e.which == 27) {
-         $(this).val("");
-         return;
+        $(this).val("");
+        return;
       }
       if (val != "") {
         $(this).parents(".single_group").find(".groupmembers div.username:not(:contains('"+val+"'))").parents("li").slideUp();
@@ -412,70 +412,70 @@ var addSingleGroupPageListeners = function(pagename,url) {
       var iscreator = $(this).data("iscreator")=="1";
 
       var clickedLink = this;
-       var popoverHTML = '<div class="popover groupmenu-popup">'+
-                  '<div class="popover-inner">'+
-                  '<div class="list-block">'+
-                  '<ul>';
-                  popoverHTML += '<li><a href="static/list_group_members.html?group='+gid+'" class="item-link list-button  close-popover" >Show members</a></li>';
-       if (isadmin) {
-                  popoverHTML += '<li><a href="#" class="item-link list-button  open-groupsettings close-popover" >Edit group</a></li>';
-       }
-       if (iscreator) {
-                  popoverHTML += '<li><a href="#" class="item-link list-button  delete_group close-popover" data-gid="'+gid+'">Delete group</a></li>';
-       }
+      var popoverHTML = '<div class="popover groupmenu-popup">'+
+        '<div class="popover-inner">'+
+        '<div class="list-block">'+
+        '<ul>';
+      popoverHTML += '<li><a href="static/list_group_members.html?group='+gid+'" class="item-link list-button  close-popover" >Show members</a></li>';
+      if (isadmin) {
+        popoverHTML += '<li><a href="#" class="item-link list-button  open-groupsettings close-popover" >Edit group</a></li>';
+      }
+      if (iscreator) {
+        popoverHTML += '<li><a href="#" class="item-link list-button  delete_group close-popover" data-gid="'+gid+'">Delete group</a></li>';
+      }
 
-                  '</ul>'+
-                  '</div>'+
-                  '</div>'+
-                  '</div>'
-              myApp.popover(popoverHTML, clickedLink);
+      '</ul>'+
+        '</div>'+
+        '</div>'+
+        '</div>'
+      myApp.popover(popoverHTML, clickedLink);
 
-              var addGroupMenuPopoverListeners = function() {
-                addGroupLeaveJoinListeners();
-                $$(".delete_group").on("click",function() {
-                  var gid = $(this).data("gid");
-                  myApp.confirm("ALL the members, rankings etc. will be deleted.<br /><br />This action cannot be undone.","Are you sure?",function(back) {
-                    var url = window.api.apicallbase +"delete_group";
-                    $.jsonp(url,{gid : gid},function(back) {
-                      myApp.alert(back,"Message",function() {
-                        mainView.router.back();
-                      });
-                      mainView.router.refreshPreviousPage();
-                    });
-                  },function() {
-                     
-                  });
-                });
-                $$(".open-groupsettings").on("click",function() {
-                  // Populate settings first
-                  var desc = $(".groupdesc").text();
-                  var name = $(".groupname").text();
-                  var public = $(".public").data("public") == "1";
-                  var groupid = $(".public").data("groupid");
+      var addGroupMenuPopoverListeners = function() {
+        addGroupLeaveJoinListeners();
+        $$(".delete_group").on("click",function() {
+          var gid = $(this).data("gid");
+          myApp.confirm("ALL the members, rankings etc. will be deleted.<br /><br />This action cannot be undone.","Are you sure?",function(back) {
+            var url = window.api.apicallbase +"delete_group";
+            $.jsonp(url,{gid : gid},function(back) {
+              myApp.alert(back,"Message",function() {
+                mainView.router.back();
+              });
+              mainView.router.refreshPreviousPage();
+            });
+          },function() {
 
-                  $(".popup-groupsettings").find(".fld_name").val(name);
-                  $(".popup-groupsettings").find(".fld_groupdesc").val(desc);
-                  $(".popup-groupsettings").find(".fld_public").prop("checked",public);
-                  $(".popup-groupsettings").find(".fld_groupid").val(groupid);
-                  myApp.popup('.popup-groupsettings');
+          });
+        });
+        $$(".open-groupsettings").on("click",function() {
+          // Populate settings first
+          var desc = $(".groupdesc").text();
+          var name = $(".groupname").text();
+          var public = $(".public").data("public") == "1";
+          var groupid = $(".public").data("groupid");
 
-                });
+          $(".popup-groupsettings").find(".fld_name").val(name);
+          $(".popup-groupsettings").find(".fld_groupdesc").val(desc);
+          $(".popup-groupsettings").find(".fld_public").prop("checked",public);
+          $(".popup-groupsettings").find(".fld_groupid").val(groupid);
+          myApp.popup('.popup-groupsettings');
 
-              };
-              $$(".groupmenu-popup").on("opened",function() {
-                  addGroupMenuPopoverListeners();
-                });
+        });
+
+      };
+      $$(".groupmenu-popup").on("opened",function() {
+        addGroupMenuPopoverListeners();
+      });
     });
-    
-    
+
+
     $$(".frm_groupsettings").on("submit",function(e) {
-       var data = myApp.formToJSON(this);
-       var url = window.api.apicallbase + "save_groupsettings";
-       $.jsonp(url,data,function(back) {
-         myApp.alert(back.message);
-         mainView.router.refreshPage();
-       });
-       return false;
+      var data = myApp.formToJSON(this);
+      var url = window.api.apicallbase + "save_groupsettings";
+      $.jsonp(url,data,function(back) {
+        myApp.alert(back.message);
+        mainView.router.refreshPage();
+      });
+      return false;
     });
   }
 }
@@ -524,41 +524,41 @@ var addInviteMemberPageListeners = function(pagename) {
 
         // Append to list
         var html =$( $("script#single_invited_email").html());
-         $(html).find(".item-title").text(email);
-         $(".invited_emails_list").append(html.html());
+        $(html).find(".item-title").text(email);
+        $(".invited_emails_list").append(html.html());
 
-         // And empty the input field.
-         $(this).parent(".item-after").siblings(".item-input").find("input.invite_email").val(""); 
+        // And empty the input field.
+        $(this).parent(".item-after").siblings(".item-input").find("input.invite_email").val(""); 
 
-         // Listener for removing an email from list
-         //
-         $$(".remove_invite_email").on("click",function() {
-           $(this).parents("li").remove();
-         });
+        // Listener for removing an email from list
+        //
+        $$(".remove_invite_email").on("click",function() {
+          $(this).parents("li").remove();
+        });
       }
     });
 
     $$(".send_invitations").on("click",function() {
-       var emails = $(".invited_email").length;
-       if (emails == 0) {
-         myApp.alert("Add email(s) to invite first.","Notification");
-         return;
-       } else {
-         emails = $(".invited_email").map(function() {
-           return $(this).find(".item-title").text().trim();
-         }).get().join(",");
-          var url = window.api.apicallbase + "send_invitations";
-          var msg = $(".invite_msg").val();
-          var add_admin = $(".add_admin_rights").is(":checked") ? "1" : "0";
-          var groupid = $("#groupid").val();
-          $.jsonp(url,{groupid: groupid, emails : emails,msg : msg, add_admin : add_admin},function(back) {
-            myApp.alert(back.message,"Problemator");
-            if (!back.error) {
-              // Go back 
-              mainView.router.back();
-            }
-          });
-       }
+      var emails = $(".invited_email").length;
+      if (emails == 0) {
+        myApp.alert("Add email(s) to invite first.","Notification");
+        return;
+      } else {
+        emails = $(".invited_email").map(function() {
+          return $(this).find(".item-title").text().trim();
+        }).get().join(",");
+        var url = window.api.apicallbase + "send_invitations";
+        var msg = $(".invite_msg").val();
+        var add_admin = $(".add_admin_rights").is(":checked") ? "1" : "0";
+        var groupid = $("#groupid").val();
+        $.jsonp(url,{groupid: groupid, emails : emails,msg : msg, add_admin : add_admin},function(back) {
+          myApp.alert(back.message,"Problemator");
+          if (!back.error) {
+            // Go back 
+            mainView.router.back();
+          }
+        });
+      }
     });
   }
 };
@@ -566,199 +566,203 @@ var addInviteMemberPageListeners = function(pagename) {
 var addSingleProblemListeners = function(pagename) {
 
   // If matches single problem
-  if ((matches=pagename.match(/problem(\d+)/)) && !singleProblemListenersInitialized) {
+  if (!singleProblemListenersInitialized) {
+    console.log("SINGLE PROBLEM LISTENERS ADDED ONCE");
     // Add listeners for dirty, dangerous and message.
-    var probid = matches[1];
-    (function(pid) {
-      // SHow global ascents
-      $(document).on("click",".show_global_ascents",function(e) {
-	var clickedLink = this;
-	var pid = $(this).data("id");
-	var url = window.api.apicallbase + "global_ascents/?pid="+pid;
-	$.jsonp(url,{pid : pid},function(back) {
-	  var tpl = $("script#global_ascents_popover").html();
-	  var ctpl = Template7.compile(tpl);
-	  var html = ctpl(back);    
-	  myApp.popover(html, clickedLink);
-
-	});
-      });
-      $(document).on("click",".spinnerminus",function() {
-	var cur = parseInt($(this).siblings("input").val());
-	cur--;
-	if (cur <= 0) {
-	  cur = 1;
-	}
-        $(this).siblings("input").val(cur);
-      });
-      $(document).on("click",".spinnerplus",function() {
-        var cur = parseInt($(this).siblings("input").val());
-        cur++;
-        $(this).siblings("input").val(cur);
-      });
-
-      $(document).on("click","#btn_savesettings",function() {
-        $("#frmsettings").ajaxSubmit(function(back) {
-          myApp.alert(back, 'Info');
-
-        });
-        return false;
-      });
-      $$(".mark_dangerous").on("click",function() {
-        // Ask reason and send straight.
-        myApp.prompt('What makes the problem dangerous?','Send feedback', function (value) {
-          var url = window.api.apicallbase + "savefeedback/?msgtype=dangerous";
-          $.jsonp(url,{"text" : value, "problemid":pid},function(back) {
-            myApp.alert(back,"Message");
-          });
-        });
+    // SHow global ascents
+    $(document).on("click",".show_global_ascents",function(e) {
+      var clickedLink = this;
+      var pid = $(this).data("id");
+      var url = window.api.apicallbase + "global_ascents/?pid="+pid;
+      $.jsonp(url,{pid : pid},function(back) {
+        var tpl = $("script#global_ascents_popover").html();
+        var ctpl = Template7.compile(tpl);
+        var html = ctpl(back);    
+        myApp.popover(html, clickedLink);
 
       });
-      $$(".mark_dirty").on("click",function() {
-        // Ask reason and send straight.
-        myApp.prompt('Describe dirtyness, if you can. It makes our life easier.','Send feedback', function (value) {
-          var url = window.api.apicallbase + "savefeedback/?msgtype=dirty";
-          $.jsonp(url,{"text" : value, "problemid":pid},function(back) {
-            myApp.alert(back,"Message");
-          });
+    });
+    $(document).on("click",".spinnerminus",function() {
+      var cur = parseInt($(this).siblings("input").val());
+      cur--;
+      if (cur <= 0) {
+        cur = 1;
+      }
+      $(this).siblings("input").val(cur);
+    });
+    $(document).on("click",".spinnerplus",function() {
+      console.log("spinner plus");
+      var cur = parseInt($(this).siblings("input").val());
+      cur++;
+      $(this).siblings("input").val(cur);
+    });
+
+    $(document).on("click","#btn_savesettings",function() {
+      $("#frmsettings").ajaxSubmit(function(back) {
+        myApp.alert(back, 'Info');
+
+      });
+      return false;
+    });
+    $$(document).on("click",".mark_dangerous",function() {
+      // Ask reason and send straight.
+      var pid = $(this).data("pid");
+      myApp.prompt('What makes the problem dangerous?','Send feedback', function (value) {
+        var url = window.api.apicallbase + "savefeedback/?msgtype=dangerous";
+        $.jsonp(url,{"text" : value, "pid":pid},function(back) {
+          myApp.alert(back,"Message");
         });
       });
-      $$('.prompt-feedback').on('click', function () {
-        myApp.prompt('You can enter your feedback about the problem, what problems you would like to have or something in general','Send feedback', function (value) {
-          var url = window.api.apicallbase + "savefeedback/?msgtype=message";
-          $.jsonp(url,{"text" : value, "pid":pid},function(back) {
-            myApp.alert(back);
-          });
-        });
-      });
-      $(document).on('click','.open_betavideos_actionsheet', function () {
-        var _pid = $(this).attr("pid");
-        $.jsonp(window.api.apicallbase+"betavideos/",{pid : _pid},function(betavideos) {
-          var buttons = [
-            {
-              text: 'Choose a betavideo',
-              label: true
-            },
-          ];
-          // ADd videos
-          for (var idx in betavideos) {
-            var v = betavideos[idx];
-            var txt = '<a href="'+v.video_url+'" class="external">'+v.video_url+'</a>';
-            if (v.userid == $("#userid").val()) {
-              txt += '&nbsp; <a class="del_betavideo" href="#" data-href="#">del</a>';
-            }
-
-            buttons.push({
-              text : txt,
-              label : true,
-            }); 
-          }
-
-          // Add cancel
-          buttons.push({
-            text: 'Cancel',
-            color: 'yellow'
-          });
-
-          myApp.actions(buttons);
-        });
-        return false;
-      }); 
-      $(document).on("click",".add_video",function() {
-        var pid = $(this).attr("pid");
-        myApp.prompt('Paste video url here. Note that you can link video starting from a certain point.<br /><br /><strong>Vimeo:</strong> Click share, click Link and add timecode if needed.<br /><br /><strong>Youtube:</strong> Right click and "Copy video at URL" or "Copy video URL at current time"','Add a betavideo', function (value) {
-          var url = window.api.apicallbase + "savebetavideo/";
-          $.jsonp(url,{"url" : value, "pid":pid},function(back) {
-            myApp.alert(back.message);
-            if (!JSON.stringify(back).match(/error/i)) {
-              mainView.router.refreshPage();
-            }
-          });
-        });
-        return false;
-      });
-      $(document).on('click','.del_betavideo', function () {
-        var url = window.api.apicallbase +"delbetavideo/";
-        $.jsonp(url,{},function(back) {
+    });
+    $$(document).on("click",".mark_dirty",function() {
+      // Ask reason and send straight.
+      var pid = $(this).data("pid");
+      myApp.prompt('Describe dirtyness, if you can. It makes our life easier.','Send feedback', function (value) {
+        var url = window.api.apicallbase + "savefeedback/?msgtype=dirty";
+        $.jsonp(url,{"text" : value, "pid":pid},function(back) {
           myApp.alert(back);
-          // Close the action sheet also
-          myApp.closeModal();
-          mainView.router.refreshPage();
-        }); 
-        return false;
+        });
       });
-
-    })(probid);
-
-
-    var saveTickFunction = function(self,action, callback) {
-      var pid = $(self).attr("data-id");
-
-      var grade_opinion = $(self).parents(".page-problem").find(".grade_opinion").val();
-      var ascent_type = $(self).parents(".page-problem").find(".ascent_type").val();
-      var like = $(self).parents(".page-problem").find("input[name=rating]:checked").val();
-      var tickdate = $(self).parents(".page-problem").find(".tickdate").val();
-      var tries = $(self).parents(".page-problem").find(".tries").val();
-      var dislike = 0;
-      var love = 0;
-      if (like == 0) {
-        dislike = 1;
-      }
-      if (like == 2) {
-        love = 1;
-        like = 0;
-      }
-      if (like == undefined) {
-        like = 0;
-      }
-      if (action == undefined) {
-        action = "savetick";
-      }
-      var url = "/t/problematormobile/"+action+"/";
-      var data = {
-        "a_like" : like,
-        "a_love" : love,
-        "a_dislike": dislike,
-        "problemid": pid,
-        "grade_opinion" : grade_opinion,
-        "userid" : $("#userid").val(),
-        "tries" : tries,
-        "ascent_type" : ascent_type,
-        "tickdate" : tickdate,
-      };
-
-      $.get(url,data,function(back) {
-        if (callback != undefined) {
-          var likeContainer = $("#swipe"+pid+" .item-after .likes");
-          if (data.a_like> 0) {
-            // Update data-count
-            var curCount = likeContainer.find("span.fa-thumbs-up").data("count");
-            curCount = parseInt(curCount);
-            if (isNaN(curCount)) {
-              curCount = 0;
-            }
-            curCount += data.a_like;
-            likeContainer.find("span.fa-thumbs-up").data("count",curCount);
-            likeContainer.find("span.fa-thumbs-up").text(curCount);
-          } 
-          if (data.a_love > 0) {
-            // Update data-count
-            var curCount = likeContainer.find("span.fa-heart").data("count");
-            curCount = parseInt(curCount);
-            if (isNaN(curCount)) {
-              curCount = 0;
-            }
-            curCount += data.a_love;
-            likeContainer.find("span.fa-heart").data("count",curCount);
-            likeContainer.find("span.fa-heart").text(curCount);
+    });
+    $$(document).on("click",'.prompt-feedback', function () {
+      var pid = $(this).data("pid");
+      myApp.prompt('You can enter your feedback about the problem, what problems you would like to have or something in general','Send feedback', function (value) {
+        var url = window.api.apicallbase + "savefeedback/?msgtype=message";
+        $.jsonp(url,{"text" : value, "pid":pid},function(back) {
+          myApp.alert(back);
+        });
+      });
+    });
+    $(document).on('click','.open_betavideos_actionsheet', function () {
+      var _pid = $(this).attr("pid");
+      $.jsonp(window.api.apicallbase+"betavideos/",{pid : _pid},function(betavideos) {
+        var buttons = [
+          {
+            text: 'Choose a betavideo',
+            label: true
+          },
+        ];
+        // ADd videos
+        for (var idx in betavideos) {
+          var v = betavideos[idx];
+          var txt = '<a href="'+v.video_url+'" class="external">'+v.video_url+'</a>';
+          if (v.userid == $("#userid").val()) {
+            txt += '&nbsp; <a class="del_betavideo" href="#" data-href="#">del</a>';
           }
-          callback(back,data);
+
+          buttons.push({
+            text : txt,
+            label : true,
+          }); 
         }
+
+        // Add cancel
+        buttons.push({
+          text: 'Cancel',
+          color: 'yellow'
+        });
+
+        myApp.actions(buttons);
       });
-    };
+      return false;
+    }); 
+    $(document).on("click",".add_video",function() {
+      var pid = $(this).attr("pid");
+      myApp.prompt('Paste video url here. Note that you can link video starting from a certain point.<br /><br /><strong>Vimeo:</strong> Click share, click Link and add timecode if needed.<br /><br /><strong>Youtube:</strong> Right click and "Copy video at URL" or "Copy video URL at current time"','Add a betavideo', function (value) {
+        var url = window.api.apicallbase + "savebetavideo/";
+        $.jsonp(url,{"url" : value, "pid":pid},function(back) {
+          myApp.alert(back.message);
+          if (!JSON.stringify(back).match(/error/i)) {
+            mainView.router.refreshPage();
+          }
+        });
+      });
+      return false;
+    });
+    $(document).on('click','.del_betavideo', function () {
+      var url = window.api.apicallbase +"delbetavideo/";
+      $.jsonp(url,{},function(back) {
+        myApp.alert(back);
+        // Close the action sheet also
+        myApp.closeModal();
+        mainView.router.refreshPage();
+      }); 
+      return false;
+    });
+
     singleProblemListenersInitialized = true;
   }
 
 }
+var saveTickFunction = function(self,action, callback) {
+  var pid = $(self).attr("data-id");
+
+  var grade_opinion = $(self).parents(".page-problem").find(".grade_opinion").val();
+  var ascent_type = $(self).parents(".page-problem").find(".ascent_type").val();
+  var like = $(self).parents(".page-problem").find("input[name=rating]:checked").val();
+  var tickdate = $(self).parents(".page-problem").find(".tickdate").val();
+  var tries = $(self).parents(".page-problem").find(".tries").val();
+  var dislike = 0;
+  var love = 0;
+  if (like == 0) {
+    dislike = 1;
+  }
+  if (like == 2) {
+    love = 1;
+    like = 0;
+  }
+  if (like == undefined) {
+    like = 0;
+  }
+  if (action == undefined) {
+    action = "savetick";
+  }
+  var url = "/t/problematormobile/"+action+"/";
+  var data = {
+    "a_like" : like,
+    "a_love" : love,
+    "a_dislike": dislike,
+    "problemid": pid,
+    "grade_opinion" : grade_opinion,
+    "userid" : $("#userid").val(),
+    "tries" : tries,
+    "ascent_type" : ascent_type,
+    "tickdate" : tickdate,
+  };
+
+  $.jsonp(url,data,function(back) {
+    debugger;
+    if (callback != undefined) {
+      /*
+      var likeContainer = $("#swipe"+pid+" .item-after .likes");
+      if (data.a_like> 0) {
+        // Update data-count
+        var curCount = likeContainer.find("span.fa-thumbs-up").data("count");
+        curCount = parseInt(curCount);
+        if (isNaN(curCount)) {
+          curCount = 0;
+        }
+        curCount += data.a_like;
+        likeContainer.find("span.fa-thumbs-up").data("count",curCount);
+        likeContainer.find("span.fa-thumbs-up").text(curCount);
+      } 
+      if (data.a_love > 0) {
+        // Update data-count
+        var curCount = likeContainer.find("span.fa-heart").data("count");
+        curCount = parseInt(curCount);
+        if (isNaN(curCount)) {
+          curCount = 0;
+        }
+        curCount += data.a_love;
+        likeContainer.find("span.fa-heart").data("count",curCount);
+        likeContainer.find("span.fa-heart").text(curCount);
+      }
+      */
+      mainView.router.refreshPage();
+      mainView.router.refreshPreviousPage();
+      callback(back,data);
+    }
+  });
+};
 
 
