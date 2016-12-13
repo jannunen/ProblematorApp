@@ -486,7 +486,7 @@ input:-webkit-autofill {
 .login-screen-content { 
   background-color : #30312e;
 
-                background-image : url("/problemator/assets/images/problematorbg.png");
+                background-image : url("../../assets/images/problematorbg.png");
 background-repeat: no-repeat;
 
     background-position: center; 

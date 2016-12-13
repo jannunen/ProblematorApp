@@ -403,6 +403,17 @@ var addGroupMemberListeners = function(pagename) {
     });
   }
 }
+var addSettingsPageListeners = function(pagename,url) {
+  if ("settingspage"==pagename) { 
+      $(document).on("click","#btn_savesettings",function() {
+        $("#frmsettings").ajaxSubmit(function(back) {
+          myApp.alert(back, 'Info');
+
+        });
+        return false;
+      });
+  }
+}
 var addSingleGroupPageListeners = function(pagename,url) {
   if ("singlegroup"==pagename) { 
     addGroupLeaveJoinListeners();
@@ -607,13 +618,6 @@ var addSingleProblemListeners = function(pagename) {
         $(this).siblings("input").val(cur);
       });
 
-      $(document).on("click","#btn_savesettings",function() {
-        $("#frmsettings").ajaxSubmit(function(back) {
-          myApp.alert(back, 'Info');
-
-        });
-        return false;
-      });
       $$(document).on("click",".mark_dangerous",function() {
         // Ask reason and send straight.
         var pid = $(this).data("pid");

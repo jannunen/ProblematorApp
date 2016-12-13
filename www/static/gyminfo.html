@@ -1,0 +1,77 @@
+<!-- Top Navbar-->
+<div class="navbar">
+  <div class="navbar-inner">
+    <div class="left">
+      <a href="#" class="link back">
+        <span class="fa-stack fa-md">
+          <i class="fa fa-circle-thin fa-stack-2x"></i>
+          <i class="fa fa-chevron-left fa-stack-1x"></i>
+        </span>
+      </a>
+    </div>
+    <div class="center sliding"><h3>Gym info</h3></div>
+    <div class="right">
+      <a href="#" class="link icon-only open-panel"> <i class="fa fa-bars "></i></a>
+    </div>
+  </div>
+</div> <!-- end of navbar -->
+
+
+<div class="page-content" id="gyminfo">		
+  <div class="row gyminforow">
+    <div class="col-100">
+      <h4>{{locinfo.name}}</h4>
+    </div>
+  </div>
+  <div class="row  no-gutter padtop">
+    <div class="col-50 text-center">
+      <h4>{{locinfo.problemcount.boulder}} </h4>
+      <span class="body-text-g">##boulder##<br />##problems##</span>
+    </div>
+    <div class="col-50 text-center">
+      <h4>{{locinfo.problemcount.sport}} </h4>
+      <span class="body-text-g">##sport##<br />##routes##</span>
+    </div>
+  </div>
+  <div class="row no-gutter">
+    <div class="col-50">
+      <div id="pie-gym-boulder"></div>
+      <span class="body-text-g">% done</span>
+
+
+    </div>
+    <div class="col-50">
+      <div id="pie-gym-sport"></div>
+      <span class="body-text-g">% done</span>
+
+    </div>
+  </div>
+  <div class="row no-gutter">
+    <div class="col-100">
+      <a href="static/floorplan.html?gymid={{locinfo.id}}" class="openfloorplan button button-fill button-big color-yellow">Check the floor plan</a>
+    </div>
+  </div>
+</div>
+
+<!-- Toolbar has additional "toolbar-bottom" class -->
+<div class="toolbar toolbar-bottom">
+  <div class="toolbar-inner">
+    <ul class="locul">
+      <li>
+        <!-- Smart select, will be opened in Picker -->
+        <a href="#" class="item-link smart-select locpicker" data-open-in="picker" data-back-on-select="true" data-back-text="&nbsp;">
+          <select name="newloc" id="newloc" >
+            {{#each locations}}
+            <option value="{{locid}}" {{#js_compare this.locinfo.id==locid}}selected="selected"{{/js_compare}}}>{{locname}}</option>
+            {{/each}}
+          </select>
+          <div class="item-content">
+            <div class="item-inner">
+              <div class = "downcaret" ><span class="fa fa-chevron-down"></span></div>
+            </div>
+          </div>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
