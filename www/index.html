@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="bower_components/Framework7/dist/css/framework7.ios.css" />
     <link rel="stylesheet" href="bower_components/Framework7/dist/css/framework7.ios.colors.min.css" />
     <link rel="stylesheet" href="bower_components/Framework7/dist/css/framework7.ios.colors.min.css" />
-    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,700,900' rel='stylesheet' type='text/css' />
     <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css" />
 
     <link rel="apple-touch-icon" sizes="57x57" href="/problemator/favico/apple-icon-57x57.png">
@@ -54,14 +53,14 @@
           </div>
           <ul>
             <li><span class="fa fa-home fa-1x"></span><a class="close-panel" href="static/dashboard.html">Home</a></li>
-            <li><span  class="fa fa-list-ul fa-1x"></span><a href="/static/problems.html"  class="close-panel" >Problems</a></li>
+            <li><span  class="fa fa-list-ul fa-1x"></span><a href="static/problems.html"  class="close-panel" >Problems</a></li>
             <li><span  class="fa fa-newspaper-o fa-1x"></span><a href="#new-problems-page"  class="close-panel" >New problems</a></li>
             <li><span  class="fa fa-info fa-1x"></span><a href="#faq"  class="close-panel" >FAQ</a> </li>
             <li><span  class="fa fa-check-square-o fa-1x"></span><a href="#tickstoday"  class="close-panel" >Ticks today</a> </li>
             <li><span  class="fa fa-calendar fa-1x"></span><a href="/t/problematormobile/_tickarchivepage/"  class="close-panel" >Tick archive</a></li>
             <li><span class="fa fa-signal fa-1x "></span><a href="/t/problematormobile/_ranking/" class="close-panel" >Ranking</a></li>
             <li ><span   class="fa fa-users fa-1x"></span><a href="static/groups.html"  class="close-panel ">Groups</a></li>
-            <li ><span   class="fa fa-trophy fa-1x"></span><a href="/static/competitions.html"  class="close-panel ">Competitions</a></li>
+            <li ><span   class="fa fa-trophy fa-1x"></span><a href="static/competitions.html"  class="close-panel ">Competitions</a></li>
             <li ><span   class="fa fa-info fa-1x"></span><a href="#gyminfo"  class="close-panel ">Gym info</a></li>
             <li ><span   class="fa fa-info fa-1x"></span><a href="#gyminfo"  class="close-panel ">Change gym</a></li>
             <li><span class=" fa fa-cogs fa-1x"></span><a href="#settings"  class="close-panel">Settings</a></li>
@@ -228,7 +227,28 @@
   <!--------------------------->
   <!--   TEMPLATES SECTION  --->
   <!--------------------------->
-
+   
+  <!-- Global ascents popover -->
+<script id="global_ascents_popover" type="text/template7">
+<div class="popover ascents popover-about">
+    <div class="popover-angle"></div>
+    <div class="popover-inner">
+      <div class="content-block">
+        <h1>Problem ascents <small>{{count}} time(s)</h1>
+                                <br />
+                                <p class="body-text-w">Public ascent list</p><br />
+                                <ul >
+                                {{#each ascents}}
+                                <li>@{{date_format tstamp "DD.MM.YYYY"}} {{etunimi}} {{sukunimi}} {{#js_compare "this.a_like > 0"}}<span class="text-w">+{{a_like}} <span class="fa fa-thumbs-up"></span></span>{{/js_compare}}</li>
+                                {{else}}
+                                 No public ascents, yet.
+                                {{/each}}
+                                </ul><br />
+                                <span class="text-y">Want to include your own ascents? Go to <a class="text-w" href="#settings">settings</a> page and make your ascents public now!</span>
+      </div>
+    </div>
+</div> 
+  </script>
 <!--
   Template for single invited email
 -->

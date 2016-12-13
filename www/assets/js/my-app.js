@@ -51,7 +51,8 @@ var myApp = new Framework7({
      if ((pos=url.indexOf(host))>0) {
        var remainder = url.substr(pos+host.length);
        if (remainder == "" || remainder=="/") {
-         return;
+         var compiledTemplate = Template7.compile(content);
+         return (compiledTemplate({location : $.jStorage.get("locations")}));
        }
      }
 
@@ -121,7 +122,8 @@ var myApp = new Framework7({
        // Load problems page data and compile the template
        //
        var url = window.api.apicallbase + "circuits";
-       $.jsonp(url, {}, function (data){ 
+       var gymid = Cookies.get("nativeproblematorlocation");
+       $.jsonp(url, {gymid : gymid}, function (data){ 
          var compiledTemplate = Template7.compile(content);
          next(compiledTemplate(data));
        });
@@ -136,17 +138,15 @@ var myApp = new Framework7({
        // Load problems page data and compile the template
        //
        var url = window.api.apicallbase + "problems/";
-       $.post(url, {}, function (data){ 
+       $.jsonp(url, {}, function (data){ 
          var compiledTemplate = Template7.compile(content);
-         var dataJSON = {walls : JSON.parse(data)};
-         next(compiledTemplate(dataJSON));
+         next(compiledTemplate({walls : data}));
        });
      } else if ((matches=url.match(/competitions.html/))) {
        var url = window.api.apicallbase + "mycompetitions/";
-       $.post(url, {}, function (data){ 
+       $.jsonp(url, {}, function (data){ 
          var compiledTemplate = Template7.compile(content);
-         var dataJSON = JSON.parse(data);
-         next(compiledTemplate(dataJSON));
+         next(compiledTemplate(data));
        });
      } else if ((matches=url.match(/invite_member.html.*?(\d+)/))) {
        var groupid = matches[1];
@@ -200,7 +200,7 @@ var myApp = new Framework7({
        return resultContent; 
      }
    },
-  //precompileTemplates: true,
+  precompileTemplates: true,
   modalTitle : "Problemator",
   pushState: true,
   template7Pages: true,

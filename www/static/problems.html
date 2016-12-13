@@ -1,5 +1,3 @@
-<div data-page="problems-page" class="page cached">
-
   <div class="navbar">
     <div class="navbar-inner">
       <div class="left sliding"><a name="pagetop" href="#" class="back link">
@@ -14,6 +12,9 @@
         </div>
     </div>
   </div>
+
+<div data-page="problems-page" class="page ">
+
   <div class="page-content" id="problemlist">
     <div class="content-block-title">
       <div class="row">
@@ -67,7 +68,7 @@
                 {{#each problems}}
                 <li class="swipeout" id="swipe{{problemid}}">
                   <div class="swipeout-content ">
-                    <a data-problemid="{{problemid}}" href="/t/problematormobile/problem/?id={{problemid}}" class="item-link item-content {{#js_compare "this.visible==0"}}strikethrough{{/js_compare}}" >
+                    <a data-problemid="{{problemid}}" href="static/problem.html?id={{problemid}}" class="item-link item-content {{#js_compare "this.visible==0"}}strikethrough{{/js_compare}}" >
                       <div class="item-media">
                         <h5 tag="{{tagshort}}" problemid="{{problemid}}" class="probtitle {{#if tick}}text-y{{else}}text-w{{/if}} grade">{{gradename}}</h5>
                       </div>

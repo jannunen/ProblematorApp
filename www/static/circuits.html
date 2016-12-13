@@ -40,7 +40,7 @@
                 {{#each problems}}
                 <li class="swipeout" id="swipe{{problemid}}">
                   <div class="swipeout-content">
-                    <a data-problemid="{{problemid}}" href="static/problem.html?id={{problemid}}" class="item-link item-content" >
+                    <a data-problemid="{{problemid}}" data-ignore-cache="true" date-reload="true" href="static/problem.html?id={{problemid}}" class="item-link item-content" >
                       <div class="item-media">
                         <h5 tag="{{tagshort}}" problemid="{{problemid}}" class="probtitle {{#if tick}}text-y{{else}}text-w{{/if}} grade">{{gradename}}</h5>
                       </div>

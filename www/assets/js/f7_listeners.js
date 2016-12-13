@@ -253,6 +253,7 @@ var addLoginPageListeners = function(pagename) {
             Cookies.set("nativeproblematorlocation",data.loc);
             Cookies.set("loginok",true);
             Cookies.set("uid",data.uid);
+
             window.uid = data.uid;
             // Initialize index page.
             myApp.closeModal();
@@ -541,7 +542,7 @@ var addInviteMemberPageListeners = function(pagename) {
     $$(".send_invitations").on("click",function() {
       var emails = $(".invited_email").length;
       if (emails == 0) {
-        myApp.alert("Add email(s) to invite first.","Notification");
+        myApp.alert("Add email(s) to invite first.");
         return;
       } else {
         emails = $(".invited_email").map(function() {
@@ -565,6 +566,12 @@ var addInviteMemberPageListeners = function(pagename) {
 
 var addSingleProblemListeners = function(pagename) {
 
+   var calendarDefault = myApp.calendar({
+               input: '#tickdate',
+               dateFormat: 'dd.mm.yyyy',
+               closeByOutsideClick : true,
+               closeOnSelect : true,
+         });
   // If matches single problem
   if (!singleProblemListenersInitialized) {
     console.log("SINGLE PROBLEM LISTENERS ADDED ONCE");
@@ -647,7 +654,7 @@ var addSingleProblemListeners = function(pagename) {
           var v = betavideos[idx];
           var txt = '<a href="'+v.video_url+'" class="external">'+v.video_url+'</a>';
           if (v.userid == $("#userid").val()) {
-            txt += '&nbsp; <a class="del_betavideo" href="#" data-href="#">del</a>';
+            txt += '&nbsp; <a class="del_betavideo" href="#" data-vid="'+v.id+'" data-href="#">del</a>';
           }
 
           buttons.push({
@@ -681,10 +688,11 @@ var addSingleProblemListeners = function(pagename) {
     });
     $(document).on('click','.del_betavideo', function () {
       var url = window.api.apicallbase +"delbetavideo/";
-      $.jsonp(url,{},function(back) {
-        myApp.alert(back);
+      var vid = $(this).data("vid");
+      $.jsonp(url,{vid : vid},function(back) {
         // Close the action sheet also
         myApp.closeModal();
+        myApp.alert(back);
         mainView.router.refreshPage();
       }); 
       return false;
