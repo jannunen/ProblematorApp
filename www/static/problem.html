@@ -1,0 +1,190 @@
+<div class="navbar">
+  <div class="navbar-inner">
+    <div class="left sliding"><a name="pagetop" href="#" class="back link">
+        <span class="fa-stack fa-md">
+          <i class="fa fa-circle-thin fa-stack-2x"></i>
+          <i class="fa fa-chevron-left fa-stack-1x"></i>
+        </span>
+      </a></div>
+      <div class="center ">Problem</div>
+      <div class="right">
+        <a href="#" class="link icon-only open-panel"> <i class="fa fa-bars"></i></a>
+      </div>
+  </div>
+</div>
+<div data-page="problem{{problem.problemid}}" class="page page-problem" data-id="{{problem.problemid}}" data-grade="{{lower problem.gradename}}">
+
+  <div class="page-content">		
+    <div class="content-block nomargin">
+      <div class="row no-gutter">
+        <div class="col-50 text-center">
+          <h1>{{problem.gradename}}</h1>
+          <span class="body-text-g text-left">{{problem.tagshort}}</span>
+        </div>
+        <div class="col-50 text-center starscol">
+          <span class="body-text-w padmore">
+            {{problem.c_like}} <span class="fa fa-thumbs-up color-yellow"></span> <span class="text-g">|</span> 
+            {{problem.c_love}} <span class="fa fa-heart color-red"></span> <span class="text-g">|</span> 
+            {{problem.c_dislike}} <span class="fa fa-thumbs-down"></span> </span><br /><br />
+          <span class="body-text text-g">by {{problem.author}}<br />{{relative_datetime problem.added}}</span>
+          {{#js_compare "this.problem.soontoberemoved==1"}}<small class="text-g"><br /><span class="fa fa-recycle text-y"></span> Problem will be replaced soon...</small>{{/js_compare}}
+        </div>
+      </div><!--end of row -->
+
+      <div class="row no-gutter infoandtick">
+        <div class="col-50 text-left">
+          <span class="body-text text-w">Info</span><br />
+          <span class="body-text text-g">{{#js_compare "this.problem.addt!=''"}}{{problem.addt}}{{else}}No additional info{{/js_compare}}
+          </span>
+        </div>
+        <div class="col-50 text-center padtick">
+
+          <input type="text" placeholder="{{date_format null "DD.MM.YYYY"}}" name="tickdate" readonly id="tickdate" class="tickdatepicker tickdate" />
+          {{#if problem.tick}}
+          <a href="#" data-id="{{problem.problemid}}" class="savetick save-button body-text-w">Save tick</a>
+          {{/if}}
+
+          {{#js_compare "this.problem.mytickcount > 0"}}
+          <a href="#" data-pid="{{problem.problemid}}" data-id="{$tick.tickid}}" class="problemator-link manageticks"><small>manage {{problem.mytickcount}} ticks...</small></a>
+          {{/js_compare}}
+        </div>
+      </div><!-- //row -->
+
+
+      <div class="row no-gutter triesandsuch">
+        <div class="col-50 text-center">
+          <div class="spinner">
+            <span class="fa fa-minus spinnerminus"></span>
+            <input type="text" size="2" maxlength="2" value="{{default problem.tick.tries "0"}}" class="number tries yatspinner" />
+            <span class="fa fa-plus spinnerplus"></span>
+          </div>
+          <span class="body-text-g">Tries</span>
+        </div>
+        <div class="col-50 text-center">
+
+          <div class="list-block grade_opinion_select">
+            <ul>
+              <!-- Smart select item -->
+              <li>
+                <!-- Additional "smart-select" class -->
+                <a href="#" class="item-link smart-select" data-open-in="picker">
+                  <!-- select -->
+                  <select name="grade_opinion" id="grade_opinion" class="form-control grade_opinion">
+                    {{select_options grades problem.gradeid}}
+                  </select>
+                  <div class="item-content">
+                    <div class="item-inner">
+                      <!-- Select label -->
+                      <!-- Selected value, not required -->
+                      <div class="item-after"><h4>{{problem.gradename}}</h4></div>
+                    </div>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+          <span class="body-text-g">My grade opinion</span>
+        </div>
+      </div>
+
+      {{#js_compare "this.problem.routetype=='sport'"}}
+      <div class="row no-gutter triesandsuch">
+        <div class="col-100 text-center">
+          <div class="list-block ascent_type_select">
+            <ul>
+              <li>
+                <span class="only_lead_counts body-text-g"><small>Only lead ascents count in rankings!</small></span>
+              </li>
+              <!-- Smart select item -->
+              <li>
+                <!-- Additional "smart-select" class -->
+                <a href="#" class="item-link smart-select" data-open-in="picker">
+                  <!-- select -->
+                  <select name="ascent_type" class="form-control ascent_type">
+                    <option  value="0">Lead</option>
+                    <option  value="1">Toprope</option>
+                  </select>
+                  <div class="item-content">
+                    <div class="item-inner">
+                      <!-- Select label -->
+                      <!-- Selected value, not required -->
+                      <div class="item-after"><h4>{{problem.gradename}}</h4></div>
+                    </div>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <span class="body-text-g ascent_type_label">Ascent type</span><br />
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      {{/js_compare}}
+
+      <div class="row no-gutter triesandsuch">
+        <div class="col-50 text-center">
+          <h4>{{problem.ascentcount}}</h4>
+          <span class="body-text-g">Global ascents</span><br />
+          <a href="#" class="show_global_ascents problemator-link" data-id="{{problem.problemid}}"><small>show ascents</small></a>
+        </div>
+        <div class="col-50 text-center" style="padding : 0; margin : 0;">
+          <div id="opinions{{problem.problemid}}" style="height : 80px;">
+          </div>
+          <span class="body-text-g">Grade opinions</span>
+        </div>
+      </div>
+
+      <div class="row no-gutter buttons problemactionbuttons">
+        <div class="col-15 body-text-w problemactionbutton">
+          <div class="icon_container">
+            <input name="rating" id="rating_ok" class="rating_ok" type="radio" value="1" {{#js_compare "this.problem.tick.a_like==1"}}checked="checked"{{/js_compare}}   />
+            <label for="rating_ok"> </label>
+          </div>
+        </div>
+        <div class="col-15 body-text-w problemactionbutton">
+          <div class="icon_container">
+            <input name="rating" id="rating_better" class="rating_ok" type="radio" value="2" {{#js_compare "this.problem.tick.a_like==2"}}checked="checked"{{/js_compare}} />
+            <label for="rating_better"></label>
+          </div>
+        </div>
+        <div class="col-15 body-text-w problemactionbutton">
+          <div class="icon_container">
+            <input name="rating" id="rating_bad" class="rating_ok" type="radio" value="0" {{#js_compare "this.problem.tick.a_dislike==1"}}checked="checked"{{/js_compare}}  />
+            <label for="rating_bad"></label>
+          </div>
+        </div>
+        <div class="col-15 problemactionbutton">
+          <div class="icon_container">
+            <a id="dirty" type="button" name="dirty" class="mark_dirty dirty body-text-w prompt_link"><span class="fa fa-wrench fa-2x"></span></a>
+            <label for="dirty" class="mark_dirty probattribute text-g">Dirty</label>
+          </div>
+        </div>
+        <div class="col-15 problemactionbutton">
+          <div class="icon_container">
+            <a id="dangerous" type="button" name="dangerous" class="mark_dangerous dangerous body-text-w prompt_link"><span class="fa fa-warning fa-2x"></span></a>
+            <label for="dangerous" class="mark_dangerous probattribute text-g">Danger</label>
+          </div>
+        </div>
+        <div class="col-15 problemactionbutton">
+          <div class="icon_container feedback" >
+            <a id="feedback" type="button" name="feedback"  class="prompt-feedback body-text-w prompt_link"><span class="fa fa-comment fa-2x"></span></a>
+            <label for="feedback" class="probattribute text-g">Feedback</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="row no-gutter buttons problemactionbuttons">
+        <div class="col-50 body-text-g">
+          <button class="problemator-button open_betavideos_actionsheet" pid="{{problem.problemid}}" type="button">           <span class="fa fa-video-camera body-text-w"></span> {{sizeof problem.betavideos}} betavideo(s)</button>
+        </div>
+        <div class="col-50 body-text-g">
+
+          <button href="#" class="problemator-button add_video" pid="{{problem.problemid}}">Add a betavideo...</button>
+        </div>
+      </div>
+      
+
+    </div><!-- end of content-block -->
+  </div><!--end of page content-->
+</div><!-- end of page -->

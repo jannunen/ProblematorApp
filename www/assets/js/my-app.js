@@ -121,18 +121,16 @@ var myApp = new Framework7({
        // Load problems page data and compile the template
        //
        var url = window.api.apicallbase + "circuits";
-       $.post(url, {}, function (data){ 
+       $.jsonp(url, {}, function (data){ 
          var compiledTemplate = Template7.compile(content);
-         var dataJSON = JSON.parse(data);
-         next(compiledTemplate(dataJSON));
+         next(compiledTemplate(data));
        });
      } else if ((matches=url.match(/circuit.html.*?(\d+)/))) {
        var circuitid = matches[1];
        var url = window.api.apicallbase + "circuit?id="+circuitid;
-       $.post(url, {}, function (data){ 
+       $.jsonp(url, {}, function (data){ 
          var compiledTemplate = Template7.compile(content);
-         var dataJSON = JSON.parse(data);
-         next(compiledTemplate(dataJSON));
+         next(compiledTemplate(data));
        });
      } else if ((matches=url.match(/problems.html/))) {
        // Load problems page data and compile the template
