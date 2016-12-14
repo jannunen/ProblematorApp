@@ -64,6 +64,8 @@ Template7.registerHelper('date_format', function (rawdate,format) {
 Template7.registerHelper('sizeof', function (arr) {
   // First we need to check is the passed arr argument is function
   if (typeof arr === 'function') arr = arr.call(this);
-
+  if (arr == undefined) {
+    return 0;
+  }
   return arr.length;
 });          

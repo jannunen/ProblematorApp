@@ -66,7 +66,7 @@
             <li><span class=" fa fa-cogs fa-1x"></span><a href="#settings"  class="close-panel">Settings</a></li>
             <li class=""><span class="fa fa-question fa-1x"></span><a href="#about" class="close-panel">About</a></li>
 
-            <li ><span   class="fa fa-sign-out fa-1x"></span><a href="/t/problematormobile/logout/"  class="external close-panel btn_logout">Logout</a></li>
+            <li ><span   class="fa fa-sign-out fa-1x"></span><a href="#"  class="close-panel btn_logout">Logout</a></li>
             <li><br /><br /></li>
           </ul>
         </nav>  
@@ -169,7 +169,7 @@
                           <option value=""> Choose a gym</option>
                           {{if locations}}
                           {{#each locations}}
-                          <option value="{$locid}" {if $loc==$locinfo.name}selected="selected"{/if}>{$loc}</option>
+                          <option value="{{id}}">{{name}}</option>
                           {{/each}}
                           {{/if}}
                           <option value="3">Isatis</option>

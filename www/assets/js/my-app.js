@@ -46,6 +46,7 @@ var myApp = new Framework7({
    preprocess: function (content, url, next) {
      var host = window.location.host;
 
+debugger;
      var pos = -1;
      if ((pos=url.indexOf(host))>0) {
        var remainder = url.substr(pos+host.length);
@@ -79,7 +80,16 @@ var myApp = new Framework7({
          next(compiledTemplate(dataJSON));
        });
      } else if ((matches=url.match(/dashboard.html/))) {
-       $.jsonp(window.api.apicallbase+"dashinfo/?id="+Cookies.get("uid"),{},function(data) {
+       var newgymid = undefined;
+       var apiurl = window.api.apicallbase+"dashinfo/?id="+Cookies.get("uid");
+       // Check if new gym id is given here
+       if ((matches=url.match(/dashboard.html.*?(\d+)/))) {
+	 newgymid = matches[1];
+	 apiurl += "&newgymid="+newgymid;
+	 // Cookie for location must be set, because it's changed
+	 Cookies.set("nativeproblematorlocation",newgymid);
+       }
+       $.jsonp(apiurl,{},function(data) {
          if (!Cookies.get("loginok")) {
            return false;
          }
@@ -93,11 +103,14 @@ var myApp = new Framework7({
          next(html);
        });
      } else if ((matches=url.match(/gyminfo.html/))) {
+
        $.jsonp(window.api.apicallbase+"gyminfo/?id="+Cookies.get("nativeproblematorlocation"),{},function(data) {
          var compiledTemplate = Template7.compile(content);
          data.locations = $.jStorage.get("locations");
-	 debugger;
+	 
 	 data.ascentsingyms = $.jStorage.get("climbinfo").ascentsingyms;
+	 data.ascentsingyms.boulder = data.ascentsingyms.boulder[data.locinfo.id];
+	 data.ascentsingyms.sport = data.ascentsingyms.sport[data.locinfo.id];
          next(compiledTemplate(data));
        });
      } else if ((matches=url.match(/competition.html.*?(\d+)/))) {
@@ -267,7 +280,7 @@ myApp.onPageInit("*",function(page) {
   addProblemsPageListeners(pagename);
   addDashBoardListeners(pagename);
   addCompetitionsPageListeners(pagename);
-
+  addGymInfoPageListeners(pagename);
 });
 
 

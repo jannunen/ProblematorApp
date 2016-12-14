@@ -7,6 +7,7 @@ var groupPageListenersInitialized = false;
 var singleGroupPageListenersInitialized = false;
 var groupMemberPageListenersInitialized = false;
 var inviteMemberPageListenersInitialized = false;
+var gymInfoPageListenersInitialized = false;
 
 var indexController= {
   initializeIndexPage : function() { 
@@ -57,6 +58,45 @@ var initPieChartsForGymInfo = function() {
 
 }
 
+var addGymInfoPageListeners = function(pagename) {
+  if ("gyminfo-page"==pagename && !gymInfoPageListenersInitialized) {
+    var selectGym = function(id) {
+       myApp.alert("Please wait, changing the gym");
+       mainView.router.loadPage("static/dashboard.html?newgymid="+id); 
+    }
+    $(document).on("click",".changelocation_picker",function() {
+      var gymid = Cookies.get("nativeproblematorlocation");
+      var buttons = [];
+      var locs = $.jStorage.get("locations");
+      buttons.push({
+	text : "Choose a location",
+	label : true
+      });
+
+      var btn = null;
+      var loc = null;
+      for (var idx in locs) {
+       loc =  locs[idx];
+       btn = {
+       text : loc.name,
+       color : "white",
+       bold : (loc.id==gymid) ,
+       onClick : $.proxy(selectGym,null,loc.id),
+       };
+       if (loc.id==gymid) {
+       btn.color = "yellow";
+       }
+       buttons.push(btn);
+      }
+
+      buttons.push({
+      text : "Close"
+      });
+      myApp.actions(buttons);
+    });
+   gymInfoPageListenersInitialized = true;
+  }
+}
 var addDashBoardListeners = function(pagename) {
   if ("dash"==pagename && !dashBoardListenersInitialized) {
     myApp.hidePreloader();
@@ -281,13 +321,6 @@ var addLoginPageListeners = function(pagename) {
       $.jsonp(url,{"username": username,"password":password,"problematorlocation" : loc, "authenticate" : true},function(data) {
         try {
           if (data && data.loc) {
-            // Set api-auth-token also
-            $.ajaxSetup({
-              headers : {'api-auth-token' : data.token}
-            });
-            $$.ajaxSetup({
-              headers : {'api-auth-token' : data.token}
-            });
 
             Cookies.set("nativeproblematorlocation",data.loc);
             Cookies.set("loginok",true);
@@ -311,17 +344,17 @@ var addLoginPageListeners = function(pagename) {
 }
 var addIndexPageListeners = function(pagename,page) {
   if ("index"==pagename && !indexPageListenersInitialized) {
-    $$(".btn_logout").on("click",function() {
+    $$(document).on("click",".btn_logout",function() {
+      $.jsonp(window.api.apicallbase+"logout");
       Cookies.remove("loginok");
       Cookies.remove("uid");
       window.uid = null;
       $("#userid").val("");
-      myApp.closePanel();
-      myApp.loginScreen();
+      mainView.router.loadPage("index.html");
 
     });
     // Confirm terminate account
-    $$(".opt-out").on("click",function() {
+    $$(document).on("click",".opt-out",function() {
       myApp.confirm("This action cannot be undone! All your data will be lost.","Are you sure?",function() {
         var url = window.api.apicallbase + "terminate_account";
         $.get(url).done(function(back) {
