@@ -85,11 +85,20 @@ var myApp = new Framework7({
          }
          loginCheck(data);
          myApp.hidePreloader();
+	 $.jStorage.set("climbinfo",data.climbinfo);
          $.jStorage.set("grades",data.grades);
          $.jStorage.set("locations",data.locations);
          var compiledTemplate = Template7.compile(content);
          var html = compiledTemplate(data);
          next(html);
+       });
+     } else if ((matches=url.match(/gyminfo.html/))) {
+       $.jsonp(window.api.apicallbase+"gyminfo/?id="+Cookies.get("nativeproblematorlocation"),{},function(data) {
+         var compiledTemplate = Template7.compile(content);
+         data.locations = $.jStorage.get("locations");
+	 debugger;
+	 data.ascentsingyms = $.jStorage.get("climbinfo").ascentsingyms;
+         next(compiledTemplate(data));
        });
      } else if ((matches=url.match(/competition.html.*?(\d+)/))) {
        // Load problems page data and compile the template
@@ -213,6 +222,9 @@ var $$ = Dom7;
 var mainView = myApp.addView('.view-main', {
   // Disable dynamic Navbar
   dynamicNavbar: true,
+});
+myApp.onPageBeforeInit('gyminfo', function(page) {
+  initPieChartsForGymInfo();
 });
 
 $$(document).on('pageInit', function (e) {

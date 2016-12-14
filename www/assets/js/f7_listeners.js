@@ -18,6 +18,45 @@ var indexController= {
     });
   }
 }
+
+
+var initPieChartsForGymInfo = function() {
+
+  // For gym info donut
+  if (pieBoulder == null && $("#pie-gym-boulder").length) {
+    var done = $("#pie-gym-boulder").data("done");
+    var all = $("#pie-gym-boulder").data("all");
+    pieBoulder = Morris.Donut({
+      element: 'pie-gym-boulder',
+      labelColor : "#636159",
+      data: [
+        {label: "Done", value: done},
+        {label: "Total", value: all}
+      ],
+      colors : ["#decc00","#636159"]
+    }); // Morris
+  }
+
+  if (pieSport == null && $("#pie-gym-sport").length) {
+    var done = $("#pie-gym-sport").data("done");
+    var all = $("#pie-gym-sport").data("all");
+    pieSport = Morris.Donut({
+      element: 'pie-gym-sport',
+      labelColor : "#636159",
+      data: [
+        {label: "Done", value: done},
+        {label: "Total", value: all}
+      ],
+      colors : ["#decc00","#636159"]
+
+    }); // Morris
+  }
+
+  pieSport.redraw();
+  pieBoulder.redraw();
+
+}
+
 var addDashBoardListeners = function(pagename) {
   if ("dash"==pagename && !dashBoardListenersInitialized) {
     myApp.hidePreloader();
