@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-eval' 'unsafe-inline' 27crags.com sandbox.27crags.com * gap://ready file:; style-src 'self' 'unsafe-inline'; img-src 'self' data:; script-src * 'unsafe-inline' 'unsafe-eval'">
     <!-- Required meta tags-->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui" />
@@ -10,30 +11,29 @@
     <title>Problemator</title>
     <link rel="stylesheet" href="bower_components/Framework7/dist/css/framework7.ios.css" />
     <link rel="stylesheet" href="bower_components/Framework7/dist/css/framework7.ios.colors.min.css" />
-    <link rel="stylesheet" href="bower_components/Framework7/dist/css/framework7.ios.colors.min.css" />
     <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css" />
 
-    <link rel="apple-touch-icon" sizes="57x57" href="/problemator/favico/apple-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="/problemator/favico/apple-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="/problemator/favico/apple-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="/problemator/favico/apple-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="/problemator/favico/apple-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="/problemator/favico/apple-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="/problemator/favico/apple-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="/problemator/favico/apple-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/problemator/favico/apple-icon-180x180.png">
-    <link rel="icon" type="image/png" sizes="192x192"  href="/problemator/favico/android-icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/problemator/favico/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="/problemator/favico/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/problemator/favico/favicon-16x16.png">
-    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" sizes="57x57" href="favico/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="favico/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="favico/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="favico/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="favico/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="favico/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="favico/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="favico/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="favico/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="favico/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favico/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="favico/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favico/favicon-16x16.png">
+    <link rel="manifest" href="manifest.json">
     <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="/problemator/favico/ms-icon-144x144.png">
+    <meta name="msapplication-TileImage" content="favico/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
 
     <!-- Path to your custom app styles-->
     <link rel="stylesheet" href="bower_components/morris.js/morris.css" />
-    <link rel="stylesheet" href="assets/css/style.css?ver={$inver}" />
+    <link rel="stylesheet" href="assets/css/style.css" />
   </head>
   <body>
     <!-- Status bar overlay for full screen mode (PhoneGap) -->
@@ -45,31 +45,31 @@
     <div class="panel panel-left panel-reveal">
       <div class="content-block">
 
-        <nav id="sidebarnav" class="list-nav">
-          <div class="row">
-            <div class="col-100 text-center">
-              <img src="assets/images/Problemator_logo_big_grey.svg" />
-            </div>
-          </div>
-          <ul>
-            <li><span class="fa fa-home fa-1x"></span><a class="close-panel" href="static/dashboard.html">Home</a></li>
-            <li><span  class="fa fa-list-ul fa-1x"></span><a href="static/problems.html"  class="close-panel" >Problems</a></li>
-            <li><span  class="fa fa-newspaper-o fa-1x"></span><a href="#new-problems-page"  class="close-panel" >New problems</a></li>
-            <li><span  class="fa fa-info fa-1x"></span><a href="#faq"  class="close-panel" >FAQ</a> </li>
-            <li><span  class="fa fa-check-square-o fa-1x"></span><a href="#tickstoday"  class="close-panel" >Ticks today</a> </li>
-            <li><span  class="fa fa-calendar fa-1x"></span><a href="/t/problematormobile/_tickarchivepage/"  class="close-panel" >Tick archive</a></li>
-            <li><span class="fa fa-signal fa-1x "></span><a href="/t/problematormobile/_ranking/" class="close-panel" >Ranking</a></li>
-            <li ><span   class="fa fa-users fa-1x"></span><a href="static/groups.html"  class="close-panel ">Groups</a></li>
-            <li ><span   class="fa fa-trophy fa-1x"></span><a href="static/competitions.html"  class="close-panel ">Competitions</a></li>
-            <li ><span   class="fa fa-info fa-1x"></span><a href="static/gyminfo.html"  class="close-panel ">Gym info</a></li>
-            <li ><span   class="fa fa-info fa-1x"></span><a href="static/gyminfo.html"  class="close-panel ">Change gym</a></li>
-            <li><span class=" fa fa-cogs fa-1x"></span><a href="#settings"  class="close-panel">Settings</a></li>
-            <li class=""><span class="fa fa-question fa-1x"></span><a href="#about" class="close-panel">About</a></li>
+	<nav id="sidebarnav" class="list-nav">
+	  <div class="row">
+	    <div class="col-100 text-center">
+	      <img src="assets/images/Problemator_logo_big_grey.svg" />
+	    </div>
+	  </div>
+	  <ul>
+	    <li><span class="fa fa-home fa-1x"></span><a class="close-panel" href="static/dashboard.html">Home</a></li>
+	    <li><span  class="fa fa-list-ul fa-1x"></span><a href="static/problems.html"  class="close-panel" >Problems</a></li>
+	    <li><span  class="fa fa-newspaper-o fa-1x"></span><a href="#new-problems-page"  class="close-panel" >New problems</a></li>
+	    <li><span  class="fa fa-info fa-1x"></span><a href="#faq"  class="close-panel" >FAQ</a> </li>
+	    <li><span  class="fa fa-check-square-o fa-1x"></span><a href="#tickstoday"  class="close-panel" >Ticks today</a> </li>
+	    <li><span  class="fa fa-calendar fa-1x"></span><a href="/t/problematormobile/_tickarchivepage/"  class="close-panel" >Tick archive</a></li>
+	    <li><span class="fa fa-signal fa-1x "></span><a href="/t/problematormobile/_ranking/" class="close-panel" >Ranking</a></li>
+	    <li ><span   class="fa fa-users fa-1x"></span><a href="static/groups.html"  class="close-panel ">Groups</a></li>
+	    <li ><span   class="fa fa-trophy fa-1x"></span><a href="static/competitions.html"  class="close-panel ">Competitions</a></li>
+	    <li ><span   class="fa fa-info fa-1x"></span><a href="static/gyminfo.html"  class="close-panel ">Gym info</a></li>
+	    <li ><span   class="fa fa-info fa-1x"></span><a href="static/gyminfo.html"  class="close-panel ">Change gym</a></li>
+	    <li><span class=" fa fa-cogs fa-1x"></span><a href="#settings"  class="close-panel">Settings</a></li>
+	    <li class=""><span class="fa fa-question fa-1x"></span><a href="#about" class="close-panel">About</a></li>
 
-            <li ><span   class="fa fa-sign-out fa-1x"></span><a href="#"  class="close-panel btn_logout">Logout</a></li>
-            <li><br /><br /></li>
-          </ul>
-        </nav>  
+	    <li ><span   class="fa fa-sign-out fa-1x"></span><a href="#"  class="close-panel btn_logout">Logout</a></li>
+	    <li><br /><br /></li>
+	  </ul>
+	</nav>  
       </div>
     </div><!-- left panel ends -->
 
@@ -79,60 +79,32 @@
       <!-- Main view-->
       <div class="view view-main">
 
-        <!-- Top Navigation Bar-->
-        <div class="navbar" >
-          <div class="navbar-inner">
-            <div class="left ">
-              <a href="dashboard.html"><img src="assets/images/problemator_logo_small.svg" alt="logo" /></a>
-            </div>
-            <div class="center">Problemator</div>
-            <div class="right">
-              <a href="#" class="link icon-only open-panel"> <i class="fa fa-bars"></i></a>
-            </div>
-          </div>
-        </div>
+	<!-- Top Navigation Bar-->
+	<div class="navbar" >
+	  <div class="navbar-inner">
+	    <div class="left ">
+	      <a href="dashboard.html"><img src="assets/images/problemator_logo_small.svg" alt="logo" /></a>
+	    </div>
+	    <div class="center">Problemator</div>
+	    <div class="right">
+	      <a href="#" class="link icon-only open-panel"> <i class="fa fa-bars"></i></a>
+	    </div>
+	  </div>
+	</div>
 
-        <!-- Pages - Fixed navbar and toolbar throughout all pages in this view stack-->
-        <div class="pages navbar-through toolbar-through">
-          <!-- Page, data-page contains page name-->
-          <div data-page="index" class="page">
-            <!-- Scrollable page content-->
-            <div class="page-content">
-              <!-- this is actually dashboard.html -->
-              <div style="height : 100%; margin-top : 50%;">
-                <span class="fa fa-spinner fa-2x"></span>  Loading...
-              </div>
-            </div>
-          </div>
-        </div>
-
-        
-        <!-- Bottom Toolbar on every view unless no-toolbar specified -->
-        <!--
-        <div class="toolbar tabbar tabbar-labels">
-          <div class="toolbar-inner text-white text-w">
-            <a href="#tab1" class="tab-link">
-              <i class="fa fa-user fa-2x"></i>
-              <span class="tabbar-label">Me</span>
-            </a>
-            <a href="#tab2" class="tab-link">
-              <i class="fa fa-trophy fa-2x"> </i>
-              <span class="tabbar-label">Ranking</span>
-            </a>
-            <a href="#" onclick="$('#sidebar_groups').click();return false;" class="tab-link">
-              <i class="fa fa-group fa-2x"></i>
-              <span class="tabbar-label">Groups</span>
-            </a>
-            <a href="#tab4" class="tab-link">
-              <i class="fa fa-gears fa-2x"></i>
-              <span class="tabbar-label">Settings</span>
-            </a>
-
-            </a>
-          </div>
-        </div>
-        -->
-        <!-- // toolbar -->
+	<!-- Pages - Fixed navbar and toolbar throughout all pages in this view stack-->
+	<div class="pages navbar-through toolbar-through">
+	  <!-- Page, data-page contains page name-->
+	  <div data-page="index" class="page">
+	    <!-- Scrollable page content-->
+	    <div class="page-content">
+	      <!-- this is actually dashboard.html -->
+	      <div style="height : 100%; margin-top : 50%;">
+		<span class="fa fa-spinner fa-2x"></span>  Loading...
+	      </div>
+	    </div>
+	  </div>
+	</div>
 
       </div><!-- // view -->
     </div><!-- // views -->
@@ -140,66 +112,66 @@
     <!-- Login screen -->
     <div class="login-screen">
       <div class="view view-main">
-        <div class="page">
-          <div class="page-content login-screen-content">
-            <form id="check-user"    method="post" action="">
-              <div class="list-block">
-                <div class="content-block-title text-center"><img height="50" src="assets/images/Problemator_logo_big_yellow.svg" /></div>
-                <div class="login-screen-title"><h2>Problemator</h2></div>
-                <div class="content-block-title text-center body-text-w text-center" style="margin : 0;">Climbing is dangerous.<br />You may also get addicted to it!</div>
-                <ul>
-                  <li class="item-content">
-                    <div class="item-inner">
-                      <div class="item-input">
-                        <input type="text" name="username" placeholder="Your e-mail" value=""  />
-                      </div>
-                    </div>
-                  </li>
-                  <li class="item-content">
-                    <div class="item-inner">
-                      <div class="item-input">
-                        <input type="password" name="password" id="password" placeholder="Your password" value="" />
-                      </div>
-                    </div>
-                  </li>
-                  
+	<div class="page">
+	  <div class="page-content login-screen-content">
+	    <form id="check-user"    method="post" action="">
+	      <div class="list-block">
+		<div class="content-block-title text-center"><img height="50" src="assets/images/Problemator_logo_big_yellow.svg" /></div>
+		<div class="login-screen-title"><h2>Problemator</h2></div>
+		<div class="content-block-title text-center body-text-w text-center" style="margin : 0;">Climbing is dangerous.<br />You may also get addicted to it!</div>
+		<ul>
+		  <li class="item-content">
+		    <div class="item-inner">
+		      <div class="item-input">
+			<input type="text" name="username" placeholder="Your e-mail" value=""  />
+		      </div>
+		    </div>
+		  </li>
+		  <li class="item-content">
+		    <div class="item-inner">
+		      <div class="item-input">
+			<input type="password" name="password" id="password" placeholder="Your password" value="" />
+		      </div>
+		    </div>
+		  </li>
 
-                </ul>
-              </div>
 
-              <div class="list-block">
-                <div class="list-block-label">
-                  <div class="row">
-                    <div class="col-50 text-left">
-                      <button type="button" class="button loginbutton color-problematoryellow body-text-w">Log in</button>
-                    </div>
-                    <div class="col-50 text-center vcenter pad20">
-                      <span class="text-g">or</span> <a class="problemator-link external" href="/t/problematormobile/signup/">Sign up</a>
-                    </div>
-                  </div>
+		</ul>
+	      </div>
 
-                  <div class="row" style="margin-top : 10px;">
-                    <div class="col-100 text-left ">
-                      <a href="#" id="facebook-login" class="external button color-facebook body-text-w">Facebook login</a>
-                    </div>
-                  </div>
-                  <div class="list-block">
-                    <div class="list-block-label">
-                      <div class="row">
-                        <div class="col-100 text-g">By registering/logging in you accept the <a href="/problemator/tos.html" class="external text-y">Terms of Use</a></div>
-                      </div>
-                  <div class="row">
-                    <div class="col-100 text-left padtop"><a href="/t/problematormobile/forgotpassword/" class="external text-w ">Forgot password?</a></div>
-                  </div>
-                    </div>
-                  </div>
+	      <div class="list-block">
+		<div class="list-block-label">
+		  <div class="row">
+		    <div class="col-50 text-left">
+		      <button type="button" class="button loginbutton color-problematoryellow body-text-w">Log in</button>
+		    </div>
+		    <div class="col-50 text-center vcenter pad20">
+		      <span class="text-g">or</span> <a class="problemator-link external" href="/t/problematormobile/signup/">Sign up</a>
+		    </div>
+		  </div>
 
-                </div>
+		  <div class="row" style="margin-top : 10px;">
+		    <div class="col-100 text-left ">
+		      <a href="#" id="facebook-login" class="external button color-facebook body-text-w">Facebook login</a>
+		    </div>
+		  </div>
+		  <div class="list-block">
+		    <div class="list-block-label">
+		      <div class="row">
+			<div class="col-100 text-g">By registering/logging in you accept the <a href="/problemator/tos.html" class="external text-y">Terms of Use</a></div>
+		      </div>
+		      <div class="row">
+			<div class="col-100 text-left padtop"><a href="/t/problematormobile/forgotpassword/" class="external text-w ">Forgot password?</a></div>
+		      </div>
+		    </div>
+		  </div>
 
-              </div>
-            </form>
-          </div>
-        </div>
+		</div>
+
+	      </div>
+	    </form>
+	  </div>
+	</div>
       </div>
     </div><!-- end of login screen -->
 
@@ -209,49 +181,49 @@
     <input type="hidden" name="_ver" id="ver" value="{$ver}" />		
 
 
-  <!--------------------------->
-  <!--   TEMPLATES SECTION  --->
-  <!--------------------------->
-   
-  <!-- Global ascents popover -->
-<script id="global_ascents_popover" type="text/template7">
-<div class="popover ascents popover-about">
+    <!--------------------------->
+    <!--   TEMPLATES SECTION  --->
+    <!--------------------------->
+
+    <!-- Global ascents popover -->
+    <script id="global_ascents_popover" type="text/template7">
+      <div class="popover ascents popover-about">
     <div class="popover-angle"></div>
     <div class="popover-inner">
       <div class="content-block">
-        <h1>Problem ascents <small>{{count}} time(s)</h1>
-                                <br />
-                                <p class="body-text-w">Public ascent list</p><br />
-                                <ul >
-                                {{#each ascents}}
-                                <li>@{{date_format tstamp "DD.MM.YYYY"}} {{etunimi}} {{sukunimi}} {{#js_compare "this.a_like > 0"}}<span class="text-w">+{{a_like}} <span class="fa fa-thumbs-up"></span></span>{{/js_compare}}</li>
-                                {{else}}
-                                 No public ascents, yet.
-                                {{/each}}
-                                </ul><br />
-                                <span class="text-y">Want to include your own ascents? Go to <a class="text-w" href="#settings">settings</a> page and make your ascents public now!</span>
+	<h1>Problem ascents <small>{{count}} time(s)</h1>
+				<br />
+				<p class="body-text-w">Public ascent list</p><br />
+				<ul >
+				{{#each ascents}}
+				<li>@{{date_format tstamp "DD.MM.YYYY"}} {{etunimi}} {{sukunimi}} {{#js_compare "this.a_like > 0"}}<span class="text-w">+{{a_like}} <span class="fa fa-thumbs-up"></span></span>{{/js_compare}}</li>
+				{{else}}
+				 No public ascents, yet.
+				{{/each}}
+				</ul><br />
+				<span class="text-y">Want to include your own ascents? Go to <a class="text-w" href="#settings">settings</a> page and make your ascents public now!</span>
       </div>
     </div>
 </div> 
-  </script>
-<!--
-  Template for single invited email
--->
-<script id="single_invited_email" type="text/template7">
-<div>
+    </script>
+    <!--
+      Template for single invited email
+    -->
+    <script id="single_invited_email" type="text/template7">
+      <div>
 <li class="invited_email">
-              <div class="item-inner">
-                <div class="item-title">email address</div>
-                <div class="item-after"><span class="fa fa-minus-square remove_invite_email"></span></div>
-              </div>
+	      <div class="item-inner">
+		<div class="item-title">email address</div>
+		<div class="item-after"><span class="fa fa-minus-square remove_invite_email"></span></div>
+	      </div>
 
-            </li>
+	    </li>
 </div>
-</script>
+    </script>
 
     <!-- Template from single search result item -->
     <script id="search_groups_hit_item" type="text/template7">
-{{#if groups}}
+      {{#if groups}}
 {{#each groups}}
 <li>
   <a href="static/group.html?id={{id}}" data-group="{{id}}" class="item-content item-link">
@@ -285,46 +257,12 @@
     <script type="text/javascript" src="bower_components/raphael/raphael.min.js"></script>
     <script type="text/javascript" src="bower_components/morris.js/morris.min.js"></script>
     <script type="text/javascript" src="bower_components/js-cookie/src/js.cookie.js"></script>
-    <script type="text/javascript" src="assets/js/template7_helpers.js?ver="></script>
-    <script type="text/javascript" src="assets/js/f7_listeners.js?ver={$inver}"></script>
+    <script type="text/javascript" src="assets/js/template7_helpers.js"></script>
+    <script type="text/javascript" src="assets/js/f7_listeners.js"></script>
 
 
     <!-- Path to your app js-->
-    <script type="text/javascript" src="assets/js/my-app.js?ver={$inver}"></script>
-
-    <!-- Path to Framework7 Library JS-->
-    <script type="text/javascript" >
-$(document).ready(function() {
-  jQuery.browser = {};
-  (function () {
-    jQuery.browser.msie = false;
-    jQuery.browser.version = 0;
-    if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
-      jQuery.browser.msie = true;
-      jQuery.browser.version = RegExp.$1;
-    }
-  })();
-
-  $(document).on("submit","#check-user",function(e) {
-    // Nokia's Lumia phones don't really care about html5's required="required" -attribute, so 
-    // the selected gym has to be checked manually.
-    if ($("#problematorlocation").val()=="") {
-      alert("Please select a gym first");
-      return false;
-    }
-    $("#check-user").ajaxSubmit(function(back) {
-      if (back.match(/^\d+$/)) {
-        document.location.href="/t/problematormobile/index/"+back+"/";
-      } else {
-        alert(back);
-      }
-    }); 
-    return false;
-  });
-
-
-});
-    </script>
+    <script type="text/javascript" src="assets/js/my-app.js"></script>
 
   </body>
 </html>              
