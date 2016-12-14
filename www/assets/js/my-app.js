@@ -93,6 +93,7 @@ debugger;
          if (!Cookies.get("loginok")) {
            return false;
          }
+	 debugger;
          loginCheck(data);
          myApp.hidePreloader();
 	 $.jStorage.set("climbinfo",data.climbinfo);
@@ -269,6 +270,7 @@ myApp.onPageInit("*",function(page) {
   var matches = null;
 
   if (!Cookies.get("loginok")) {
+    myApp.loginScreen();
     return false;
   }
   console.log("Initi: "+pagename);

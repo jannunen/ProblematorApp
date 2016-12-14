@@ -12,11 +12,7 @@ var gymInfoPageListenersInitialized = false;
 var indexController= {
   initializeIndexPage : function() { 
     // Data is set in my-app preprocess -function
-    mainView.router.load({
-      url: 'static/dashboard.html',
-      ignoreCache : true,
-      reload : true
-    });
+    mainView.router.loadPage('static/dashboard.html');
   }
 }
 
@@ -57,14 +53,11 @@ var initPieChartsForGymInfo = function() {
   pieBoulder.redraw();
 
 }
-
-var addGymInfoPageListeners = function(pagename) {
-  if ("gyminfo-page"==pagename && !gymInfoPageListenersInitialized) {
+var invokeLocationChangeActionSheet = function() {
     var selectGym = function(id) {
        myApp.alert("Please wait, changing the gym");
        mainView.router.loadPage("static/dashboard.html?newgymid="+id); 
     }
-    $(document).on("click",".changelocation_picker",function() {
       var gymid = Cookies.get("nativeproblematorlocation");
       var buttons = [];
       var locs = $.jStorage.get("locations");
@@ -93,6 +86,12 @@ var addGymInfoPageListeners = function(pagename) {
       text : "Close"
       });
       myApp.actions(buttons);
+}
+
+var addGymInfoPageListeners = function(pagename) {
+  if ("gyminfo-page"==pagename && !gymInfoPageListenersInitialized) {
+    $(document).on("click",".changelocation_picker",function() {
+      invokeLocationChangeActionSheet();
     });
    gymInfoPageListenersInitialized = true;
   }
@@ -104,7 +103,13 @@ var addDashBoardListeners = function(pagename) {
       Cookies.set("whatsnew"+ver,true,{ expires: 7650 });
       myApp.alert("1. Groups! You can add groups and invite your friends to groups and have a fun and friendly competition!.<br />2. It's easier to manage your ticks. Just click 'Manage Ticks' from a problem page.<br />3. You can change your tick date when saving a tick.<br />4. Ranking progress on dashboard. If you want to see how you progress (or regress) in your ranks :)","What's new?");
     }  
+    var gymid = Cookies.get("nativeproblematorlocation");
+    if (isNaN(parseInt(gymid))) {
+      invokeLocationChangeActionSheet();
+    }
+    debugger;
     if (!chartsInitialized) {
+
       chartsInitialized = true;
 
       var gradesArr = $.jStorage.get("grades");
@@ -315,14 +320,19 @@ var addLoginPageListeners = function(pagename) {
       }
       var username = $(this).parents("form").find('input[name="username"]').val();
       var password = $(this).parents("form").find('input[name="password"]').val();
-      var loc = $(this).parents("form").find("#problematorlocation").val();
+      //var loc = $(this).parents("form").find("#problematorlocation").val();
       // Handle username and password
       var url = window.api.apicallbase + "dologin?native=true"; 
-      $.jsonp(url,{"username": username,"password":password,"problematorlocation" : loc, "authenticate" : true},function(data) {
+      var opt = {"username": username,"password":password, "authenticate" : true};
+      if (Cookies.get("nativeproblematorlocation")) {
+	opt.problematorlocation = Cookies.get("nativeproblematorlocation");
+      }
+      $.jsonp(url,opt,function(data) {
         try {
-          if (data && data.loc) {
+	  debugger;
+          if (data) {
 
-            Cookies.set("nativeproblematorlocation",data.loc);
+            //Cookies.set("nativeproblematorlocation",data.loc);
             Cookies.set("loginok",true);
             Cookies.set("uid",data.uid);
 
@@ -330,7 +340,7 @@ var addLoginPageListeners = function(pagename) {
             // Initialize index page.
             myApp.closeModal();
             myApp.showPreloader('Hang on, initializing app.');
-            indexController.initializeIndexPage();
+            mainView.router.loadPage("static/dashboard.html");
           } else {
             myApp.alert(data.message);
           }
@@ -338,6 +348,7 @@ var addLoginPageListeners = function(pagename) {
           myApp.alert(data);
         }
       });
+      return false;
     });
     loginPageListenersInitialized = true;
   }
@@ -345,13 +356,16 @@ var addLoginPageListeners = function(pagename) {
 var addIndexPageListeners = function(pagename,page) {
   if ("index"==pagename && !indexPageListenersInitialized) {
     $$(document).on("click",".btn_logout",function() {
-      $.jsonp(window.api.apicallbase+"logout");
-      Cookies.remove("loginok");
-      Cookies.remove("uid");
-      window.uid = null;
-      $("#userid").val("");
-      mainView.router.loadPage("index.html");
-
+      debugger;
+      $.jsonp(window.api.apicallbase+"logout",{},function() {
+	Cookies.remove("loginok");
+	Cookies.remove("uid");
+	window.uid = null;
+	$("#userid").val("");
+	//mainView.router.loadPage("static/dashboard.html");
+	//mainView.router.refreshPage();
+	document.location.href="index.html";
+      });
     });
     // Confirm terminate account
     $$(document).on("click",".opt-out",function() {
