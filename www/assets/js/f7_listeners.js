@@ -1,3 +1,4 @@
+var indexhtmlLoaded = false;
 var singleProblemListenersInitialized = false;
 var problemsPageListenersInitialized = false;
 var dashBoardListenersInitialized = false;
@@ -14,6 +15,10 @@ var singleGroupPageListenerInitialized = false;
 var doPreprocess = function(content,url,next) {
   var host = window.location.host;
   var pos = -1;
+  if (url.match(/index.html/)) {
+   // Just return index.html as is
+   next(content);
+  }
   if ((pos=url.indexOf(host))>0) {
     var remainder = url.substr(pos+host.length);
     if (remainder == "" || remainder=="/") {
@@ -674,8 +679,7 @@ var addGroupPageListeners = function(pagename) {
         // Do a search
         var url = window.api.apicallbase+"search_groups";
         $.jsonp(url,{text : val},function(back) {
-          var tpl = $("script#search_groups_hit_item").html();
-          var ctpl = Template7.compile(tpl);
+	  var ctpl = myApp.templates.single_group_search_item;
           var html = ctpl({groups : back});    
           $(".search_results").empty().append(html);
 
@@ -767,52 +771,6 @@ var addSingleGroupPageListeners = function(pagename,url) {
       });
     });
 
-    $$(document).on("click",".send_invitations",function() {
-      var emails = $(".invited_email").length;
-      if (emails == 0) {
-        myApp.alert("Add email(s) to invite first.");
-        return;
-      } else {
-        emails = $(".invited_email").map(function() {
-          return $(this).find(".item-title").text().trim();
-        }).get().join(",");
-        var url = window.api.apicallbase + "send_invitations";
-        var msg = $(".invite_msg").val();
-        var add_admin = $(".add_admin_rights").is(":checked") ? "1" : "0";
-        var groupid = $("#groupid").val();
-        $.jsonp(url,{groupid: groupid, emails : emails,msg : msg, add_admin : add_admin},function(back) {
-          myApp.alert(back.message,"Problemator");
-          if (!back.error) {
-            // Go back 
-            mainView.router.back();
-          }
-        });
-      }
-    });
-    $$(document).on("click",".add_invite_email",function() {
-      // Validate email and add to emails list.
-      var email =  $(this).parent(".item-after").siblings(".item-input").find("input.invite_email").val(); 
-      if (email == undefined || !email.match(/^[^@]+@[^@]+\.[^@]+$/)) {
-        myApp.alert("Not a valid email.","Error");
-      } else {
-        // Make sure that the placeholder is gone
-        $(".no_emails_yet").remove();
-
-        // Append to list
-        var html =$( $("script#single_invited_email").html());
-        $(html).find(".item-title").text(email);
-        $(".invited_emails_list").append(html.html());
-
-        // And empty the input field.
-        $(this).parent(".item-after").siblings(".item-input").find("input.invite_email").val(""); 
-
-        // Listener for removing an email from list
-        //
-        $$(".remove_invite_email").on("click",function() {
-          $(this).parents("li").remove();
-        });
-      }
-    });
     $$(document).on("click",".groupmenu-open",function() {
       var isme = $(this).data("me") != "";
       var gid = $(this).data("gid");
@@ -898,7 +856,54 @@ var addSingleGroupPageListeners = function(pagename,url) {
 
 var addInviteMemberPageListeners = function(pagename) {
   if ("invite_group_member"==pagename) { 
+    $$(document).on("click",".send_invitations",function() {
+      var emails = $(".invited_email").length;
+      if (emails == 0) {
+        myApp.alert("Add email(s) to invite first.");
+        return;
+      } else {
+        emails = $(".invited_email").map(function() {
+          return $(this).find(".item-title").text().trim();
+        }).get().join(",");
+        var url = window.api.apicallbase + "send_invitations";
+        var msg = $(".invite_msg").val();
+        var add_admin = $(".add_admin_rights").is(":checked") ? "1" : "0";
+        var groupid = $("#groupid").val();
+        $.jsonp(url,{groupid: groupid, emails : emails,msg : msg, add_admin : add_admin},function(back) {
+          myApp.alert(back.message,"Problemator");
+          if (!back.error) {
+            // Go back 
+            mainView.router.back();
+          }
+        });
+      }
+    });
+
     // What to do when plus is clicked and email is added to the list
+    $$(document).on("click",".add_invite_email",function() {
+      // Validate email and add to emails list.
+      var email =  $(this).parent(".item-after").siblings(".item-input").find("input.invite_email").val(); 
+      if (email == undefined || !email.match(/^[^@]+@[^@]+\.[^@]+$/)) {
+        myApp.alert("Not a valid email.","Error");
+      } else {
+        // Make sure that the placeholder is gone
+        $(".no_emails_yet").remove();
+
+        // Append to list
+	var html = $(myApp.templates.single_invited_email());
+        $(html).find(".item-title").text(email);
+        $(".invited_emails_list").append(html.html());
+
+        // And empty the input field.
+        $(this).parent(".item-after").siblings(".item-input").find("input.invite_email").val(""); 
+
+        // Listener for removing an email from list
+        //
+        $$(".remove_invite_email").on("click",function() {
+          $(this).parents("li").remove();
+        });
+      }
+    });
 
   }
 };
@@ -924,8 +929,10 @@ var addSingleProblemListeners = function(pagename) {
         var pid = $(this).data("id");
         var url = window.api.apicallbase + "global_ascents/?pid="+pid;
         $.jsonp(url,{pid : pid},function(back) {
-          var tpl = $("script#global_ascents_popover").html();
-          var ctpl = Template7.compile(tpl);
+	  debugger;
+	  var ctpl = myApp.templates.global_ascents_popover;
+          //var tpl = $("script#global_ascents_popover").html();
+          //var ctpl = Template7.compile(tpl);
           var html = ctpl(back);    
           myApp.popover(html, clickedLink);
 
@@ -1108,5 +1115,26 @@ var saveTickFunction = function(self,action, callback) {
     }
   });
 };
+
+
+var initializeTemplates = function(myApp) {
+   
+  // Template for problem global ascents popover
+  var t1 = '<div class="popover ascents popover-about"> <div class="popover-angle"></div> <div class="popover-inner"> <div class="content-block"> <h1>Problem ascents <small>{{count}} time(s)</h1> <br /> <p class="body-text-w">Public ascent list</p><br /> <ul > {{#each ascents}} <li>@{{date_format tstamp "DD.MM.YYYY"}} {{etunimi}} {{sukunimi}} {{#js_compare "this.a_like > 0"}}<span class="text-w">+{{a_like}} <span class="fa fa-thumbs-up"></span></span>{{/js_compare}}</li> {{else}} No public ascents, yet.  {{/each}} </ul><br /> <span class="text-y">Want to include your own ascents? Go to <a class="text-w" href="#settings">settings</a> page and make your ascents public now!</span> </div> </div> </div> ';
+  var ctpl = Template7.compile(t1);
+  myApp.templates.global_ascents_popover = ctpl;
+
+  // Template for single invited email
+  t1 = '<div> <li class="invited_email"> <div class="item-inner"> <div class="item-title">email address</div> <div class="item-after"><span class="fa fa-minus-square remove_invite_email"></span></div> </div> </li> </div>';
+  var ctpl = Template7.compile(t1);
+  myApp.templates.single_invited_email = ctpl;
+
+    // Template from single search result item 
+  t1 = '{{#if groups}} {{#each groups}} <li> <a href="static/group.html?id={{id}}" data-group="{{id}}" class="item-content item-link"> <div class="item-inner"> <div class="item-title-row"> <div class="item-title text-w">{{name}}</div> <div class="item-after"><span class="fa fa-users"></span>{{usercount}}</div> </div> </div> </a> </li> {{else}} <li> <div class="item-content"> <div class="item-inner"> <div class="item-title text-w">No search results...</div> </div> </div> </li> {{/each}} {{/if}}';
+  var ctpl = Template7.compile(t1);
+  myApp.templates.single_group_search_item = ctpl;
+
+
+}
 
 

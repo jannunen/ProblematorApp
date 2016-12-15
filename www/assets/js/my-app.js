@@ -7,6 +7,7 @@ var myApp = new Framework7({
   modalTitle : "Problemator",
   pushState: true,
   template7Pages: false,
+  precompileTemplates : false,
   init : false,
 });
 
@@ -66,6 +67,7 @@ myApp.onPageInit("*",function(page) {
 });
 
 myApp.init(); // init app manually after you've attached all handlers
+initializeTemplates(myApp);
 
 
 var loginCheck = function(data) {
