@@ -1057,6 +1057,76 @@ var addSingleProblemListeners = function(pagename) {
         return false;
       });
 
+      // Untick from single problem
+      $(document).on("click",".untick",function(e) {
+	var tickid = $(this).attr("data-id");
+	var from = $(this).attr("data-from");
+	var self = this;
+	$(this).attr("disabled","disabled");
+	var gymid = $("#location").val();
+	var pid = $(this).data("pid");
+	myApp.confirm('Really untick this problem?', function () {
+           var url = window.api.apicallbase + "untick"; 
+	  $.jsonp(url,{"tickid" : tickid,'pid' : pid},function(back) {
+	    $(self).removeAttr("disabled");
+	    if (from == "manageticks") {
+	      // IF coming from manage ticks from a single problem view.
+	      myApp.closeModal();
+            }
+	  });
+	},function() {
+	  $(self).removeAttr("disabled");
+	});
+	return false;
+      });
+      //
+      //
+      // Untick from single problem
+      $(document).on("click",".manageticks",function(e) {
+        var self = this;
+        var pid = $(this).data("pid");
+        var url = window.api.apicallbase + "userticks/"; 
+        $.jsonp(url,{pid : pid},function(ticks) {
+
+          var buttons = [
+            {
+              text: 'Tick(s) for the problem',
+              label: true
+            },
+          ];
+          // ADd ticks
+          var now = moment();
+          for (var idx in ticks) {
+            var t = ticks[idx];
+            var mt = moment(t.tstamp);
+            var txt = "<span class='text-w'>";
+            if (t.routetype == 'sport') {
+              txt += ascent_types[t.ascent_type] + " ";
+            }
+            //txt += mt.from(now)+" with "+t.tries+" tries ";
+            txt += mt.format("DD.MM.YYYY")+" with "+t.tries+" tries ";
+            txt += '&nbsp; </span><a data-from="manageticks" class="untick" data-id="'+t.id+'" pid="'+t.problemid+'" href="#" ><span class="fa fa-times"></span></a>';
+
+            buttons.push({
+              text : txt,
+              label : true,
+            });
+          }
+
+          // Add cancel
+          buttons.push({
+            text: 'Cancel',
+            color: 'yellow'
+          });
+
+          myApp.actions(buttons);
+        });
+        return false;
+
+      });
+
+
+
       singleProblemListenersInitialized = true;
     }
   }
