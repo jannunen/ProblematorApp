@@ -6,11 +6,6 @@ var pieBoulder = null;
 var data_opinions = []; // For problem page Morris chart.
 var tickSaved = false;
 window.initialized = false;
-Template7.registerHelper('stringify', function (context){
-	var str = JSON.stringify(context);
-	// Need to replace any single quotes in the data with the HTML char to avoid string being cut short
-	return str.split("'").join('&#39;');
-});
 
 var api = {
   server : "http://beta.problemator.fi",
@@ -21,11 +16,6 @@ var api = {
 window.api = api;
 api.apicallbase = api.server+api.api+api.version;
 
-$.expr[":"].contains = $.expr.createPseudo(function(arg) {
-  return function( elem ) {
-    return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
-  };
-});
 var loginCheck = function(data) {
   data = JSON.stringify(data);
   if (data && data.match(/Login.failed/i)) {

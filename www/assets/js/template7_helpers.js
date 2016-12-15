@@ -1,3 +1,14 @@
+$.expr[":"].contains = $.expr.createPseudo(function(arg) {
+  return function( elem ) {
+    return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+  };
+});
+
+Template7.registerHelper('stringify', function (context){
+	var str = JSON.stringify(context);
+	// Need to replace any single quotes in the data with the HTML char to avoid string being cut short
+	return str.split("'").join('&#39;');
+});
 Template7.registerHelper('select_options',function(values, selected, options) {
   var optLines= "";
   if (values) {
