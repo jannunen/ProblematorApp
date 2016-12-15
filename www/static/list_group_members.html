@@ -62,7 +62,7 @@
             {{#each group.members}}
             <li class="item-content">
               <div class="item-inner">
-                <div class="item-title text-w username">{{etunimi}} {{sukunimi}} 
+                <div class="item-title username {{#js_compare "this.isme==1"}}text-y{{else}}text-w{{/js_compare}}">{{etunimi}} {{sukunimi}} 
                   {{#js_compare "this.iscreator==1"}}<span class="body-text-g">founder</span>{{/js_compare}}
                   {{#js_compare "this.isadmin==1"}}<span class="body-text-g">admin</span>{{/js_compare}}
                 </div>

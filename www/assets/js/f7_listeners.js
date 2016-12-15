@@ -585,13 +585,11 @@ var   addProblemsPageListeners = function(pagename) {
     if (!problemsPageListenersInitialized) {
       problemsPageListenersInitialized = true;
       $(document).on("click","#quicktick",function() {
-debugger;
 	$(this).attr("disabled","disabled");
 	var self = this;
 	var gymid = Cookies.get("nativeproblematorlocation");
 
 	var probs = $("#quickproblems").val();
-///t/problematormobile/saveticks/
 	var url = window.api.apicallbase + "saveticks/";
 	$.jsonp(url,{"ticks" : probs,gymid : gymid},function(back) {
 	  loginCheck(back);
@@ -719,8 +717,8 @@ var addGroupMemberListeners = function(pagename) {
         var gid = self.data("gid");
         var uid = self.data("userid");
         $.jsonp(url,{gid : gid,uid : uid},function(back) {
-          myApp.alert(back);
-          if (back.match(/removed from/i)) {
+          myApp.alert(back.message);
+          if (!back.error) {
             // Remove from the list
             mainView.router.refreshPage();
           }
