@@ -153,7 +153,6 @@ var doPreprocess = function(content,url,next) {
        });
      } else if ((matches=url.match(/groups.html/))) {
        // List groups 
-       debugger;
        var url = window.api.apicallbase + "groups/";
        $.jsonp(url, {}, function (data){
          if (!Cookies.get("loginok")) {
@@ -216,7 +215,7 @@ var addGlobalListeners = function() {
     $$(document).on("click",".opt-out",function() {
       myApp.confirm("This action cannot be undone! All your data will be lost.","Are you sure?",function() {
         var url = window.api.apicallbase + "terminate_account";
-        $.get(url).done(function(back) {
+        $.jsonp(url).done(function(back) {
           myApp.alert(back);
           setTimeout(function() {
             document.location.href="/index.html";
@@ -585,6 +584,23 @@ var   addProblemsPageListeners = function(pagename) {
   if ("problems-page"==pagename) {
     if (!problemsPageListenersInitialized) {
       problemsPageListenersInitialized = true;
+      $(document).on("click","#quicktick",function() {
+debugger;
+	$(this).attr("disabled","disabled");
+	var self = this;
+	var gymid = Cookies.get("nativeproblematorlocation");
+
+	var probs = $("#quickproblems").val();
+///t/problematormobile/saveticks/
+	var url = window.api.apicallbase + "saveticks/";
+	$.jsonp(url,{"ticks" : probs,gymid : gymid},function(back) {
+	  loginCheck(back);
+	  myApp.alert(back.message);
+	  mainView.router.refreshPage();
+	  $(self).removeAttr("disabled");
+	});
+      });
+    
     }
 
   }
@@ -600,7 +616,7 @@ var addCompetitionsPageListeners = function(pagename) {
         $(".searching").html('<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>');
         // Do a search
         var url = window.api.apicallbase+"search_competitions";
-        $.getJSON(url,{text : val},function(back) {
+        $.jsonp(url,{text : val},function(back) {
           var tpl = $("script#search_competitions_hit_item").html();
           var ctpl = Template7.compile(tpl);
           var html = ctpl({groups : back});    
@@ -618,20 +634,23 @@ var addGroupPageListeners = function(pagename) {
     $$(document).on("click",".accept-invitation",function() {
       var invid = $$(this).data("invid");
       var url = window.api.apicallbase + "acceptinvitation";
-      $.post(url,{invid: invid}).done(function(back) {
+      $.jsonp(url,{invid: invid},function(back) {
 	myApp.closeModal();
-	reloadPendingInvitations();
-	reloadMyGroups();
+	mainView.router.refreshPage();
       });
+      return false;
 
     });
     $$(document).on("click",".decline-invitation",function() {
+      debugger;
       var invid = $$(this).data("invid");
       var url = window.api.apicallbase + "declineinvitation";
-      $.post(url,{invid: invid}).done(function(back) {
+      $.jsonp(url,{invid: invid},function(back) {
+	debugger;
 	myApp.closeModal();
-	reloadPendingInvitations();
+	mainView.router.refreshPage();
       });
+      return false;
 
     });
 
