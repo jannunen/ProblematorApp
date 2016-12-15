@@ -30,30 +30,32 @@
       <ul>
         <div id="mypendinginvitationslist">
           <!-- Invitations start -->
+          {{#if pending}}
           {{#each pending}}
           <li>
-            <a href="#" class="item-content item-link">
+            <a href="#" class="item-content item-link invitation-accept-decline" data-gid="{{group.id}}" data-invid="{{id}}">
               <div class="item-inner">
                 <div class="item-title-row">
-                  <div class="item-title">{{name}}</div>
-                  <div class="item-after"><span class="badge badge-yellow">{{userCount}}</div>
+                  <div class="item-title">{{group.name}}, <small class="text-g">{{group.userCount}} member(s)</small></div>
+
                 </div>
-                <div class="item-subtitle">Current leader, @Jarmo</div>
-                <div class="item-text">{{description}}</div>
+                <div class="item-subtitle"><span class="text-g">Invited by</span> <span class="text-w">{{from.etunimi}} {{from.sukunimi}}</span></div>
+                <div class="item-text">{{invmsg}}</div>
               </div>
             </a>
           </li>
           {{else}}
           <li>
-            <a href="#" class="item-content">
-              <div class="item-inner">
-                <div class="item-text">
-                  No invitations at the moment.
-                </div>
+            <div class="item-inner">
+              <div class="item-title">
+                No pending invitations.
               </div>
-            </a>
+            </div>
           </li>
-          {{/each}}
+
+          {{/each}
+          {{/if}}
+
           <!-- // Invitations end -->
         </div>
       </ul>

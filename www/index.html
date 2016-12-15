@@ -25,7 +25,7 @@
     <meta name="msapplication-tap-highlight" content="no">
 
     <!-- Your app title -->
-    <title>27Crags TopoMaker</title>
+    <title>Problemator</title>
 
     <!-- This template defaults to the iOS CSS theme. To support both iOS and material design themes, see the Framework7 Tutorial at the link below:
         http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-themes-in-single-app.html
@@ -33,6 +33,7 @@
 
     <link rel="stylesheet" href="bower_components/framework7/dist/css/framework7.ios.min.css">
     <link rel="stylesheet" href="bower_components/framework7/dist/css/framework7.ios.colors.min.css">
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css" />
 
     <!-- Path to your custom app styles-->
     <link rel="stylesheet" href="bower_components/morris.js/morris.css" />
@@ -85,7 +86,7 @@
         <div class="navbar">
           <div class="navbar-inner">
             <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
-            <div class="center sliding">Awesome App</div>
+            <div class="center sliding">Problemator</div>
             <div class="right">
               <!--
                 Right link contains only icon - additional "icon-only" class
@@ -105,7 +106,7 @@
 
 	      <!-- this is actually dashboard.html -->
 	      <div style="height : 100%; margin-top : 50%;" class="text-w text-center">
-                <h2><span class="fa fa-spinner fa-2x"></span>  Loading...</h2>
+                <h2 class="text-w"><span class="fa fa-spinner fa-2x"></span>  Loading...</h2>
 	      </div>
 
 
@@ -128,28 +129,6 @@
       </div>
     </div>
 
-    <script id="index" type="text/template7">
-      <textarea style="width : 100%; height : 80px;" id="log"></textarea>
-<h1>Premium crags</h2>
-        <table class="table table-striped table-condensed">
-          <thead>
-            <tr>
-              <th>id</th>
-              <th>name</th>
-              <th>actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {{#each crags}}
-            <tr>
-                <td>{{id}}</td>
-                <td>{{name}}</td>
-                <td><a href="#" data-id="{{id}}" class="downloadcrag button button-raised">Download</a></td>
-            </tr>
-            {{/each}}
-          </tbody>
-        </table>
-    </script>
 
     <!-- Login screen -->
     <div class="login-screen">
@@ -219,6 +198,75 @@
     </div><!-- end of login screen -->
 
 
+
+    <!--------------------------->
+    <!--   TEMPLATES SECTION  --->
+    <!--------------------------->
+
+    <!-- Global ascents popover -->
+    <script id="global_ascents_popover" type="text/template7">
+      <div class="popover ascents popover-about">
+    <div class="popover-angle"></div>
+    <div class="popover-inner">
+      <div class="content-block">
+	<h1>Problem ascents <small>{{count}} time(s)</h1>
+				<br />
+				<p class="body-text-w">Public ascent list</p><br />
+				<ul >
+				{{#each ascents}}
+				<li>@{{date_format tstamp "DD.MM.YYYY"}} {{etunimi}} {{sukunimi}} {{#js_compare "this.a_like > 0"}}<span class="text-w">+{{a_like}} <span class="fa fa-thumbs-up"></span></span>{{/js_compare}}</li>
+				{{else}}
+				 No public ascents, yet.
+				{{/each}}
+				</ul><br />
+				<span class="text-y">Want to include your own ascents? Go to <a class="text-w" href="#settings">settings</a> page and make your ascents public now!</span>
+      </div>
+    </div>
+</div> 
+    </script>
+    <!--
+      Template for single invited email
+    -->
+    <script id="single_invited_email" type="text/template7">
+      <div>
+<li class="invited_email">
+	      <div class="item-inner">
+		<div class="item-title">email address</div>
+		<div class="item-after"><span class="fa fa-minus-square remove_invite_email"></span></div>
+	      </div>
+
+	    </li>
+</div>
+    </script>
+
+    <!-- Template from single search result item -->
+    <script id="search_groups_hit_item" type="text/template7">
+      {{#if groups}}
+{{#each groups}}
+<li>
+  <a href="static/group.html?id={{id}}" data-group="{{id}}" class="item-content item-link">
+<div class="item-inner">
+<div class="item-title-row">
+<div class="item-title text-w">{{name}}</div>
+<div class="item-after"><span class="fa fa-users"></span>{{usercount}}</div>
+</div>
+</div>
+</a>
+</li>
+{{else}}
+<li>
+<div class="item-content">
+<div class="item-inner">
+<div class="item-title text-w">No search results...</div>
+</div>
+</div>
+</li>
+{{/each}}
+{{/if}}
+    </script>
+
+
+
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="bower_components/framework7/dist/js/framework7.min.js"></script>
     <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
@@ -231,7 +279,7 @@
     <script type="text/javascript" src="assets/js/template7_helpers.js"></script>
     <script type="text/javascript" src="assets/js/f7_listeners.js"></script>
 
-    <script type="text/javascript" src="js/my-app.js"></script>
+    <script type="text/javascript" src="assets/js/my-app.js"></script>
 
 
 

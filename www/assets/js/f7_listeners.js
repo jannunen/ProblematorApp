@@ -7,11 +7,12 @@ var groupPageListenersInitialized = false;
 var singleGroupPageListenersInitialized = false;
 var groupMemberPageListenersInitialized = false;
 var inviteMemberPageListenersInitialized = false;
+var globalListenersAdded = false;
 var gymInfoPageListenersInitialized = false;
+var singleGroupPageListenerInitialized = false;
 
 var doPreprocess = function(content,url,next) {
   var host = window.location.host;
-  debugger;
   var pos = -1;
   if ((pos=url.indexOf(host))>0) {
     var remainder = url.substr(pos+host.length);
@@ -37,8 +38,11 @@ var doPreprocess = function(content,url,next) {
        var groupid = matches[1];
        var url = window.api.apicallbase + "group/";
        $.jsonp(url, {id : groupid}, function (data){ 
-         if (!Cookies.get("loginok")) {
-           return false;
+         if (data==null) {
+           myApp.alert("The group does not exist anymore!",function() {
+             document.location.href="index.html";
+           });
+           return true;
          }
          var compiledTemplate = Template7.compile(content);
          var dataJSON = {group : data};
@@ -47,7 +51,6 @@ var doPreprocess = function(content,url,next) {
      } else if ((matches=url.match(/dashboard.html/))) {
        var newgymid = undefined;
        var apiurl = window.api.apicallbase+"dashinfo/?id="+Cookies.get("uid");
-       debugger;
        // Check if new gym id is given here
        if ((matches=url.match(/dashboard.html.*?(\d+)/))) {
          newgymid = matches[1];
@@ -59,7 +62,6 @@ var doPreprocess = function(content,url,next) {
          if (!Cookies.get("loginok")) {
            return false;
          }
-         debugger;
          loginCheck(data);
          myApp.hidePreloader();
          $.jStorage.set("climbinfo",data.climbinfo);
@@ -145,7 +147,8 @@ var doPreprocess = function(content,url,next) {
          next(compiledTemplate({"group" : data}));
        });
      } else if ((matches=url.match(/groups.html/))) {
-       // List group members
+       // List groups 
+       debugger;
        var url = window.api.apicallbase + "groups/";
        $.jsonp(url, {}, function (data){
          if (!Cookies.get("loginok")) {
@@ -190,6 +193,79 @@ var doPreprocess = function(content,url,next) {
 
 }
 
+var addGlobalListeners = function() {
+   if (!globalListenersAdded) {
+    $$(document).on("click",".btn_logout",function() {
+      debugger;
+      $.jsonp(window.api.apicallbase+"logout",{},function() {
+        Cookies.remove("loginok");
+        Cookies.remove("uid");
+        window.uid = null;
+        $("#userid").val("");
+        //mainView.router.loadPage("static/dashboard.html");
+        //mainView.router.refreshPage();
+        document.location.href="index.html";
+      });
+    });
+    // Confirm terminate account
+    $$(document).on("click",".opt-out",function() {
+      myApp.confirm("This action cannot be undone! All your data will be lost.","Are you sure?",function() {
+        var url = window.api.apicallbase + "terminate_account";
+        $.get(url).done(function(back) {
+          myApp.alert(back);
+          setTimeout(function() {
+            document.location.href="/index.html";
+          },5000);
+        });
+      });
+    });
+     $$('.loginbutton').on('click', function (e) {
+       if ($("#problematorlocation").val()=="") {
+         myApp.alert("Please select a gym","Gym not selected");
+         return false;
+       }
+       var username = $(this).parents("form").find('input[name="username"]').val();
+       var password = $(this).parents("form").find('input[name="password"]').val();
+       //var loc = $(this).parents("form").find("#problematorlocation").val();
+       // Handle username and password
+       console.log("Loggin in with "+username+" and password "+password);
+       var url = window.api.apicallbase + "dologin?native=true"; 
+       var opt = {"username": username,"password":password, "authenticate" : true};
+       if (Cookies.get("nativeproblematorlocation")) {
+         opt.problematorlocation = Cookies.get("nativeproblematorlocation");
+       }
+       $.jsonp(url,opt,function(data) {
+         try {
+           debugger;
+           console.log(JSON.stringify(data));
+           if (data && !data.error) {
+
+             //Cookies.set("nativeproblematorlocation",data.loc);
+             Cookies.set("loginok",true);
+             Cookies.set("uid",data.uid);
+
+             window.uid = data.uid;
+             // Initialize index page.
+             myApp.closeModal();
+             //myApp.showPreloader('Hang on, initializing app.');
+             //mainView.router.loadPage("static/dashboard.html");
+             document.location.href="index.html";
+           } else {
+             // Possibly login failed
+             //
+             debugger;
+             myApp.alert(data.message);
+           }
+         } catch(e) {
+           myApp.alert(data);
+         }
+       });
+       return false;
+     });
+
+     globalListenersAdded = true;
+   }
+}
 var initPieChartsForGymInfo = function() {
 
   // For gym info donut
@@ -283,98 +359,98 @@ var addDashBoardListeners = function(pagename) {
     debugger;
     //if (!chartsInitialized) {
 
-      chartsInitialized = true;
+    chartsInitialized = true;
 
-      var gradesArr = $.jStorage.get("grades");
-      var grades = [];
-      var grade;
-      for (var idx in gradesArr) {
-        grade = gradesArr[idx];
-        grades[grade.score*10]=grade.name;
-      }
-      window.ggrades = grades;
+    var gradesArr = $.jStorage.get("grades");
+    var grades = [];
+    var grade;
+    for (var idx in gradesArr) {
+      grade = gradesArr[idx];
+      grades[grade.score*10]=grade.name;
+    }
+    window.ggrades = grades;
 
 
-      var url = window.api.apicallbase + "globalrankingprogress?jsonp=true";
-      $.jsonp(url,{uid:window.uid},function(_data) {
-        dashboardLineChart = Morris.Line({
-          element: 'ranking_progress',
-          data: _data,
-          xkey: 'y',
-          hideHover : 'always',
-          pointSize : 0,
-          lineColors : ['#decc00','#bfb6a8'],
-          lineWidth : "2px",
-          smooth : true,
-          yLabelFormat : function(y) {
-            return -y;
-          },
+    var url = window.api.apicallbase + "globalrankingprogress?jsonp=true";
+    $.jsonp(url,{uid:window.uid},function(_data) {
+      dashboardLineChart = Morris.Line({
+        element: 'ranking_progress',
+        data: _data,
+        xkey: 'y',
+        hideHover : 'always',
+        pointSize : 0,
+        lineColors : ['#decc00','#bfb6a8'],
+        lineWidth : "2px",
+        smooth : true,
+        yLabelFormat : function(y) {
+          return -y;
+        },
 
-          xLabelFormat : function(x) {
-            var objDate = new Date(x);
-            var locale = "en-us";
-            var short = objDate.toLocaleString(locale, { month: "short" });
-            return short.toUpperCase();
+        xLabelFormat : function(x) {
+          var objDate = new Date(x);
+          var locale = "en-us";
+          var short = objDate.toLocaleString(locale, { month: "short" });
+          return short.toUpperCase();
 
-          },
-          ykeys: ['a','b'],
+        },
+        ykeys: ['a','b'],
 
-          labels: ['BOULDER','SPORT']
+        labels: ['BOULDER','SPORT']
+      });
+    });
+    var url = window.api.apicallbase+"json_running6mo_both/";
+    $.jsonp(url,{uid : window.uid},function(_data) {
+
+      dashboardLineChart = Morris.Line({
+        element: 'running6mo',
+        data: _data,
+        xkey: 'y',
+        hideHover : 'always',
+        pointSize : 0,
+        yLabelFormat : function (x) { 
+          // ROund to nearest 500
+          var near = Math.round(x/500)*500;
+          near = window.ggrades[near];
+          if (near==undefined) {
+            return "";
+          }
+          return near;
+        },
+        lineColors : ['#decc00','#bfb6a8'],
+        lineWidth : "2px",
+        smooth : true,
+
+        xLabelFormat : function(x) {
+          var objDate = new Date(x);
+          var locale = "en-us";
+          var short = objDate.toLocaleString(locale, { month: "short" });
+          return short.toUpperCase();
+
+        },
+        ykeys: ['a','b'],
+
+        labels: ['BOULDER','SPORT']
+      });
+    }); // get
+
+    var barurl = window.api.apicallbase+"json_running6mogradebars_both/";
+    if ($("#running6mobars").length) {
+      $.jsonp(barurl,{uid : window.uid},function(back) {
+        dashboardBarChart = Morris.Bar({
+          element : 'running6mobars',
+          data : back,
+          'gridTextSize' : 8,
+          xLabelMargin: 0,
+
+          xkey : 'y',
+          hideHover : 'false',
+          stacked : true,
+          ykeys : ['a','b'],
+          labels : ['BOULDER','SPORT'],
+          barColors : ['#decc00','#bfb6a8'],
         });
       });
-      var url = window.api.apicallbase+"json_running6mo_both/";
-      $.jsonp(url,{uid : window.uid},function(_data) {
-
-        dashboardLineChart = Morris.Line({
-          element: 'running6mo',
-          data: _data,
-          xkey: 'y',
-          hideHover : 'always',
-          pointSize : 0,
-          yLabelFormat : function (x) { 
-            // ROund to nearest 500
-            var near = Math.round(x/500)*500;
-            near = window.ggrades[near];
-            if (near==undefined) {
-              return "";
-            }
-            return near;
-          },
-          lineColors : ['#decc00','#bfb6a8'],
-          lineWidth : "2px",
-          smooth : true,
-
-          xLabelFormat : function(x) {
-            var objDate = new Date(x);
-            var locale = "en-us";
-            var short = objDate.toLocaleString(locale, { month: "short" });
-            return short.toUpperCase();
-
-          },
-          ykeys: ['a','b'],
-
-          labels: ['BOULDER','SPORT']
-        });
-      }); // get
-
-      var barurl = window.api.apicallbase+"json_running6mogradebars_both/";
-      if ($("#running6mobars").length) {
-        $.jsonp(barurl,{uid : window.uid},function(back) {
-          dashboardBarChart = Morris.Bar({
-            element : 'running6mobars',
-            data : back,
-            'gridTextSize' : 8,
-            xLabelMargin: 0,
-
-            xkey : 'y',
-            hideHover : 'false',
-            stacked : true,
-            ykeys : ['a','b'],
-            labels : ['BOULDER','SPORT'],
-            barColors : ['#decc00','#bfb6a8'],
-          });
-        });
-      }
+    }
     //}
     dashBoardListenersInitialized = true;
   } // if pagename
@@ -388,175 +464,109 @@ var addDashBoardListeners = function(pagename) {
       myApp.alert("1. Groups! You can add groups and invite your friends to groups and have a fun and friendly competition!.<br />2. It's easier to manage your ticks. Just click 'Manage Ticks' from a problem page.<br />3. You can change your tick date when saving a tick.<br />4. Ranking progress on dashboard. If you want to see how you progress (or regress) in your ranks :)","What's new?");
     }  
     //if (!chartsInitialized) {
-      chartsInitialized = true;
+    chartsInitialized = true;
 
-      var gradesArr = $.jStorage.get("grades");
-      var grades = [];
-      var grade;
-      for (var idx in gradesArr) {
-        grade = gradesArr[idx];
-        grades[grade.score*10]=grade.name;
-      }
-      window.ggrades = grades;
+    var gradesArr = $.jStorage.get("grades");
+    var grades = [];
+    var grade;
+    for (var idx in gradesArr) {
+      grade = gradesArr[idx];
+      grades[grade.score*10]=grade.name;
+    }
+    window.ggrades = grades;
 
 
-      var url = window.api.apicallbase + "globalrankingprogress?jsonp=true";
-      $.jsonp(url,{uid:window.uid},function(_data) {
-        dashboardLineChart = Morris.Line({
-          element: 'ranking_progress',
-          data: _data,
-          xkey: 'y',
-          hideHover : 'always',
-          pointSize : 0,
-          lineColors : ['#decc00','#bfb6a8'],
-          lineWidth : "2px",
-          smooth : true,
-          yLabelFormat : function(y) {
-            return -y;
-          },
+    var url = window.api.apicallbase + "globalrankingprogress?jsonp=true";
+    $.jsonp(url,{uid:window.uid},function(_data) {
+      dashboardLineChart = Morris.Line({
+        element: 'ranking_progress',
+        data: _data,
+        xkey: 'y',
+        hideHover : 'always',
+        pointSize : 0,
+        lineColors : ['#decc00','#bfb6a8'],
+        lineWidth : "2px",
+        smooth : true,
+        yLabelFormat : function(y) {
+          return -y;
+        },
 
-          xLabelFormat : function(x) {
-            var objDate = new Date(x);
-            var locale = "en-us";
-            var short = objDate.toLocaleString(locale, { month: "short" });
-            return short.toUpperCase();
+        xLabelFormat : function(x) {
+          var objDate = new Date(x);
+          var locale = "en-us";
+          var short = objDate.toLocaleString(locale, { month: "short" });
+          return short.toUpperCase();
 
-          },
-          ykeys: ['a','b'],
+        },
+        ykeys: ['a','b'],
 
-          labels: ['BOULDER','SPORT']
+        labels: ['BOULDER','SPORT']
+      });
+    });
+    var url = window.api.apicallbase+"json_running6mo_both/";
+    $.jsonp(url,{uid : window.uid},function(_data) {
+
+      dashboardLineChart = Morris.Line({
+        element: 'running6mo',
+        data: _data,
+        xkey: 'y',
+        hideHover : 'always',
+        pointSize : 0,
+        yLabelFormat : function (x) { 
+          // ROund to nearest 500
+          var near = Math.round(x/500)*500;
+          near = window.ggrades[near];
+          if (near==undefined) {
+            return "";
+          }
+          return near;
+        },
+        lineColors : ['#decc00','#bfb6a8'],
+        lineWidth : "2px",
+        smooth : true,
+
+        xLabelFormat : function(x) {
+          var objDate = new Date(x);
+          var locale = "en-us";
+          var short = objDate.toLocaleString(locale, { month: "short" });
+          return short.toUpperCase();
+
+        },
+        ykeys: ['a','b'],
+
+        labels: ['BOULDER','SPORT']
+      });
+    }); // get
+
+    var barurl = window.api.apicallbase+"json_running6mogradebars_both/";
+    if ($("#running6mobars").length) {
+      $.jsonp(barurl,{uid : window.uid},function(back) {
+        dashboardBarChart = Morris.Bar({
+          element : 'running6mobars',
+          data : back,
+          'gridTextSize' : 8,
+          xLabelMargin: 0,
+
+          xkey : 'y',
+          hideHover : 'false',
+          stacked : true,
+          ykeys : ['a','b'],
+          labels : ['BOULDER','SPORT'],
+          barColors : ['#decc00','#bfb6a8'],
         });
       });
-      var url = window.api.apicallbase+"json_running6mo_both/";
-      $.jsonp(url,{uid : window.uid},function(_data) {
-
-        dashboardLineChart = Morris.Line({
-          element: 'running6mo',
-          data: _data,
-          xkey: 'y',
-          hideHover : 'always',
-          pointSize : 0,
-          yLabelFormat : function (x) { 
-            // ROund to nearest 500
-            var near = Math.round(x/500)*500;
-            near = window.ggrades[near];
-            if (near==undefined) {
-              return "";
-            }
-            return near;
-          },
-          lineColors : ['#decc00','#bfb6a8'],
-          lineWidth : "2px",
-          smooth : true,
-
-          xLabelFormat : function(x) {
-            var objDate = new Date(x);
-            var locale = "en-us";
-            var short = objDate.toLocaleString(locale, { month: "short" });
-            return short.toUpperCase();
-
-          },
-          ykeys: ['a','b'],
-
-          labels: ['BOULDER','SPORT']
-        });
-      }); // get
-
-      var barurl = window.api.apicallbase+"json_running6mogradebars_both/";
-      if ($("#running6mobars").length) {
-        $.jsonp(barurl,{uid : window.uid},function(back) {
-          dashboardBarChart = Morris.Bar({
-            element : 'running6mobars',
-            data : back,
-            'gridTextSize' : 8,
-            xLabelMargin: 0,
-
-            xkey : 'y',
-            hideHover : 'false',
-            stacked : true,
-            ykeys : ['a','b'],
-            labels : ['BOULDER','SPORT'],
-            barColors : ['#decc00','#bfb6a8'],
-          });
-        });
-      }
+    }
     //}
     dashBoardListenersInitialized = true;
   } // if pagename
 }
 var addLoginPageListeners = function(pagename) {
   if (pagename == "login-page" && !loginPageListenersInitialized) {
-    $$('.loginbutton').on('click', function (e) {
-      if ($("#problematorlocation").val()=="") {
-        myApp.alert("Please select a gym","Gym not selected");
-        return false;
-      }
-      var username = $(this).parents("form").find('input[name="username"]').val();
-      var password = $(this).parents("form").find('input[name="password"]').val();
-      //var loc = $(this).parents("form").find("#problematorlocation").val();
-      // Handle username and password
-      console.log("Loggin in with "+username+" and password "+password);
-      var url = window.api.apicallbase + "dologin?native=true"; 
-      var opt = {"username": username,"password":password, "authenticate" : true};
-      if (Cookies.get("nativeproblematorlocation")) {
-        opt.problematorlocation = Cookies.get("nativeproblematorlocation");
-      }
-      $.jsonp(url,opt,function(data) {
-        try {
-          debugger;
-          console.log(JSON.stringify(data));
-          if (data && !data.error) {
-
-            //Cookies.set("nativeproblematorlocation",data.loc);
-            Cookies.set("loginok",true);
-            Cookies.set("uid",data.uid);
-
-            window.uid = data.uid;
-            // Initialize index page.
-            myApp.closeModal();
-            myApp.showPreloader('Hang on, initializing app.');
-            mainView.router.loadPage("static/dashboard.html");
-          } else {
-            // Possibly login failed
-            //
-            debugger;
-            myApp.alert(data.message);
-          }
-        } catch(e) {
-          myApp.alert(data);
-        }
-      });
-      return false;
-    });
     loginPageListenersInitialized = true;
   }
 }
 var addIndexPageListeners = function(pagename,page) {
   if ("index"==pagename && !indexPageListenersInitialized) {
-    $$(document).on("click",".btn_logout",function() {
-      debugger;
-      $.jsonp(window.api.apicallbase+"logout",{},function() {
-        Cookies.remove("loginok");
-        Cookies.remove("uid");
-        window.uid = null;
-        $("#userid").val("");
-        //mainView.router.loadPage("static/dashboard.html");
-        //mainView.router.refreshPage();
-        document.location.href="index.html";
-      });
-    });
-    // Confirm terminate account
-    $$(document).on("click",".opt-out",function() {
-      myApp.confirm("This action cannot be undone! All your data will be lost.","Are you sure?",function() {
-        var url = window.api.apicallbase + "terminate_account";
-        $.get(url).done(function(back) {
-          myApp.alert(back);
-          setTimeout(function() {
-            document.location.href="/index.html";
-          },5000);
-        });
-      });
-    });
     indexPageListenersInitialized = true;
   }
 
@@ -599,7 +609,48 @@ var addCompetitionsPageListeners = function(pagename) {
 }
 
 var addGroupPageListeners = function(pagename) {
-  if ("grouplist"==pagename) {
+  if (!groupPageListenersInitialized && "grouplist"==pagename) {
+    $$(document).on("click",".accept-invitation",function() {
+      var invid = $$(this).data("invid");
+      var url = window.api.apicallbase + "acceptinvitation";
+      $.post(url,{invid: invid}).done(function(back) {
+	myApp.closeModal();
+	reloadPendingInvitations();
+	reloadMyGroups();
+      });
+
+    });
+    $$(document).on("click",".decline-invitation",function() {
+      var invid = $$(this).data("invid");
+      var url = window.api.apicallbase + "declineinvitation";
+      $.post(url,{invid: invid}).done(function(back) {
+	myApp.closeModal();
+	reloadPendingInvitations();
+      });
+
+    });
+
+
+    $$(document).on("click",".invitation-accept-decline",function()  {
+      var invid = $$(this).data("invid");
+      var gid = $$(this).data("gid");
+      var clickedLink = this;
+      var popoverHTML = '<div class="popover invitation-popup">'+
+	'<div class="popover-inner">'+
+	'<div class="list-block">'+
+	'<ul>'+
+	'<li><a href="/t/problematormobile/group/'+gid+'" class="item-link list-button accept-invitation" >Open group</a></li>'+
+	'<li><a href="#" class="item-link list-button accept-invitation" data-invid="'+invid+'">Accept invitation</a></li>'+
+	'<li><a href="#" class="item-link list-button decline-invitation" data-invid="'+invid+'">Decline invitation</a></li>'+
+	'<li><a href="#" class="item-link list-button close-popover">Close</a></li>'+
+	'</ul>'+
+	'</div>'+
+	'</div>'+
+	'</div>'
+      myApp.popover(popoverHTML, clickedLink);
+      $$(".invitation-popup").on("opened",function() {
+      });
+    });
     $$("#creategroup").on("click",function() {
       var gname = $("#newgroup").val();
       //var uid = $("#userid").val();
@@ -632,6 +683,7 @@ var addGroupPageListeners = function(pagename) {
       }
     });
 
+    groupPageListenersInitialized = true;
   }
 }
 var addGroupMemberListeners = function(pagename) {
@@ -679,9 +731,89 @@ var addSettingsPageListeners = function(pagename,url) {
   }
 }
 var addSingleGroupPageListeners = function(pagename,url) {
-  if ("singlegroup"==pagename) { 
-    addGroupLeaveJoinListeners();
-    $$(".groupmenu-open").on("click",function() {
+  if ("singlegroup"==pagename && !singleGroupPageListenerInitialized) { 
+    console.log("ADDED SINGLEGROUPAGELISTENERS");
+
+    $$(document).on("click",".join_group",function() {
+      var gid = $(this).data("gid");
+      var url = window.api.apicallbase + "join_group";
+      myApp.confirm("Are you sure you want to join this group?",function() {
+	$.jsonp(url,{gid : gid},function(back) {
+	  debugger;
+	  myApp.closeModal();
+	  myApp.alert(back.message);
+	  mainView.router.refreshPage();
+
+	});  
+      });
+    });
+    $$(document).on("click",".leave_group",function() {
+      var gid = $(this).data("gid");
+      var url = window.api.apicallbase + "leave_group";
+      myApp.confirm("Are you sure you want to leave this group?",function() {
+	$.jsonp(url,{gid : gid},function(back) {
+	  myApp.closeModal();
+	  myApp.alert(back.message,"Problemator",function() {
+	    debugger;
+	    mainView.router.back({
+	      url : "static/groups.html",
+	      ignoreCache : true,
+	      force : true
+	    })
+	  });
+	  mainView.router.refreshPage();
+
+	});  
+      });
+    });
+
+    $$(document).on("click",".send_invitations",function() {
+      var emails = $(".invited_email").length;
+      if (emails == 0) {
+        myApp.alert("Add email(s) to invite first.");
+        return;
+      } else {
+        emails = $(".invited_email").map(function() {
+          return $(this).find(".item-title").text().trim();
+        }).get().join(",");
+        var url = window.api.apicallbase + "send_invitations";
+        var msg = $(".invite_msg").val();
+        var add_admin = $(".add_admin_rights").is(":checked") ? "1" : "0";
+        var groupid = $("#groupid").val();
+        $.jsonp(url,{groupid: groupid, emails : emails,msg : msg, add_admin : add_admin},function(back) {
+          myApp.alert(back.message,"Problemator");
+          if (!back.error) {
+            // Go back 
+            mainView.router.back();
+          }
+        });
+      }
+    });
+    $$(document).on("click",".add_invite_email",function() {
+      // Validate email and add to emails list.
+      var email =  $(this).parent(".item-after").siblings(".item-input").find("input.invite_email").val(); 
+      if (email == undefined || !email.match(/^[^@]+@[^@]+\.[^@]+$/)) {
+        myApp.alert("Not a valid email.","Error");
+      } else {
+        // Make sure that the placeholder is gone
+        $(".no_emails_yet").remove();
+
+        // Append to list
+        var html =$( $("script#single_invited_email").html());
+        $(html).find(".item-title").text(email);
+        $(".invited_emails_list").append(html.html());
+
+        // And empty the input field.
+        $(this).parent(".item-after").siblings(".item-input").find("input.invite_email").val(""); 
+
+        // Listener for removing an email from list
+        //
+        $$(".remove_invite_email").on("click",function() {
+          $(this).parents("li").remove();
+        });
+      }
+    });
+    $$(document).on("click",".groupmenu-open",function() {
       var isme = $(this).data("me") != "";
       var gid = $(this).data("gid");
       var isadmin = $(this).data("isadmin")=="1";
@@ -707,22 +839,27 @@ var addSingleGroupPageListeners = function(pagename,url) {
       myApp.popover(popoverHTML, clickedLink);
 
       var addGroupMenuPopoverListeners = function() {
-        addGroupLeaveJoinListeners();
-        $$(".delete_group").on("click",function() {
+        $$(document).on("click",".delete_group",function() {
           var gid = $(this).data("gid");
           myApp.confirm("ALL the members, rankings etc. will be deleted.<br /><br />This action cannot be undone.","Are you sure?",function(back) {
             var url = window.api.apicallbase +"delete_group";
             $.jsonp(url,{gid : gid},function(back) {
-              myApp.alert(back,"Message",function() {
-                mainView.router.back();
-              });
-              mainView.router.refreshPreviousPage();
+              debugger;
+              if (!back.error) {
+                mainView.router.refreshPreviousPage();
+                myApp.alert(back.message,function() {
+                  mainView.router.refreshPreviousPage();
+                  mainView.router.back();
+                });
+              } else {
+                myApp.alert(back.message);
+              }
             });
           },function() {
 
           });
         });
-        $$(".open-groupsettings").on("click",function() {
+        $$(document).on("click",".open-groupsettings",function() {
           // Populate settings first
           var desc = $(".groupdesc").text();
           var name = $(".groupname").text();
@@ -744,98 +881,25 @@ var addSingleGroupPageListeners = function(pagename,url) {
     });
 
 
-    $$(".frm_groupsettings").on("submit",function(e) {
+    $$(document).on("submit",".frm_groupsettings",function(e) {
       var data = myApp.formToJSON(this);
       var url = window.api.apicallbase + "save_groupsettings";
       $.jsonp(url,data,function(back) {
         myApp.alert(back.message);
         mainView.router.refreshPage();
+        mainView.router.refreshPreviousPage();
       });
       return false;
     });
+    singleGroupPageListenerInitialized = true;
   }
 }
 
 
-var addGroupLeaveJoinListeners = function() {
-  $$(".join_group").on("click",function() {
-    var gid = $(this).data("gid");
-    var url = window.api.apicallbase + "join_group";
-    myApp.confirm("Are you sure you want to join this group?",function() {
-      $.jsonp(url,{gid : gid},function(back) {
-        myApp.closeModal();
-        myApp.alert(back.message);
-        mainView.router.refreshPage();
-
-      });  
-    });
-  });
-  $$(".leave_group").on("click",function() {
-    var gid = $(this).data("gid");
-    var url = window.api.apicallbase + "leave_group";
-    myApp.confirm("Are you sure you want to leave this group?",function() {
-      $.jsonp(url,{gid : gid},function(back) {
-        myApp.closeModal();
-        myApp.alert(back.message,"Problemator",function() {
-          mainView.router.back();
-        });
-        mainView.router.refreshPage();
-        //mainView.router.refreshPreviousPage();
-
-      });  
-    });
-  });
-}
 var addInviteMemberPageListeners = function(pagename) {
   if ("invite_group_member"==pagename) { 
     // What to do when plus is clicked and email is added to the list
-    $$(".add_invite_email").on('click',function() {
-      // Validate email and add to emails list.
-      var email =  $(this).parent(".item-after").siblings(".item-input").find("input.invite_email").val(); 
-      if (email == undefined || !email.match(/^[^@]+@[^@]+\.[^@]+$/)) {
-        myApp.alert("Not a valid email.","Error");
-      } else {
-        // Make sure that the placeholder is gone
-        $(".no_emails_yet").remove();
 
-        // Append to list
-        var html =$( $("script#single_invited_email").html());
-        $(html).find(".item-title").text(email);
-        $(".invited_emails_list").append(html.html());
-
-        // And empty the input field.
-        $(this).parent(".item-after").siblings(".item-input").find("input.invite_email").val(""); 
-
-        // Listener for removing an email from list
-        //
-        $$(".remove_invite_email").on("click",function() {
-          $(this).parents("li").remove();
-        });
-      }
-    });
-
-    $$(".send_invitations").on("click",function() {
-      var emails = $(".invited_email").length;
-      if (emails == 0) {
-        myApp.alert("Add email(s) to invite first.");
-        return;
-      } else {
-        emails = $(".invited_email").map(function() {
-          return $(this).find(".item-title").text().trim();
-        }).get().join(",");
-        var url = window.api.apicallbase + "send_invitations";
-        var msg = $(".invite_msg").val();
-        var add_admin = $(".add_admin_rights").is(":checked") ? "1" : "0";
-        var groupid = $("#groupid").val();
-        $.jsonp(url,{groupid: groupid, emails : emails,msg : msg, add_admin : add_admin},function(back) {
-          myApp.alert(back.message,"Problemator");
-          if (!back.error) {
-            // Go back 
-            mainView.router.back();
-          }
-        });
-      }
-    });
   }
 };
 

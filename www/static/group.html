@@ -43,18 +43,18 @@
     
     <div class="content-block  nomargin">
       <div class="list-block  ">
-      <ul>
+      <ul class="action-buttons">
       {{#if group.me}}
-        <a href="static/invite_member.html?groupid={{group.id}}" class="button problemator-button text-w">
+      <li> <a href="static/invite_member.html?groupid={{group.id}}" class="button problemator-button text-w">
           <div class="item-title ">Invite a new member...</div>
-        </a>
+        </a></li>
         <a href="#" class="leave_group button problemator-button text-w" data-gid="{{group.id}}">
           <div class="item-title ">Leave group</div>
         </a>
       {{else}}
-      <a href="#" class="join_group button problemator-button text-w" data-gid="{{group.id}}">
+      <li><a href="#" class="join_group button problemator-button text-w" data-gid="{{group.id}}">
           <div class="item-title ">Join Group</div>
-        </a>
+        </a></li>
       {{/if}}
       </div>
       </ul>

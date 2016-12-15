@@ -1,84 +1,59 @@
-var chartsInitialized = false;
-var dashboardLineChart = null;
-var dashboardBarChart = null;
-var pieSport = null;
-var pieBoulder = null;
-var data_opinions = []; // For problem page Morris chart.
-var tickSaved = false;
-window.initialized = false;
-
-
-var loginCheck = function(data) {
-  data = JSON.stringify(data);
-  if (data && data.match(/Login.failed/i)) {
-    myApp.alert("Session expired");
-    //mainView.router.load("#index");
-    window.uid = null;
-    Cookies.remove("loginok");
-    myApp.loginScreen();
-  }  else {
-    window.uid =          Cookies.get("uid");
-    $("#userid").val(window.uid);
-  }
-}
-// Initialize your app
+window.ver = "problemator_20161215";
+// Initialize app
 var myApp = new Framework7({
-  animateNavBackIcon: true,
-  // Enable templates auto precompilation
-   preprocess: function (content, url, next) {
-   },
-  //precompileTemplates: true,
+  preprocess: function (content, url, next) {
+     doPreprocess(content,url,next);
+  },
   modalTitle : "Problemator",
   pushState: true,
-  template7Pages: true,
-  init: false //Disable App's automatica initialization
+  template7Pages: false,
+  init : false,
 });
 
-// Export selectors engine
+var api = {
+  server : "https://beta.problemator.fi",
+  api : "/t/problematorapi/",
+  version : "v02/",
+
+};
+window.api = api;
+api.apicallbase = api.server+api.api+api.version;
+
+// If we need to use custom DOM library, let's save it to $$ variable:
 var $$ = Dom7;
-
-// Add main View
+// Add view
 var mainView = myApp.addView('.view-main', {
-  // Disable dynamic Navbar
-  dynamicNavbar: true,
-});
-myApp.onPageBeforeInit('gyminfo', function(page) {
-  initPieChartsForGymInfo();
+    // Because we want to use dynamic navbar, we need to enable it for this view:
+    dynamicNavbar: true
 });
 
-$$(document).on('pageInit', function (e) {
-	// Check if login ok and go for dashboard init if is.
-	//
-	if (!window.initialized) {
-		// If first initializing, add listeners to listen sidebar menu items
-		addIndexPageListeners("index");
-		if (Cookies.get("loginok")) {
-			myApp.closeModal(".login-screen");
-			var uid = Cookies.get("uid");
-			$("#userid").val(uid);
-			window.uid = uid;
-		  // Go here only if the page is empty or it is dashboard...
-		  var uri = e.target.baseURI;
-		  if (uri.match(/\d+\.\d+.\d+\.\d+.*?\//) || uri.match(/localho.*\//) || uri.match(/dashboard/i)) {
-		    indexController.initializeIndexPage();
-		  }
-		} else {
-			addLoginPageListeners();
-			myApp.loginScreen();
-		}
-		window.initialized = true;
-	} 
+// Handle Cordova Device Ready Event
+$$(document).on('deviceready', function() {
+    console.log("Device is ready!");
+
 });
-myApp.init(); // init app manually after you've attached all handlers
+
+
+
+
 myApp.onPageInit("*",function(page) {
   var pagename = page.name;
   var matches = null;
+  console.log("pageInit "+page.name);
+  // These have to be added here before any actual check is made.
+  // eg login page listeners have to be added before the login page
+  // is actually shown =)
+  addGlobalListeners();
 
   if (!Cookies.get("loginok")) {
     myApp.loginScreen();
     return false;
   }
-  console.log("Initi: "+pagename);
+  if (pagename=="index") {
+    // Redirect to dashboard
+    mainView.router.loadPage("static/dashboard.html");
+  }
+  addIndexPageListeners(pagename);
   addGroupMemberListeners(pagename);
   addInviteMemberPageListeners(pagename);
   addSingleGroupPageListeners(pagename,page.url);
@@ -90,343 +65,8 @@ myApp.onPageInit("*",function(page) {
   addGymInfoPageListeners(pagename);
 });
 
+myApp.init(); // init app manually after you've attached all handlers
 
-document.addEventListener("deviceready", function(){
-	console.log("Device is ready... :)");
-},true);
-
-
-myApp.onPageInit("competition-page",function(page) {
-  $(document).ready(function() {
-    window.setupTimeLeftTimer();
-    window.updateDoneAmount();
-  });
-});
-
-/*
-myApp.onPageBack('*', function(page) {
-  var pagename = page.name;
-  var matches = null;
-
-  if ((matches=pagename.match(/problem(\d+)/))) {
-    if (tickSaved != undefined && !tickSaved) {
-      var probid = matches[1];
-      // Tick is not saved, save still the stuff as pretick, so user
-      // can save amount of tries...
-      saveTickFunction($("a.savetick"),'savepretick',function(back) {
-        // ADd data ignore cache so that the page will be reloaded if user goes back...
-        $("a[data-problemid="+probid+"]").attr("data-ignore-cache","true");
-      }); 
-    }
-  }
-});
-
-myApp.onPageInit('tickarchive',function(page) {
-  var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August' , 'September' , 'October', 'November', 'December'];
-  $.getJSON("/t/problematormobile/_dates_with_ticks/",{uid : $("#userid").val() },function(datesWithTicks) {
-    var evts = [];
-    for (var idx in datesWithTicks) {
-      var dstr = datesWithTicks[idx];
-      dstr += "";
-      var m = dstr.split("-");
-      var month = parseInt(m[1])-1;
-      evts.push(new Date(m[0],month,m[2]));
-    }
-    var calendarInline = myApp.calendar({
-      container: '#calendar-inline-container',
-      value: [new Date()],
-      weekHeader: true,
-      events : evts,
-
-      onDayClick : function(p,dayContainer,year,month,day) {
-        // Find events for clicked day.
-        month = parseInt(month) + 1;
-        var date = year+"-"+month+"-"+day;
-        var url = "/t/problematormobile/_tickarchive/";
-        $("#tickContainer").load(url,{date : date},function(back) {
-
-        });
-      },
-      onOpen: function (p) {
-
-        var amt = $("div[data-year="+p.currentYear+"][data-month="+p.currentMonth+"] .picker-calendar-day-has-events").not(".picker-calendar-day-next").length;
-        $("#traindays").html(amt);
-        $$('.calendar-custom-toolbar .center').text(monthNames[p.currentMonth] +', ' + p.currentYear);
-        $$('.calendar-custom-toolbar .left .link').on('click', function () {
-          calendarInline.prevMonth();
-        });
-        $$('.calendar-custom-toolbar .right .link').on('click', function () {
-          calendarInline.nextMonth();
-        });
-
-      },
-      onMonthYearChangeStart: function (p,year,month) {
-        var amt = $("div[data-year="+year+"][data-month="+month+"] .picker-calendar-day-has-events").not(".picker-calendar-day-next").length;
-        $("#traindays").html(amt);
-        $$('.calendar-custom-toolbar .center').text(monthNames[p.currentMonth] +', ' + p.currentYear);
-      }
-    });          		
-  });//getJSON
-
-});
-*/
-/*
- * Page init function for groups page
- */
-/*
-myApp.onPageInit('grouplist', function(page) {
-  // Fetch group list
-  var reloadMyGroups = function() {
-    $.getJSON(window.api.apicallbase+"mygroups", function(groups) {
-      var tpl = $("script#template_mygroup_item").html();
-      var ctpl = Template7.compile(tpl);
-      var html = ctpl(groups);    
-      $("#mygrouplist").empty().append(html);
-
-      $$(".load_single_group").on("click",function() {
-        var gid = $$(this).attr("data-group");
-        var url = window.api.apicallbase + "group/"+gid;
-        $$.getJSON(url, function (data){
-          var tpl = $("script#template_single_group").html();
-          var ctpl = Template7.compile(tpl);
-          var html = ctpl({group : data});    
-          mainView.router.loadContent(html);
-
-        });
-
-
-      });
-    });
-  }
-  var reloadPendingInvitations = function() {
-    $.getJSON(window.api.apicallbase+"mypendinginvitations", function(invitations) {
-      var tpl = $("script#template_mypendinginvitation_item").html();
-      var ctpl = Template7.compile(tpl);
-      var html = ctpl({invitations : invitations});    
-      $("#mypendinginvitationslist").empty().append(html);
-      addInvitationListeners();
-    });
-  }
-  var addInvitationPopoverListeners = function() {
-    $$(".accept-invitation").on("click",function() {
-      var invid = $$(this).data("invid");
-      var url = window.api.apicallbase + "acceptinvitation";
-      $.post(url,{invid: invid}).done(function(back) {
-        myApp.closeModal();
-        reloadPendingInvitations();
-        reloadMyGroups();
-      });
-
-    });
-    $$(".decline-invitation").on("click",function() {
-      var invid = $$(this).data("invid");
-      var url = window.api.apicallbase + "declineinvitation";
-      $.post(url,{invid: invid}).done(function(back) {
-        myApp.closeModal();
-        reloadPendingInvitations();
-      });
-
-    });
-
-  }
-  var addInvitationListeners = function() {
-    $$(".invitation-accept-decline").on("click",function()  {
-      var invid = $$(this).data("invid");
-      var gid = $$(this).data("gid");
-      var clickedLink = this;
-      var popoverHTML = '<div class="popover invitation-popup">'+
-        '<div class="popover-inner">'+
-        '<div class="list-block">'+
-        '<ul>'+
-        '<li><a href="/t/problematormobile/group/'+gid+'" class="item-link list-button accept-invitation" >Open group</a></li>'+
-        '<li><a href="#" class="item-link list-button accept-invitation" data-invid="'+invid+'">Accept invitation</a></li>'+
-        '<li><a href="#" class="item-link list-button decline-invitation" data-invid="'+invid+'">Decline invitation</a></li>'+
-        '<li><a href="#" class="item-link list-button close-popover">Close</a></li>'+
-        '</ul>'+
-        '</div>'+
-        '</div>'+
-        '</div>'
-      myApp.popover(popoverHTML, clickedLink);
-      $$(".invitation-popup").on("opened",function() {
-        addInvitationPopoverListeners();
-      });
-    });
-     
-  }
-  reloadMyGroups();
-  reloadPendingInvitations();
-  $$("#creategroup").on("click",function() {
-     var gname = $("#newgroup").val();
-     //var uid = $("#userid").val();
-     var url = window.api.apicallbase + "addgroup";
-     $.post(url,{name : gname}).then(function(back) {
-       try {
-       back = eval("("+back+")");
-       } catch(e) {
-          back = {error : true, msg : e};
-       }
-       if (!back.error) {
-         //  inform about group creation
-         myApp.alert(back.msg,"Message");
-         reloadMyGroups();
-       } else {
-         myApp.alert(back.msg,"Message");
-       }
-     });
-
-  });
-});
-
-myApp.onPageInit('index', function (page) {
-  // Confirm terminate account
-  $$(".opt-out").on("click",function() {
-     myApp.confirm("This action cannot be undone! All your data will be lost.","Are you sure?",function() {
-       var url = window.api.apicallbase + "terminate_account";
-        $.get(url).done(function(back) {
-           myApp.alert(back);
-           setTimeout(function() {
-             document.location.href="/t/problematormobile/login";
-           },5000);
-        });
-     });
-  });
-  // ASk user to select a gym, if not selected...
-  var curloc = $("#curloc").text();
-  if (""==curloc) {
-    myApp.alert("Please go to <a href='#gyminfo'>Gym Info</a> and select a gym","Gym not selected");
-    mainView.router.loadPage("#gyminfo");
-  }
-  $(document).ready(function() {
-    // give the EU statement...
-    var ver = $("#ver").val();
-    if (Cookies.get("whatsnew"+ver)==undefined) {
-      Cookies.set("whatsnew"+ver,true,{ expires: 7650 });
-      myApp.alert("1. Groups! You can add groups and invite your friends to groups and have a fun and friendly competition!.<br />2. It's easier to manage your ticks. Just click 'Manage Ticks' from a problem page.<br />3. You can change your tick date when saving a tick.<br />4. Ranking progress on dashboard. If you want to see how you progress (or regress) in your ranks :)","What's new?");
-    }  
-    if (Cookies.get("eucookie")==undefined) {
-      myApp.addNotification({
-        title: 'This app uses cookies',
-        message: 'Our app uses cookies so that it works. By using the app you accept the use of cookies.',
-        onClose: function () {
-          Cookies.set("eucookie",true,{ expires: 7650 });
-        }
-      });
-    }
-  });
-
-
-  if (!chartsInitialized) {
-    chartsInitialized = true;
-    //				$('.sparkpie').sparkline('html', { type: 'pie', height: '1.0em' });
-
-    var grades = [];
-    grades["0"] = "0";
-    grades["500"] = "1";
-    grades["1000"] = "2";
-    grades["1500"] = "3+";
-    grades["2000"] = "4";
-    grades["2500"] = "4+";
-    grades["3000"] = "5";
-    grades["3500"] = "5+";
-    grades["4000"] = "6a";
-    grades["4500"] = "6a+";
-    grades["5000"] = "6b";
-    grades["5500"] = "6b+";
-    grades["6000"] = "6c";
-    grades["6500"] = "6c+";
-    grades["7000"] = "7a";
-    grades["7500"] = "7a+";
-    grades["8000"] = "7b";
-    grades["8500"] = "7b+";
-    grades["9000"] = "7c";
-    grades["9500"] = "7c+";
-    grades["10000"] = "8a";
-    grades["10500"] = "8a+";
-    grades["11000"] = "8b";
-    grades["11500"] = "8b+";
-    grades["12000"] = "8c";
-    grades["12500"] = "8c+";
-    grades["13000"] = "9a";
-
-    var url = window.api.apicallbase + "globalrankingprogress";
-    $.getJSON(url,{},function(_data) {
-      dashboardLineChart = Morris.Line({
-        element: 'ranking_progress',
-        data: _data,
-        xkey: 'y',
-        hideHover : 'always',
-        pointSize : 0,
-        lineColors : ['#decc00','#bfb6a8'],
-        lineWidth : "2px",
-        smooth : true,
-
-        xLabelFormat : function(x) {
-          var objDate = new Date(x);
-          var locale = "en-us";
-          var short = objDate.toLocaleString(locale, { month: "short" });
-          return short.toUpperCase();
-
-        },
-        ykeys: ['a','b'],
-
-        labels: ['BOULDER','SPORT']
-      });
-    });
-    var url = "/t/problematormobile/json_running6mo_both/?userid="+$("#userid").val();
-    $.get(url,{},function(_data) {
-
-      dashboardLineChart = Morris.Line({
-        element: 'running6mo',
-        data: _data,
-        xkey: 'y',
-        hideHover : 'always',
-        pointSize : 0,
-        yLabelFormat : function (x) { 
-          // ROund to nearest 500
-          var near = Math.round(x/500)*500;
-          return grades[near];
-        },
-        lineColors : ['#decc00','#bfb6a8'],
-        lineWidth : "2px",
-        smooth : true,
-
-        xLabelFormat : function(x) {
-          var objDate = new Date(x);
-          var locale = "en-us";
-          var short = objDate.toLocaleString(locale, { month: "short" });
-          return short.toUpperCase();
-
-        },
-        ykeys: ['a','b'],
-
-        labels: ['BOULDER','SPORT']
-      });
-    }); // get
-
-    var barurl = "/t/problematormobile/json_running6mogradebars_both/";
-    if ($("#running6mobars").length) {
-      $.get(barurl,{},function(back) {
-        dashboardBarChart = Morris.Bar({
-          element : 'running6mobars',
-          data : back,
-          'gridTextSize' : 8,
-          xLabelMargin: 0,
-
-          xkey : 'y',
-          hideHover : 'false',
-          stacked : true,
-          ykeys : ['a','b'],
-          labels : ['BOULDER','SPORT'],
-          barColors : ['#decc00','#bfb6a8'],
-        });
-      });
-    }
-
-  }	
-
-});
-
-*/
 
 var loginCheck = function(data) {
   data = JSON.stringify(data);
@@ -466,4 +106,5 @@ $.jsonp = function(url,_data,callback,options) {
           console.log("back from jsonp with ERROR "+thrown.message+", url: "+url);
         }
  });
-}
+} //jsonp
+

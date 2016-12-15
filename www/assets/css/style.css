@@ -1399,3 +1399,6 @@ color : white;
   text-decoration : line-through;
   text-decoration-colour : #decc00;
 }
+ul.action-buttons li {
+  margin-bottom : 2px;
+}
