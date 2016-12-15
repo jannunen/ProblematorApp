@@ -9,13 +9,186 @@ var groupMemberPageListenersInitialized = false;
 var inviteMemberPageListenersInitialized = false;
 var gymInfoPageListenersInitialized = false;
 
-var indexController= {
-  initializeIndexPage : function() { 
-    // Data is set in my-app preprocess -function
-    mainView.router.loadPage('static/dashboard.html');
+var doPreprocess = function(content,url,next) {
+  var host = window.location.host;
+  debugger;
+  var pos = -1;
+  if ((pos=url.indexOf(host))>0) {
+    var remainder = url.substr(pos+host.length);
+    if (remainder == "" || remainder=="/") {
+      var compiledTemplate = Template7.compile(content);
+      return (compiledTemplate({location : $.jStorage.get("locations")}));
+    }
   }
-}
 
+  var matches = null;
+  if (url == null) {
+    if (next != null) {
+      next(content);
+    }
+    return;
+  }
+  /* 
+   * If a single group is being fetched, go ahead, find the group data 
+   * via API, compile the template and since it is an AJAX call,
+   * one has to call next() to advance in the processing 
+   */
+     if ((matches=url.match(/group.html.*?(\d+)/i))) {
+       var groupid = matches[1];
+       var url = window.api.apicallbase + "group/";
+       $.jsonp(url, {id : groupid}, function (data){ 
+         if (!Cookies.get("loginok")) {
+           return false;
+         }
+         var compiledTemplate = Template7.compile(content);
+         var dataJSON = {group : data};
+         next(compiledTemplate(dataJSON));
+       });
+     } else if ((matches=url.match(/dashboard.html/))) {
+       var newgymid = undefined;
+       var apiurl = window.api.apicallbase+"dashinfo/?id="+Cookies.get("uid");
+       debugger;
+       // Check if new gym id is given here
+       if ((matches=url.match(/dashboard.html.*?(\d+)/))) {
+         newgymid = matches[1];
+         apiurl += "&newgymid="+newgymid;
+         // Cookie for location must be set, because it's changed
+         Cookies.set("nativeproblematorlocation",newgymid);
+       }
+       $.jsonp(apiurl,{},function(data) {
+         if (!Cookies.get("loginok")) {
+           return false;
+         }
+         debugger;
+         loginCheck(data);
+         myApp.hidePreloader();
+         $.jStorage.set("climbinfo",data.climbinfo);
+         $.jStorage.set("grades",data.grades);
+         $.jStorage.set("locations",data.locations);
+         var compiledTemplate = Template7.compile(content);
+         var html = compiledTemplate(data);
+         next(html);
+       });
+     } else if ((matches=url.match(/gyminfo.html/))) {
+
+       $.jsonp(window.api.apicallbase+"gyminfo/?id="+Cookies.get("nativeproblematorlocation"),{},function(data) {
+         var compiledTemplate = Template7.compile(content);
+         data.locations = $.jStorage.get("locations");
+
+         data.ascentsingyms = $.jStorage.get("climbinfo").ascentsingyms;
+         data.ascentsingyms.boulder = data.ascentsingyms.boulder[data.locinfo.id];
+         data.ascentsingyms.sport = data.ascentsingyms.sport[data.locinfo.id];
+         next(compiledTemplate(data));
+       });
+     } else if ((matches=url.match(/competition.html.*?(\d+)/))) {
+       // Load problems page data and compile the template
+       //
+       var compid = matches[1];
+       var url = window.api.apicallbase + "competition/?compid="+compid+"&jsonp=false";
+       $.post(url, {}, function (data){ 
+         loginCheck(data);
+         var dataObj = JSON.parse(data);
+         if (dataObj.success) {
+         } else {
+           myApp.alert(dataObj.msg);
+           mainView.router.back();
+           return true;
+         }
+         var compiledTemplate = Template7.compile(content);
+         next(compiledTemplate(dataObj));
+       });
+     } else if ((matches=url.match(/registertocomp.html.*?(\d+)/))) {
+       var compid = matches[1];
+       var url = window.api.apicallbase + "registertocomp/";
+       $.post(url, {compid : compid}, function (data){ 
+         loginCheck(data);
+         var compiledTemplate = Template7.compile(content);
+         var dataJSON = JSON.parse(data);
+         next(compiledTemplate(dataJSON));
+       });
+     } else if ((matches=url.match(/circuits.html/))) {
+       // Load problems page data and compile the template
+       //
+       var url = window.api.apicallbase + "circuits";
+       var gymid = Cookies.get("nativeproblematorlocation");
+       $.jsonp(url, {gymid : gymid}, function (data){ 
+         var compiledTemplate = Template7.compile(content);
+         next(compiledTemplate(data));
+       });
+     } else if ((matches=url.match(/circuit.html.*?(\d+)/))) {
+       var circuitid = matches[1];
+       var url = window.api.apicallbase + "circuit?id="+circuitid;
+       $.jsonp(url, {}, function (data){ 
+         var compiledTemplate = Template7.compile(content);
+         next(compiledTemplate(data));
+       });
+     } else if ((matches=url.match(/problems.html/))) {
+       // Load problems page data and compile the template
+       //
+       var url = window.api.apicallbase + "problems/";
+       $.jsonp(url, {}, function (data){ 
+         var compiledTemplate = Template7.compile(content);
+         next(compiledTemplate({walls : data}));
+       });
+     } else if ((matches=url.match(/competitions.html/))) {
+       var url = window.api.apicallbase + "mycompetitions/";
+       $.jsonp(url, {}, function (data){ 
+         var compiledTemplate = Template7.compile(content);
+         next(compiledTemplate(data));
+       });
+     } else if ((matches=url.match(/invite_member.html.*?(\d+)/))) {
+       var groupid = matches[1];
+       var url = window.api.apicallbase + "group/";
+       $.jsonp(url, {id : groupid}, function (data){ 
+         var compiledTemplate = Template7.compile(content);
+         //var dataJSON = {group : JSON.parse(data)};
+         next(compiledTemplate({"group" : data}));
+       });
+     } else if ((matches=url.match(/groups.html/))) {
+       // List group members
+       var url = window.api.apicallbase + "groups/";
+       $.jsonp(url, {}, function (data){
+         if (!Cookies.get("loginok")) {
+           return false;
+         }
+         var compiledTemplate = Template7.compile(content);
+         var html = compiledTemplate(data);
+         next(html);
+       });
+     } else if ((matches=url.match(/list_group_members.html.*?(\d+)/))) {
+       // List group members
+       var groupid = matches[1];
+       var url = window.api.apicallbase + "list_group_members/";
+       $.jsonp(url, {id : groupid}, function (data){ 
+         var compiledTemplate = Template7.compile(content);
+         var html = compiledTemplate({"group" : data});
+         next(html);
+       });
+
+     } else if ((matches=url.match(/problem.html.*?(\d+)/))) {
+       // List group members
+       var pid = matches[1];
+       var url = window.api.apicallbase + "problem";
+       $.jsonp(url, {id : pid}, function (data){ 
+         if (!Cookies.get("loginok")) {
+           return false;
+         }
+         var compiledTemplate = Template7.compile(content);
+         data.grades = $.jStorage.get("grades");
+         var html = compiledTemplate(data);
+         next(html);
+       });
+
+     } else {
+       if (content ==  null || content == "") {
+         return "";
+       }
+       var template = Template7.compile(content);
+       var resultContent = template();
+       return resultContent; 
+     }
+
+}
 
 var initPieChartsForGymInfo = function() {
 
@@ -54,38 +227,38 @@ var initPieChartsForGymInfo = function() {
 
 }
 var invokeLocationChangeActionSheet = function() {
-    var selectGym = function(id) {
-       myApp.alert("Please wait, changing the gym");
-       mainView.router.loadPage("static/dashboard.html?newgymid="+id); 
+  var selectGym = function(id) {
+    myApp.alert("Please wait, changing the gym");
+    mainView.router.loadPage("static/dashboard.html?newgymid="+id); 
+  }
+  var gymid = Cookies.get("nativeproblematorlocation");
+  var buttons = [];
+  var locs = $.jStorage.get("locations");
+  buttons.push({
+    text : "Choose a location",
+    label : true
+  });
+
+  var btn = null;
+  var loc = null;
+  for (var idx in locs) {
+    loc =  locs[idx];
+    btn = {
+      text : loc.name,
+      color : "white",
+      bold : (loc.id==gymid) ,
+      onClick : $.proxy(selectGym,null,loc.id),
+    };
+    if (loc.id==gymid) {
+      btn.color = "yellow";
     }
-      var gymid = Cookies.get("nativeproblematorlocation");
-      var buttons = [];
-      var locs = $.jStorage.get("locations");
-      buttons.push({
-	text : "Choose a location",
-	label : true
-      });
+    buttons.push(btn);
+  }
 
-      var btn = null;
-      var loc = null;
-      for (var idx in locs) {
-       loc =  locs[idx];
-       btn = {
-       text : loc.name,
-       color : "white",
-       bold : (loc.id==gymid) ,
-       onClick : $.proxy(selectGym,null,loc.id),
-       };
-       if (loc.id==gymid) {
-       btn.color = "yellow";
-       }
-       buttons.push(btn);
-      }
-
-      buttons.push({
-      text : "Close"
-      });
-      myApp.actions(buttons);
+  buttons.push({
+    text : "Close"
+  });
+  myApp.actions(buttons);
 }
 
 var addGymInfoPageListeners = function(pagename) {
@@ -93,7 +266,7 @@ var addGymInfoPageListeners = function(pagename) {
     $(document).on("click",".changelocation_picker",function() {
       invokeLocationChangeActionSheet();
     });
-   gymInfoPageListenersInitialized = true;
+    gymInfoPageListenersInitialized = true;
   }
 }
 var addDashBoardListeners = function(pagename) {
@@ -108,7 +281,7 @@ var addDashBoardListeners = function(pagename) {
       invokeLocationChangeActionSheet();
     }
     debugger;
-    if (!chartsInitialized) {
+    //if (!chartsInitialized) {
 
       chartsInitialized = true;
 
@@ -202,7 +375,7 @@ var addDashBoardListeners = function(pagename) {
           });
         });
       }
-    }
+    //}
     dashBoardListenersInitialized = true;
   } // if pagename
 }
@@ -214,7 +387,7 @@ var addDashBoardListeners = function(pagename) {
       Cookies.set("whatsnew"+ver,true,{ expires: 7650 });
       myApp.alert("1. Groups! You can add groups and invite your friends to groups and have a fun and friendly competition!.<br />2. It's easier to manage your ticks. Just click 'Manage Ticks' from a problem page.<br />3. You can change your tick date when saving a tick.<br />4. Ranking progress on dashboard. If you want to see how you progress (or regress) in your ranks :)","What's new?");
     }  
-    if (!chartsInitialized) {
+    //if (!chartsInitialized) {
       chartsInitialized = true;
 
       var gradesArr = $.jStorage.get("grades");
@@ -307,12 +480,12 @@ var addDashBoardListeners = function(pagename) {
           });
         });
       }
-    }
+    //}
     dashBoardListenersInitialized = true;
   } // if pagename
 }
 var addLoginPageListeners = function(pagename) {
-  if (!loginPageListenersInitialized) {
+  if (pagename == "login-page" && !loginPageListenersInitialized) {
     $$('.loginbutton').on('click', function (e) {
       if ($("#problematorlocation").val()=="") {
         myApp.alert("Please select a gym","Gym not selected");
@@ -322,15 +495,17 @@ var addLoginPageListeners = function(pagename) {
       var password = $(this).parents("form").find('input[name="password"]').val();
       //var loc = $(this).parents("form").find("#problematorlocation").val();
       // Handle username and password
+      console.log("Loggin in with "+username+" and password "+password);
       var url = window.api.apicallbase + "dologin?native=true"; 
       var opt = {"username": username,"password":password, "authenticate" : true};
       if (Cookies.get("nativeproblematorlocation")) {
-	opt.problematorlocation = Cookies.get("nativeproblematorlocation");
+        opt.problematorlocation = Cookies.get("nativeproblematorlocation");
       }
       $.jsonp(url,opt,function(data) {
         try {
-	  debugger;
-          if (data) {
+          debugger;
+          console.log(JSON.stringify(data));
+          if (data && !data.error) {
 
             //Cookies.set("nativeproblematorlocation",data.loc);
             Cookies.set("loginok",true);
@@ -342,6 +517,9 @@ var addLoginPageListeners = function(pagename) {
             myApp.showPreloader('Hang on, initializing app.');
             mainView.router.loadPage("static/dashboard.html");
           } else {
+            // Possibly login failed
+            //
+            debugger;
             myApp.alert(data.message);
           }
         } catch(e) {
@@ -358,13 +536,13 @@ var addIndexPageListeners = function(pagename,page) {
     $$(document).on("click",".btn_logout",function() {
       debugger;
       $.jsonp(window.api.apicallbase+"logout",{},function() {
-	Cookies.remove("loginok");
-	Cookies.remove("uid");
-	window.uid = null;
-	$("#userid").val("");
-	//mainView.router.loadPage("static/dashboard.html");
-	//mainView.router.refreshPage();
-	document.location.href="index.html";
+        Cookies.remove("loginok");
+        Cookies.remove("uid");
+        window.uid = null;
+        $("#userid").val("");
+        //mainView.router.loadPage("static/dashboard.html");
+        //mainView.router.refreshPage();
+        document.location.href="index.html";
       });
     });
     // Confirm terminate account
@@ -491,13 +669,13 @@ var addGroupMemberListeners = function(pagename) {
 }
 var addSettingsPageListeners = function(pagename,url) {
   if ("settingspage"==pagename) { 
-      $(document).on("click","#btn_savesettings",function() {
-        $("#frmsettings").ajaxSubmit(function(back) {
-          myApp.alert(back, 'Info');
+    $(document).on("click","#btn_savesettings",function() {
+      $("#frmsettings").ajaxSubmit(function(back) {
+        myApp.alert(back, 'Info');
 
-        });
-        return false;
       });
+      return false;
+    });
   }
 }
 var addSingleGroupPageListeners = function(pagename,url) {
@@ -666,12 +844,12 @@ var addSingleProblemListeners = function(pagename) {
   // If matches single problem
   if ((matches=pagename.match(/problem(\d+)/))) {
     // This has to be loaded every time a problem page is loaded.
-   var calendarDefault = myApp.calendar({
-               input: '#tickdate',
-               dateFormat: 'dd.mm.yyyy',
-               closeByOutsideClick : true,
-               closeOnSelect : true,
-         });
+    var calendarDefault = myApp.calendar({
+      input: '#tickdate',
+      dateFormat: 'dd.mm.yyyy',
+      closeByOutsideClick : true,
+      closeOnSelect : true,
+    });
     if (!singleProblemListenersInitialized) {
 
       console.log("SINGLE PROBLEM LISTENERS ADDED ONCE");
