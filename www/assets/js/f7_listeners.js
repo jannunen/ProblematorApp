@@ -24,7 +24,11 @@ var doPreprocess = function(content,url,next) {
     var remainder = url.substr(pos+host.length);
     if (remainder == "" || remainder=="/") {
       var compiledTemplate = Template7.compile(content);
-      return (compiledTemplate({location : $.jStorage.get("locations")}));
+      if (next != null && next != undefined) {
+      next(compiledTemplate());
+      } else {
+	return compiledTemplate();
+      }
     }
   }
 
@@ -122,11 +126,11 @@ var doPreprocess = function(content,url,next) {
        var date = mom.format("YYYY-MM-DD");
        $.jsonp(url, {date : date}, function (data){ 
 	 // Compile ticks for today, and put them into content
-	 debugger;
 	 var ctpl = window.myApp.templates.tickarchive_list;
 	 var html = ctpl({ticksinday : data});
-	 $(content).find("#tickContainer").empty().append(html);
-         next(content);
+         var compiledTemplate = Template7.compile(content);
+         next(compiledTemplate({ticksToday : html}));
+
        });
      } else if ((matches=url.match(/circuits.html/))) {
        // Load problems page data and compile the template
@@ -227,7 +231,6 @@ var doPreprocess = function(content,url,next) {
 var addGlobalListeners = function() {
    if (!globalListenersAdded) {
     $$(document).on("click",".btn_logout",function() {
-      debugger;
       $.jsonp(window.api.apicallbase+"logout",{},function() {
         Cookies.remove("loginok");
         Cookies.remove("uid");
@@ -267,7 +270,6 @@ var addGlobalListeners = function() {
        }
        $.jsonp(url,opt,function(data) {
          try {
-           debugger;
            console.log(JSON.stringify(data));
            if (data && !data.error) {
 
@@ -284,7 +286,6 @@ var addGlobalListeners = function() {
            } else {
              // Possibly login failed
              //
-             debugger;
              myApp.alert(data.message);
            }
          } catch(e) {
@@ -369,7 +370,8 @@ var invokeLocationChangeActionSheet = function() {
 }
 
 var addTickArchivePageListeners = function(pagename) {
-  if ("tickarchive-page"==pagename && !tickArchivePageListenerInitialized) {
+  if ("tickarchive-page"==pagename) {
+    // Initialize every time we get to this page
     var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August' , 'September' , 'October', 'November', 'December'];
     var url = window.api.apicallbase + "tickarchive_tickdates"; 
     $.jsonp(url,{},function(datesWithTicks) {
@@ -389,9 +391,12 @@ var addTickArchivePageListeners = function(pagename) {
 	  // Find events for clicked day.
 	  month = parseInt(month) + 1;
 	  var date = year+"-"+month+"-"+day;
-	  var url = "/t/problematormobile/_tickarchive/";
-	  $("#tickContainer").load(url,{date : date},function(back) {
-
+	  var url = window.api.apicallbase + "tickarchive";	 
+	  $("#tickContainer").empty().append('<div class="text-w"><span class="fa fa-spinner "></span>  Loading...</div>');
+	  $.jsonp(url,{date : date},function(back) {
+	    var ctpl = window.myApp.templates.tickarchive_list;
+	    var html = ctpl({ticksinday : back});
+	    $("#tickContainer").empty().append(html);
 	  });
 	},
 	onOpen: function (p) {
@@ -415,8 +420,19 @@ var addTickArchivePageListeners = function(pagename) {
       });
     });//jsonp
 
+    if (!tickArchivePageListenerInitialized) {
 
-    tickArchivePageListenerInitialized = true;
+      // These should be initialized only once
+      $(document).on("click",".swipeuntick",function(el) {
+        $(this).attr("disabled","disabled");
+        var tickid = $(this).attr("data-tickid");
+        var url = window.api.apicallbase + "untick";	 
+        $.jsonp(url,{"tickid" : tickid},function(back) {
+        });
+      });
+
+      tickArchivePageListenerInitialized = true;
+    }
   }
 }
 var addGymInfoPageListeners = function(pagename) {
@@ -438,7 +454,6 @@ var addDashBoardListeners = function(pagename) {
     if (isNaN(parseInt(gymid))) {
       invokeLocationChangeActionSheet();
     }
-    debugger;
     //if (!chartsInitialized) {
 
     chartsInitialized = true;
@@ -749,11 +764,9 @@ var addGroupPageListeners = function(pagename) {
 
     });
     $$(document).on("click",".decline-invitation",function() {
-      debugger;
       var invid = $$(this).data("invid");
       var url = window.api.apicallbase + "declineinvitation";
       $.jsonp(url,{invid: invid},function(back) {
-	debugger;
 	myApp.closeModal();
 	mainView.router.refreshPage();
       });
@@ -869,7 +882,6 @@ var addSingleGroupPageListeners = function(pagename,url) {
       var url = window.api.apicallbase + "join_group";
       myApp.confirm("Are you sure you want to join this group?",function() {
 	$.jsonp(url,{gid : gid},function(back) {
-	  debugger;
 	  myApp.closeModal();
 	  myApp.alert(back.message);
 	  mainView.router.refreshPage();
@@ -884,7 +896,6 @@ var addSingleGroupPageListeners = function(pagename,url) {
 	$.jsonp(url,{gid : gid},function(back) {
 	  myApp.closeModal();
 	  myApp.alert(back.message,"Problemator",function() {
-	    debugger;
 	    mainView.router.back({
 	      url : "static/groups.html",
 	      ignoreCache : true,
@@ -928,7 +939,6 @@ var addSingleGroupPageListeners = function(pagename,url) {
           myApp.confirm("ALL the members, rankings etc. will be deleted.<br /><br />This action cannot be undone.","Are you sure?",function(back) {
             var url = window.api.apicallbase +"delete_group";
             $.jsonp(url,{gid : gid},function(back) {
-              debugger;
               if (!back.error) {
                 mainView.router.refreshPreviousPage();
                 myApp.alert(back.message,function() {
@@ -1087,7 +1097,6 @@ var addSingleProblemListeners = function(pagename) {
         $(this).attr("disabled","disabled");
         var pid = $(this).data("id");
 
-        debugger;
         saveTickFunction(this,"savetick",function(back,opt) {
           self.removeAttr("disabled");
           if (back.error) {
@@ -1104,7 +1113,6 @@ var addSingleProblemListeners = function(pagename) {
         var pid = $(this).data("id");
         var url = window.api.apicallbase + "global_ascents/?pid="+pid;
         $.jsonp(url,{pid : pid},function(back) {
-	  debugger;
 	  var ctpl = myApp.templates.global_ascents_popover;
           //var tpl = $("script#global_ascents_popover").html();
           //var ctpl = Template7.compile(tpl);
@@ -1326,9 +1334,7 @@ var saveTickFunction = function(self,action, callback) {
     "tickdate" : tickdate,
   };
 
-  debugger;
   $.jsonp(url,data,function(back) {
-    debugger;
     if (callback != undefined) {
       callback(back,data);
     }
@@ -1354,7 +1360,7 @@ var initializeTemplates = function(myApp) {
   myApp.templates.single_group_search_item = ctpl;
 
   // Template for tickarchive ticks in a day
-  t1 = '<div class="content-block-title">{{sizeof ticksinday}} tick(s)</div> <ul> {{#if ticksinday}}{{#each ticksinday}} <li class="swipeout"> <div class="swipeout-content"> <a data-problemid="{{problemid}}" href="static/problem.html?id={{problemid}}" class="item-link item-content" > <div class="item-media"> <h5>{{gradename}}</h5> </div> <div class="item-inner"> <div class="item-title"> <span  class="fa fa-square" style="color : {{code}};"></span> <span class="body-text-w">{{substr tag 7}}</span> <span class="body-text">| {{date_format tstamp "%H:%M"}} {{#js_compare "this.routetype==\'sport\'"}}| {{ascent_type_text}}{{else}}| gboulder##{{/js_compare}}| {{default tries "N/A"}} {{#js_compare "this.tries==1"}}##try##{{else}}##tries##{{/js_compare}}</span> </div> <div class="item-after"> <small>{{idx}}</small> <span class="fa fa-chevron-right text-w"></span> </div> </div><!--- end of item-inner --> </a> </div><!-- end of swipeout-content--> <div class="swipeout-actions-right"> <a href="#" data-tag="{{tagshort}}" data-tickid="{{tickid}}" class="swipeuntick action1">Untick</a> </div> </li> {{else}}<li>No ticks for today</li>{{/each}}{{/if}}</ul>';
+  t1 = '<div class="content-block-title">{{sizeof ticksinday}} tick(s)</div> <ul> {{#if ticksinday}}{{#each ticksinday}} <li class="swipeout"> <div class="swipeout-content"> <a data-problemid="{{problemid}}" href="static/problem.html?id={{problemid}}" class="item-link item-content" > <div class="item-media"> <h5>{{gradename}}</h5> </div> <div class="item-inner"> <div class="item-title"> <span  class="fa fa-square" style="color : {{code}};"></span> <span class="body-text-w">{{substr tag 7}}</span> <span class="body-text">| {{date_format tstamp "HH:MM"}} {{#js_compare "this.routetype==\'sport\'"}}| {{ascent_type_text}}{{else}}| boulder{{/js_compare}}| {{default tries "N/A"}} {{#js_compare "this.tries==1"}}try{{else}}tries{{/js_compare}}</span> </div> <div class="item-after"> <small>{{idx}}</small> <span class="fa fa-chevron-right text-w"></span> </div> </div><!--- end of item-inner --> </a> </div><!-- end of swipeout-content--> <div class="swipeout-actions-right"> <a href="#" data-tag="{{tagshort}}" data-tickid="{{tickid}}" class="swipeuntick swipeout-delete action1">Untick</a> </div> </li> {{else}}<li>No ticks for today</li>{{/each}}{{/if}}</ul>';
   var ctpl = Template7.compile(t1);
   myApp.templates.tickarchive_list = ctpl;
 

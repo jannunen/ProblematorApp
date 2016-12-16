@@ -1,25 +1,19 @@
-<!-- Top Navbar-->
 <div class="navbar">
   <div class="navbar-inner">
-    <div class="left">
-      <a href="#" class="link back">
+    <div class="left sliding"><a name="pagetop" href="#" class="back link">
         <span class="fa-stack fa-md">
           <i class="fa fa-circle-thin fa-stack-2x"></i>
           <i class="fa fa-chevron-left fa-stack-1x"></i>
         </span>
-      </a>
-    </div>
-    <div class="center sliding"><h3>Tick Archive</h3></div>
-    <div class="right">
-      <a href="#" class="link icon-only open-panel">
-        <i class="fa fa-bars"></i>
-      </a>
-    </div>
+      </a></div>
+      <div class="center ">Tick Archive</div>
+      <div class="right">
+        <a href="#" class="link icon-only open-panel"> <i class="fa fa-bars"></i></a>
+      </div>
   </div>
-</div> <!-- end of navbar -->
+</div>
 
 <div data-page="tickarchive-page" class="page">
-
   <div class="page-content">
     <div id="tickarchive">
       <div class="content-block">
@@ -36,10 +30,11 @@
         <div class="content-block-title"><span id="traindays"></span> Training day(s) in a month</div>
         <div class="list-block">
           <div id="tickContainer">
+	    {{ticksToday}}
           </div>
         </div>
       </div>
     </div><!-- /#tickarchive -->
   </div><!-- end of page-content-->
-</div> <!-- end of boulder page-->
+</div> <!-- end of page-->
 

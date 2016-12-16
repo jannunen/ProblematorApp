@@ -48,14 +48,18 @@ Template7.registerHelper('upper', function (text, options){
   var ret = text.toUpperCase();
   return ret;
 });
-Template7.registerHelper('substr', function (str,start,len) {
+Template7.registerHelper('substr', function (str,start,len,options) {
   // First we need to check is the passed arr argument is function
   if (typeof arr === 'function') arr = arr.call(this);
 
   if (str == undefined) {
     return "";
   }
-  if (len == undefined) {
+
+  // If len is not given, just go for the end of the string.
+  // is parseInt of len is NOT a number, we can safely assume
+  // that we got the options object instead (== hence end of the string)
+  if (isNaN(parseInt(len))) {
     // default to end of string
    return str.substring(start,str.length);  
   } else {
