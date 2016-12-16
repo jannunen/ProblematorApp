@@ -37,6 +37,7 @@
 
     <!-- Path to your custom app styles-->
     <link rel="stylesheet" href="bower_components/morris.js/morris.css" />
+    <link rel="stylesheet" href="assets/css/welcomescreen.css" />
     <link rel="stylesheet" href="assets/css/style.css" />
   </head>
 
@@ -198,7 +199,11 @@
     </div><!-- end of login screen -->
 
 
-    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript">
+      if (!navigator.userAgent.toLowerCase().match('chrome')) {
+        document.write("<script type='text/javascript' src='cordova.js'><\/script>");
+          }
+        </script>
     <script type="text/javascript" src="bower_components/framework7/dist/js/framework7.min.js"></script>
     <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
     <script type="text/javascript" src="bower_components/js-cookie/src/js.cookie.js"></script>
@@ -209,6 +214,7 @@
     <script type="text/javascript" src="bower_components/js-cookie/src/js.cookie.js"></script>
     <script type="text/javascript" src="assets/js/template7_helpers.js"></script>
     <script type="text/javascript" src="assets/js/f7_listeners.js"></script>
+    <script type="text/javascript" src="assets/js/welcomescreen.js"></script>
 
     <script type="text/javascript" src="assets/js/my-app.js"></script>
 

@@ -354,7 +354,7 @@ var addDashBoardListeners = function(pagename) {
     myApp.hidePreloader();
     if (Cookies.get("whatsnew"+ver)==undefined) {
       Cookies.set("whatsnew"+ver,true,{ expires: 7650 });
-      myApp.alert("1. Groups! You can add groups and invite your friends to groups and have a fun and friendly competition!.<br />2. It's easier to manage your ticks. Just click 'Manage Ticks' from a problem page.<br />3. You can change your tick date when saving a tick.<br />4. Ranking progress on dashboard. If you want to see how you progress (or regress) in your ranks :)","What's new?");
+      myApp.alert("1. Competitions, check upcoming/ongoing competitions on the dashboard.<br />2. Circuits. Complete them!<br />3. Native version from Google Play and App Store!","What's new?");
     }  
     var gymid = Cookies.get("nativeproblematorlocation");
     if (isNaN(parseInt(gymid))) {
@@ -927,8 +927,38 @@ var addInviteMemberPageListeners = function(pagename) {
 
 var addSingleProblemListeners = function(pagename) {
 
-  // If matches single problem
   if ((matches=pagename.match(/problem(\d+)/))) {
+    if (Cookies.get("problemhelpshown"+ver)==null) {
+       // Show problem help
+      var problemsHelp = [
+        {
+          id: 'slide0',
+          picture: '<div class="tutorialicon"><img src="assets/images/help/savetickhelp1.png" /></div>',
+          text: 'You can change <strong>tick date</strong> by clicking the date above the "SAVE TICK"-button. <a href="#" class="text-y" onclick="problemHelpScreen.next();">Next slide</a>'
+        },
+        {
+          id: 'slide1',
+          picture: '<div class="tutorialicon"><img src="assets/images/help/savetickhelp2.png" /></div>',
+          text: 'You can manage (=view and delete ) your ticks (after ticking) by clicking MANAGE x TICKS... below the "SAVE TICK"-button <a href="#" class="text-y" onclick="problemHelpScreen.next();">Next slide</a>'
+        },
+        {
+          id: 'slide2',
+          picture: '<div class="tutorialicon"><img src="assets/images/help/savetickhelp3.png" /></div>',
+          text: 'You can save your <strong>tries</strong> by clicking the spinner up/down and going back. Your tries will be automatically saved! <a href="#" class="text-y" onclick="problemHelpScreen.next();">Next slide</a>'
+        },
+        {
+          id: 'slide3',
+          picture: '<div class="tutorialicon"><img src="assets/images/help/savetickhelp4.png" /></div>',
+          text: 'Give feedback! Show your like, love and dislike of the problems. Report dirty/dangerous problems and send open feedback to routesetter. <a href="#" class="text-y" onclick="problemHelpScreen.close();">Got it!</a>'
+        },
+      ];
+      var options = {
+          'bgcolor': '#30312e',
+          'fontcolor': '#fff'
+      }
+      Cookies.set("problemhelpshown"+ver,true);
+      window.problemHelpScreen = myApp.welcomescreen(problemsHelp, options);
+    }
     // This has to be loaded every time a problem page is loaded.
     var calendarDefault = myApp.calendar({
       input: '#tickdate',
@@ -936,10 +966,29 @@ var addSingleProblemListeners = function(pagename) {
       closeByOutsideClick : true,
       closeOnSelect : true,
     });
-    if (!singleProblemListenersInitialized) {
+    // And this only once
+    if (pagename.match(/problem(\d+)/) && !singleProblemListenersInitialized) {
 
       console.log("SINGLE PROBLEM LISTENERS ADDED ONCE");
-      // Add listeners for dirty, dangerous and message.
+
+      $(document).on("click",".savetick",function() {
+        // First, disable this button...
+        tickSaved = true; // Save global tickSaved state
+        var self = $(this);
+        $(this).attr("disabled","disabled");
+        var pid = $(this).data("id");
+
+        debugger;
+        saveTickFunction(this,"savetick",function(back,opt) {
+          self.removeAttr("disabled");
+          if (back.error) {
+            myApp.alert(back.message);
+          }
+          mainView.router.refreshPage();
+          mainView.router.refreshPreviousPage();
+        });
+        return false;
+      });
       // SHow global ascents
       $(document).on("click",".show_global_ascents",function(e) {
         var clickedLink = this;
@@ -1155,7 +1204,7 @@ var saveTickFunction = function(self,action, callback) {
   if (action == undefined) {
     action = "savetick";
   }
-  var url = "/t/problematormobile/"+action+"/";
+  var url = window.api.apicallbase+action+"/";
   var data = {
     "a_like" : like,
     "a_love" : love,
@@ -1168,36 +1217,10 @@ var saveTickFunction = function(self,action, callback) {
     "tickdate" : tickdate,
   };
 
+  debugger;
   $.jsonp(url,data,function(back) {
     debugger;
     if (callback != undefined) {
-      /*
-      var likeContainer = $("#swipe"+pid+" .item-after .likes");
-      if (data.a_like> 0) {
-      // Update data-count
-        var curCount = likeContainer.find("span.fa-thumbs-up").data("count");
-        curCount = parseInt(curCount);
-        if (isNaN(curCount)) {
-          curCount = 0;
-        }
-        curCount += data.a_like;
-        likeContainer.find("span.fa-thumbs-up").data("count",curCount);
-        likeContainer.find("span.fa-thumbs-up").text(curCount);
-      } 
-      if (data.a_love > 0) {
-      // Update data-count
-        var curCount = likeContainer.find("span.fa-heart").data("count");
-        curCount = parseInt(curCount);
-        if (isNaN(curCount)) {
-          curCount = 0;
-        }
-        curCount += data.a_love;
-        likeContainer.find("span.fa-heart").data("count",curCount);
-        likeContainer.find("span.fa-heart").text(curCount);
-      }
-      */
-      mainView.router.refreshPage();
-      mainView.router.refreshPreviousPage();
       callback(back,data);
     }
   });
