@@ -2,7 +2,6 @@ window.ver = "problemator_20161215";
 // Initialize app
 var myApp = new Framework7({
   preprocess: function (content, url, next) {
-    debugger;
     if (url == null) {
       next(content);
     } else {
@@ -72,6 +71,7 @@ myApp.onPageInit("*",function(page) {
   addDashBoardListeners(pagename);
   addCompetitionsPageListeners(pagename);
   addGymInfoPageListeners(pagename);
+  addTickArchivePageListeners(pagename);
 });
 
 myApp.init(); // init app manually after you've attached all handlers

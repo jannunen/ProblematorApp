@@ -11,6 +11,7 @@ var inviteMemberPageListenersInitialized = false;
 var globalListenersAdded = false;
 var gymInfoPageListenersInitialized = false;
 var singleGroupPageListenerInitialized = false;
+var tickArchivePageListenerInitialized = false;
 
 var doPreprocess = function(content,url,next) {
   var host = window.location.host;
@@ -112,6 +113,20 @@ var doPreprocess = function(content,url,next) {
          var compiledTemplate = Template7.compile(content);
          var dataJSON = JSON.parse(data);
          next(compiledTemplate(dataJSON));
+       });
+     } else if ((matches=url.match(/tickarchive.html/))) {
+       // Load problems page data and compile the template
+       //
+       var url = window.api.apicallbase + "tickarchive";
+       var mom = moment();
+       var date = mom.format("YYYY-MM-DD");
+       $.jsonp(url, {date : date}, function (data){ 
+	 // Compile ticks for today, and put them into content
+	 debugger;
+	 var ctpl = window.myApp.templates.tickarchive_list;
+	 var html = ctpl({ticksinday : data});
+	 $(content).find("#tickContainer").empty().append(html);
+         next(content);
        });
      } else if ((matches=url.match(/circuits.html/))) {
        // Load problems page data and compile the template
@@ -353,6 +368,57 @@ var invokeLocationChangeActionSheet = function() {
   myApp.actions(buttons);
 }
 
+var addTickArchivePageListeners = function(pagename) {
+  if ("tickarchive-page"==pagename && !tickArchivePageListenerInitialized) {
+    var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August' , 'September' , 'October', 'November', 'December'];
+    var url = window.api.apicallbase + "tickarchive_tickdates"; 
+    $.jsonp(url,{},function(datesWithTicks) {
+      var evts = [];
+      for (var idx in datesWithTicks) {
+	var dstr = datesWithTicks[idx];
+	var mom = moment(dstr);
+	evts.push(mom.toDate());
+      }
+      var calendarInline = myApp.calendar({
+	container: '#calendar-inline-container',
+	value: [new Date()],
+	weekHeader: true,
+	events : evts,
+
+	onDayClick : function(p,dayContainer,year,month,day) {
+	  // Find events for clicked day.
+	  month = parseInt(month) + 1;
+	  var date = year+"-"+month+"-"+day;
+	  var url = "/t/problematormobile/_tickarchive/";
+	  $("#tickContainer").load(url,{date : date},function(back) {
+
+	  });
+	},
+	onOpen: function (p) {
+
+	  var amt = $("div[data-year="+p.currentYear+"][data-month="+p.currentMonth+"] .picker-calendar-day-has-events").not(".picker-calendar-day-next").length;
+	  $("#traindays").html(amt);
+	  $$('.calendar-custom-toolbar .center').text(monthNames[p.currentMonth] +', ' + p.currentYear);
+	  $$('.calendar-custom-toolbar .left .link').on('click', function () {
+	    calendarInline.prevMonth();
+	  });
+	  $$('.calendar-custom-toolbar .right .link').on('click', function () {
+	    calendarInline.nextMonth();
+	  });
+
+	},
+	onMonthYearChangeStart: function (p,year,month) {
+	  var amt = $("div[data-year="+year+"][data-month="+month+"] .picker-calendar-day-has-events").not(".picker-calendar-day-next").length;
+	  $("#traindays").html(amt);
+	  $$('.calendar-custom-toolbar .center').text(monthNames[p.currentMonth] +', ' + p.currentYear);
+	}
+      });
+    });//jsonp
+
+
+    tickArchivePageListenerInitialized = true;
+  }
+}
 var addGymInfoPageListeners = function(pagename) {
   if ("gyminfo-page"==pagename && !gymInfoPageListenersInitialized) {
     $(document).on("click",".changelocation_picker",function() {
@@ -1286,6 +1352,11 @@ var initializeTemplates = function(myApp) {
   t1 = '{{#if groups}} {{#each groups}} <li> <a href="static/group.html?id={{id}}" data-group="{{id}}" class="item-content item-link"> <div class="item-inner"> <div class="item-title-row"> <div class="item-title text-w">{{name}}</div> <div class="item-after"><span class="fa fa-users"></span>{{usercount}}</div> </div> </div> </a> </li> {{else}} <li> <div class="item-content"> <div class="item-inner"> <div class="item-title text-w">No search results...</div> </div> </div> </li> {{/each}} {{/if}}';
   var ctpl = Template7.compile(t1);
   myApp.templates.single_group_search_item = ctpl;
+
+  // Template for tickarchive ticks in a day
+  t1 = '<div class="content-block-title">{{sizeof ticksinday}} tick(s)</div> <ul> {{#if ticksinday}}{{#each ticksinday}} <li class="swipeout"> <div class="swipeout-content"> <a data-problemid="{{problemid}}" href="static/problem.html?id={{problemid}}" class="item-link item-content" > <div class="item-media"> <h5>{{gradename}}</h5> </div> <div class="item-inner"> <div class="item-title"> <span  class="fa fa-square" style="color : {{code}};"></span> <span class="body-text-w">{{substr tag 7}}</span> <span class="body-text">| {{date_format tstamp "%H:%M"}} {{#js_compare "this.routetype==\'sport\'"}}| {{ascent_type_text}}{{else}}| gboulder##{{/js_compare}}| {{default tries "N/A"}} {{#js_compare "this.tries==1"}}##try##{{else}}##tries##{{/js_compare}}</span> </div> <div class="item-after"> <small>{{idx}}</small> <span class="fa fa-chevron-right text-w"></span> </div> </div><!--- end of item-inner --> </a> </div><!-- end of swipeout-content--> <div class="swipeout-actions-right"> <a href="#" data-tag="{{tagshort}}" data-tickid="{{tickid}}" class="swipeuntick action1">Untick</a> </div> </li> {{else}}<li>No ticks for today</li>{{/each}}{{/if}}</ul>';
+  var ctpl = Template7.compile(t1);
+  myApp.templates.tickarchive_list = ctpl;
 
 
 }
