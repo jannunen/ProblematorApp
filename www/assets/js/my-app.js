@@ -2,6 +2,7 @@ window.ver = "problemator_20161215";
 // Initialize app
 var myApp = new Framework7({
   preprocess: function (content, url, next) {
+    debugger;
     if (url == null) {
       next(content);
     } else {

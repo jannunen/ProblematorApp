@@ -200,7 +200,11 @@ var doPreprocess = function(content,url,next) {
        }
        var template = Template7.compile(content);
        var resultContent = template();
-       return resultContent; 
+       if (next != undefined && next != null) {
+	 next(resultContent);
+       } else {
+	 return resultContent; 
+       }
      }
 
 }
