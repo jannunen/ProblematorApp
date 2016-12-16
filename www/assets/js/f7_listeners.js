@@ -584,6 +584,37 @@ var   addProblemsPageListeners = function(pagename) {
   if ("problems-page"==pagename) {
     if (!problemsPageListenersInitialized) {
       problemsPageListenersInitialized = true;
+    if (Cookies.get("problemlisthelpshown"+ver)==null) {
+       // Show problem help
+      var problemlistHelp = [
+        {
+          id: 'slide0',
+          picture: '<div class="tutorialicon"><img src="assets/images/help/problemlisthelp1.png" /></div>',
+          text: 'Swipe problem to quick tick a problem (Userful for fast re-ticking). Works only with mobile phone. <a href="#" class="text-y" onclick="helpScreen.next();">Next slide</a>'
+        },
+        {
+          id: 'slide1',
+          picture: '<div class="tutorialicon"><img src="assets/images/help/problemlisthelp2.png" /></div>',
+          text: 'Use Problem tags to quick tick problems. You can tick several at once by separating tags with a comma (,) <a href="#" class="text-y" onclick="helpScreen.next();">Next slide</a>'
+        },
+        {
+          id: 'slide2',
+          picture: '<div class="tutorialicon"><img src="assets/images/help/problemlisthelp3.png" /></div>',
+          text: 'Click a problem to go to the Problem Details -page. There you can rate, grade, tick and give feedback. <a href="#" class="text-y" onclick="helpScreen.next();">Next slide</a>'
+        },
+        {
+          id: 'slide3',
+          picture: '<div class="tutorialicon"><img src="assets/images/help/problemlisthelp4.png" /></div>',
+          text: 'It looks like this. Happy cranking! <a href="#" class="text-y" onclick="helpScreen.close();">Got it!</a>'
+        },
+      ];
+      var options = {
+          'bgcolor': '#30312e',
+          'fontcolor': '#fff'
+      }
+      Cookies.set("problemlisthelpshown"+ver,true);
+      window.helpScreen = myApp.welcomescreen(problemlistHelp, options);
+    }
       $(document).on("click","#quicktick",function() {
 	$(this).attr("disabled","disabled");
 	var self = this;
