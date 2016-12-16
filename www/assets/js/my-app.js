@@ -2,7 +2,11 @@ window.ver = "problemator_20161215";
 // Initialize app
 var myApp = new Framework7({
   preprocess: function (content, url, next) {
+    if (url == null) {
+      next(content);
+    } else {
      doPreprocess(content,url,next);
+    }
   },
   modalTitle : "Problemator",
   pushState: true,
@@ -44,6 +48,9 @@ myApp.onPageInit("*",function(page) {
   // These have to be added here before any actual check is made.
   // eg login page listeners have to be added before the login page
   // is actually shown =)
+  if (page.name == null) {
+     alert("Your page is missing a name! "+page.url);
+  }
   addGlobalListeners();
 
   if (!Cookies.get("loginok")) {

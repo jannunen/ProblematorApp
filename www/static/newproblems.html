@@ -1,0 +1,76 @@
+<div class="navbar">
+  <div class="navbar-inner">
+    <div class="left sliding"><a href="#" class="back link">
+        <span class="fa-stack fa-md">
+          <i class="fa fa-circle-thin fa-stack-2x"></i>
+          <i class="fa fa-chevron-left fa-stack-1x"></i>
+        </span>
+      </a></div>
+      <div class="center sliding">
+        <h3>New problems</h3>
+      </div>
+      <div class="right"><a href="#" class="link icon-only open-panel"><i class="fa fa-bars"></i></a></div>
+  </div>
+</div>
+<div class="page" data-page="new-problems-page">
+  <div class="page-content" id="newproblemlist">
+    <div class="content-block-title">Latest 10 new problems</div>
+    <div class="list-block accordion-list custom-accordion problems-accordion">
+      <ul>
+        {{#each newproblems}}
+        <li class="accordion-item">
+          <a href="#" class="item-content item-link">
+            <div class="item-inner">
+              <div class="item-title">
+                <span class="problematorbadge">{{index}}</span> <span class="body-text-w">{{@key}}</span>
+              </div><!--/item-title-->
+            </div><!-- /item-inner -->
+          </a>
+          <div class="accordion-item-content">
+            <div class="content-block">
+              <ul>
+                {{#each probs}}
+                <li class="swipeout" id="swipe{{problemid}}">
+                  <div class="swipeout-content">
+                    <a data-problemid="{{problemid}}" href="static/problem.html?pid={{problemid}}" class="item-link item-content" >
+                      <div class="item-media">
+                        {{#if tick}}
+                        <h5 tag="{{substr tag 7}}" problemid="{{problemid}}" class="probtitle text-y grade">{{gradename}}</h5>
+                        {{else}}
+                        <h5 tag="{{substr tag 7}}" problemid="{{problemid}}" class="probtitle white grade">{{gradename}}</h5>
+                        {{/if}}
+                      </div>
+                      <div class="item-inner">
+                        <div class="item-title">
+                          <span  class="fa fa-square" style="color : {{code}};"></span>
+                          <span class="body-text-w">{{substr tag 7}}</span> 
+                          <small>| {{relative_datetime added}}</small>
+                          {{#if tick}}
+                          <span class="fa fa-check problemator-link"></span>
+                          {{/if}}
+                        </div>
+                        <div class="item-after">
+                          <span class="body-text-w likes">
+                            <span data-count="{{c_like}}" class="fa fa-thumbs-up"></span> {{c_like}}
+                            <span data-count="{{c_love}}" class="fa fa-heart"></span> {{c_love}}
+                          </span>
+                          <span class="fa fa-chevron-right"></span>
+                        </div>
+                      </div><!--- end of item-inner -->
+                    </a>
+                  </div><!-- end of swipeout-content-->
+                  <div class="swipeout-actions-right">
+                    <a href="#" data-tag="{{tagshort}}" data-pid="{{problemid}}" class="swipetick action1">Tick!</a>
+                  </div>
+                </li>
+                {{/each}}
+              </ul>
+            </div>
+          </div>
+        </li>
+        <!-- end of accordion item -->
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+</div>

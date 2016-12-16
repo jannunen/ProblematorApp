@@ -129,6 +129,14 @@ var doPreprocess = function(content,url,next) {
          var compiledTemplate = Template7.compile(content);
          next(compiledTemplate(data));
        });
+     } else if ((matches=url.match(/newproblems.html/))) {
+       // Load problems page data and compile the template
+       //
+       var url = window.api.apicallbase + "newproblems/";
+       $.jsonp(url, {}, function (data){ 
+         var compiledTemplate = Template7.compile(content);
+         next(compiledTemplate({newproblems : data}));
+       });
      } else if ((matches=url.match(/problems.html/))) {
        // Load problems page data and compile the template
        //

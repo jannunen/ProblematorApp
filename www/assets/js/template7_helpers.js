@@ -48,6 +48,20 @@ Template7.registerHelper('upper', function (text, options){
   var ret = text.toUpperCase();
   return ret;
 });
+Template7.registerHelper('substr', function (str,start,len) {
+  // First we need to check is the passed arr argument is function
+  if (typeof arr === 'function') arr = arr.call(this);
+
+  if (str == undefined) {
+    return "";
+  }
+  if (len == undefined) {
+    // default to end of string
+   return str.substring(start,str.length);  
+  } else {
+    return str.substr(start,len);
+  }
+});          
 Template7.registerHelper('relative_datetime', function (rawdate,format) {
   // First we need to check is the passed arr argument is function
   if (typeof arr === 'function') arr = arr.call(this);
