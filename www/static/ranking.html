@@ -13,14 +13,14 @@
   </div>
 </div>
 	
-<div data-page="ranking_boulder" class="page">
+<div data-page="ranking-page" class="page">
 
   <div class="page-content">
     <div class="content-block-title text-w">How ranking works?</div>
     <!-- Inset content block -->
     <div class="content-block inset bg-light">
       <div class="content-block-inner">
-        <p class="text-g">Only top10 best routes/problems are calculated.<br /><br /> 6a gives you 400 points, 6b=500, 6c=600, 7a=700...8a=1000 points. Ranking changes nightly, so don't expect your ranking to change immediately after a tick =)</p>
+        <p class="text-g">Only your top10 hardest routes/problems are calculated.<br /><br /> 6a gives you 400 points, 6b=500, 6c=600, 7a=700...8a=1000 points.<br />Toproping decuts your points by 150.<br /><br />Ranking changes nightly, so don't expect your ranking to change immediately after a tick =)</p>
       </div>
     </div>
 
@@ -32,14 +32,16 @@
             <!-- Smart select, will be opened in Picker -->
             <a href="#" class="item-link smart-select locpicker" data-open-in="picker" data-searchbar="true" data-back-on-select="true">
               <select name="ranking_location" id="ranking_location" >
+                <option value="0"> GLOBAL (All gyms)</option>
                 {{#each locations}}
-                <option value="{{locid}}" {{#js_compare "this.locid==rankinglocation}}selected="selected"{{/js_compare}}>{{locname}}</option>
+                <option value="{{id}}" {{#js_compare "this.id==this.rankinglocation"}}selected="selected"{{/js_compare}}>{{name}}</option>
                 {{/each}}
+                <option value="0"> GLOBAL (All gyms)</option>
               </select>
               <div class="item-content">
                 <div class="item-inner " >
                   <div class="item-after " id="rankingsmart">
-                    {{locations[locid]}}
+                    {{locations[this.problematorlocation]}}
                     <div id = "downcaret" class="downcaret" ><span class="fa fa-chevron-down"></span></div>
                   </div>
                 </div>
@@ -57,66 +59,53 @@
           </div>
         </div><!-- end of content block-->
         <div class="tabs">
+
           <div id="tab_boulder_ranking" class="tab active">
-            <div id="list_ranking_boulder">
 
-{{#js_compare  "this.ranking_1m.length==0 AND ranking_6m.length==0 AND $ranking_1m.length==0}
-  <div class="content-block">
-    <span class="title">No boulder problems in the selected gym!</span>
-  </div>
-{{else}}
-  <strong>{{rankinginfo}</strong>
-  <div class="list-block">
-    <div class="list-block-label">
-      <span>Your ranking is {{default rank_1m.rank "unranked"}}. with {{default rank_1m.rankpoints 0}} points</span><br />
-      {{#js_compare "this.rank.reachnext > 0"}}
-      <small>You'll need {{rank_1m.reachnext}} points  (={{rank_1m.whatgrade}}) to gain a rank!</small>
-      {{/js_compare}}
-    </div>
-    <div class="list-block-label">Top 10 | This month</div>
-  <ul>
-  {{each $ranking_1m as $r}
-  {{> "ranking_li"}}
-  {{/each}}
-  </ul>
-  </div>
-
-  <div class="list-block">
-    <div class="list-block-label">
-      <span>Your ranking is {{default rank_6m.rank "unranked"}}. with {{default rank_6m.rankpoints 0}} points</span><br />
-      {{#js_compare "this.rank.reachnext > 0"}}
-      <small>You'll need {{rank_6m.reachnext}} points  (={{rank_6m.whatgrade}}) to gain a rank!</small>
-      {{/js_compare}}
-    </div>
-  <div class="list-block-label">Top 10 | 6 months</div>
-  <ul>
-  {{each $ranking_6m as $r}
-  {{> "ranking_li"}}
-  {{/each}}
-  </ul>
-  </div>
-
-  <div class="list-block">
-    <div class="list-block-label">
-      <span>Your ranking is {{default rank_1y.rank "unranked"}}. with {{default rank_1y.rankpoints 0}} points</span><br />
-      {{#js_compare "this.rank.reachnext > 0"}}
-      <small>You'll need {{rank_1y.reachnext}} points  (={{rank_1y.whatgrade}}) to gain a rank!</small>
-      {{/js_compare}}
-    </div>
-  <div class="list-block-label">Top 10 | 1 year</div>
-  <ul>
-    {{each ranking_1y}}
-  {{> "ranking_li"}}
-  {{/each}}
-  </ul>
-  </div>
-{{/js_compare}}
-
-            </div>
+              <div id="list_ranking_boulder">
+              {{#each rankings.boulder}}
+                <strong>{{@key}}</strong>
+                <div class="list-block">
+                  <div class="list-block-label">
+                    <span>Your ranking is {{default this.rank.rank "unranked"}}. with {{default rank.rankpoints 0}} points</span><br />
+                    {{#js_compare "this.rank.reachnext>0"}}
+                    <small>You'll need {{rank.reachnext}} points  (={{rank.whatgrade}}) to gain a rank!</small>
+                    {{/js_compare}}
+                  </div>
+                  <div class="list-block-label">Top 10 | {{@key}}</div>
+                  <ul>
+                    {{#each list}}
+                      {{> "ranking_li"}}
+                    {{else}}
+                    <li>No ranking rows for given ranking</li>
+                    {{/each}}
+                  </ul>
+                </div><!-- //list-block -->
+              {{/each}}
+              </div><!-- // list-ranking-boudler-->
           </div><!-- end of tab1 -->
+
           <div id="tab_sport_ranking" class="tab">
             <div id="list_ranking_sport">
-              {{include file="problemator/mobile/minio/_ranking_sport.tpl"}}
+              {{#each rankings.sport}}
+                <strong>{{@key}}</strong>
+                <div class="list-block">
+                  <div class="list-block-label">
+                    <span>Your ranking is {{default this.rank.rank "unranked"}}. with {{default rank.rankpoints 0}} points</span><br />
+                    {{#js_compare "this.rank.reachnext>0"}}
+                    <small>You'll need {{rank.reachnext}} points  (={{rank.whatgrade}}) to gain a rank!</small>
+                    {{/js_compare}}
+                  </div>
+                  <div class="list-block-label">Top 10 | {{@key}}</div>
+                  <ul>
+                    {{#each list}}
+                      {{> "ranking_li"}}
+                    {{else}}
+                    <li>No ranking rows for given ranking</li>
+                    {{/each}}
+                  </ul>
+                </div><!-- //list-block -->
+              {{/each}}
             </div>
           </div><!-- end of tab1 -->
 

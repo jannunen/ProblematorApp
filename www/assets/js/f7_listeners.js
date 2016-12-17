@@ -78,6 +78,7 @@ var doPreprocess = function(content,url,next) {
          $.jStorage.set("climbinfo",data.climbinfo);
          $.jStorage.set("grades",data.grades);
          $.jStorage.set("locations",data.locations);
+         $.jStorage.set("mysettings",data.mysettings);
          var compiledTemplate = Template7.compile(content);
          var html = compiledTemplate(data);
          next(html);
@@ -98,12 +99,11 @@ var doPreprocess = function(content,url,next) {
        //
        var compid = matches[1];
        var url = window.api.apicallbase + "competition/?compid="+compid+"&jsonp=false";
-       $.post(url, {}, function (data){ 
+       $.jsonp(url, {}, function (data){ 
          loginCheck(data);
-         var dataObj = JSON.parse(data);
-         if (dataObj.success) {
+         if (data.success) {
          } else {
-           myApp.alert(dataObj.msg);
+           myApp.alert(data.msg);
            mainView.router.back();
            return true;
          }
@@ -112,21 +112,28 @@ var doPreprocess = function(content,url,next) {
        });
      } else if ((matches=url.match(/ranking.html/))) {
        var url = window.api.apicallbase + "ranking/";
-       $.post(url, {compid : compid}, function (data){ 
+       $.jsonp(url, {compid : compid}, function (data){ 
          loginCheck(data);
          var compiledTemplate = Template7.compile(content);
-         data.locations = $.jStorage.get("locations");
-         var dataJSON = JSON.parse(data);
-         next(compiledTemplate(dataJSON));
+         var set = $.jStorage.get("mysettings");
+         if (set.rankinglocation == null) {
+           set.rankinglocation = "0";
+         }
+         var pass = { 
+           rankings : data,
+           locations : $.jStorage.get("locations"),
+           rankinglocation : set.rankinglocation,
+           problematorlocation : Cookies.get("nativeproblematorlocation"),
+         }
+         next(compiledTemplate(pass));
        });
      } else if ((matches=url.match(/registertocomp.html.*?(\d+)/))) {
        var compid = matches[1];
        var url = window.api.apicallbase + "registertocomp/";
-       $.post(url, {compid : compid}, function (data){ 
+       $.jsonp(url, {compid : compid}, function (data){ 
          loginCheck(data);
          var compiledTemplate = Template7.compile(content);
-         var dataJSON = JSON.parse(data);
-         next(compiledTemplate(dataJSON));
+         next(compiledTemplate(data));
        });
      } else if ((matches=url.match(/tickarchive.html/))) {
        // Load problems page data and compile the template
@@ -185,7 +192,6 @@ var doPreprocess = function(content,url,next) {
        var url = window.api.apicallbase + "group/";
        $.jsonp(url, {id : groupid}, function (data){ 
          var compiledTemplate = Template7.compile(content);
-         //var dataJSON = {group : JSON.parse(data)};
          next(compiledTemplate({"group" : data}));
        });
      } else if ((matches=url.match(/groups.html/))) {
@@ -381,9 +387,28 @@ var invokeLocationChangeActionSheet = function() {
 
 var addRankingPageListeners = function(pagename) {
   if ("ranking-page"==pagename && !rankingPageListenersInitialized) {
+    $(document).on("change","#ranking_location",function() {
+      // Change ranking gym
+      $elem = myApp.alert(  'This calculation might take some while, have patience! =)', 'Calculating ranks...');
 
-    // Register partial for ranking single list item
-    Template7.registerPartial('ranking_li','<li data-gender="{{gender}}"> <div class="item-content"> <div class="item-media"> <h5 class="rankingnumber">{{rank}}.</h5> </div> <div class="item-inner"> <div class="item-title body-text-w"> {{#js_compare "this.showinranking==0"}} Salainen nagetti {{else}} {{etunimi}} {{sukunimi}} {{/js_compare}} </div> <div class="item-after"> <span class="body-text-g">{{rankpoints}}<br />&asymp;{{yourgrade}}</span> </div> </div> </div> </li>');
+      var gymid = $("#ranking_location option:selected").map(function() { return $(this).val(); }).get().join(",");
+      var boulderdone = false;
+      var sportdone = false;
+      debugger;
+      //console.log("Gymid "+gymid);
+      var url = window.api.apicallbase + "ranking"; 
+      $.jsonp(url,{gymid : gymid},function(data) {
+        debugger;
+        var ctpl = window.myApp.templates.rankings;
+        var html = ctpl(data.boulder);
+        $("#list_ranking_boulder").empty().append(html);
+
+        ctpl = window.myApp.templates.rankings;
+        html = ctpl(data.sport);
+        $("#list_ranking_sport").empty().append(html);
+      });
+      return false;
+    });
 
     rankingPageListenersInitialized  = true;
   }
@@ -1363,6 +1388,9 @@ var saveTickFunction = function(self,action, callback) {
 
 
 var initializeTemplates = function(myApp) {
+  // Register partial for ranking single list item
+  Template7.registerPartial('ranking_li','<li data-gender="{{gender}}"> <div class="item-content"> <div class="item-media"> <h5 class="rankingnumber">{{rank}}.</h5> </div> <div class="item-inner"> <div class="item-title body-text-w"> {{#js_compare "this.showinranking==0"}} Secret nuggett {{else}} {{etunimi}} {{sukunimi}} {{/js_compare}} </div> <div class="item-after"> <span class="body-text-g">{{rankpoints}}<br />&asymp;<small>{{yourgrade}}</small></span> </div> </div> </div> </li>');
+
    
   // Template for problem global ascents popover
   var t1 = '<div class="popover ascents popover-about"> <div class="popover-angle"></div> <div class="popover-inner"> <div class="content-block"> <h1>Problem ascents <small>{{count}} time(s)</h1> <br /> <p class="body-text-w">Public ascent list</p><br /> <ul > {{#each ascents}} <li>@{{date_format tstamp "DD.MM.YYYY"}} {{etunimi}} {{sukunimi}} {{#js_compare "this.a_like > 0"}}<span class="text-w">+{{a_like}} <span class="fa fa-thumbs-up"></span></span>{{/js_compare}}</li> {{else}} No public ascents, yet.  {{/each}} </ul><br /> <span class="text-y">Want to include your own ascents? Go to <a class="text-w" href="#settings">settings</a> page and make your ascents public now!</span> </div> </div> </div> ';
@@ -1383,6 +1411,10 @@ var initializeTemplates = function(myApp) {
   t1 = '<div class="content-block-title">{{sizeof ticksinday}} tick(s)</div> <ul> {{#if ticksinday}}{{#each ticksinday}} <li class="swipeout"> <div class="swipeout-content"> <a data-problemid="{{problemid}}" href="static/problem.html?id={{problemid}}" class="item-link item-content" > <div class="item-media"> <h5>{{gradename}}</h5> </div> <div class="item-inner"> <div class="item-title"> <span  class="fa fa-square" style="color : {{code}};"></span> <span class="body-text-w">{{substr tag 7}}</span> <span class="body-text">| {{date_format tstamp "HH:MM"}} {{#js_compare "this.routetype==\'sport\'"}}| {{ascent_type_text}}{{else}}| boulder{{/js_compare}}| {{default tries "N/A"}} {{#js_compare "this.tries==1"}}try{{else}}tries{{/js_compare}}</span> </div> <div class="item-after"> <small>{{idx}}</small> <span class="fa fa-chevron-right text-w"></span> </div> </div><!--- end of item-inner --> </a> </div><!-- end of swipeout-content--> <div class="swipeout-actions-right"> <a href="#" data-tag="{{tagshort}}" data-tickid="{{tickid}}" class="swipeuntick swipeout-delete action1">Untick</a> </div> </li> {{else}}<li>No ticks for today</li>{{/each}}{{/if}}</ul>';
   var ctpl = Template7.compile(t1);
   myApp.templates.tickarchive_list = ctpl;
+
+  t1 = ' {{#each this}} <strong>{{@key}}</strong> <div class="list-block"> <div class="list-block-label"> <span>Your ranking is {{default this.rank.rank "unranked"}}. with {{default rank.rankpoints 0}} points</span><br /> {{#js_compare "this.rank.reachnext>0"}} <small>You\'ll need {{rank.reachnext}} points  (={{rank.whatgrade}}) to gain a rank!</small> {{/js_compare}} </div> <div class="list-block-label">Top 10 | {{@key}}</div> <ul> {{#each list}} {{> "ranking_li"}} {{else}} <li>No ranking rows for given ranking</li> {{/each}} </ul> </div><!-- //list-block --> {{/each}}';
+  var ctpl = Template7.compile(t1);
+  myApp.templates.rankings = ctpl;
 
 
 }
