@@ -1,0 +1,127 @@
+<div class="navbar">
+  <div class="navbar-inner">
+    <div class="left sliding"><a name="pagetop" href="#" class="back link">
+        <span class="fa-stack fa-md">
+          <i class="fa fa-circle-thin fa-stack-2x"></i>
+          <i class="fa fa-chevron-left fa-stack-1x"></i>
+        </span>
+      </a></div>
+      <div class="center ">Ranking</div>
+      <div class="right">
+        <a href="#" class="link icon-only open-panel"> <i class="fa fa-bars"></i></a>
+      </div>
+  </div>
+</div>
+	
+<div data-page="ranking_boulder" class="page">
+
+  <div class="page-content">
+    <div class="content-block-title text-w">How ranking works?</div>
+    <!-- Inset content block -->
+    <div class="content-block inset bg-light">
+      <div class="content-block-inner">
+        <p class="text-g">Only top10 best routes/problems are calculated.<br /><br /> 6a gives you 400 points, 6b=500, 6c=600, 7a=700...8a=1000 points. Ranking changes nightly, so don't expect your ranking to change immediately after a tick =)</p>
+      </div>
+    </div>
+
+    <div class="content-block">
+      <div class="list-block">
+
+        <ul class="locul" id="rankinglistselect">
+          <li>
+            <!-- Smart select, will be opened in Picker -->
+            <a href="#" class="item-link smart-select locpicker" data-open-in="picker" data-searchbar="true" data-back-on-select="true">
+              <select name="ranking_location" id="ranking_location" >
+                {{#each locations}}
+                <option value="{{locid}}" {{#js_compare "this.locid==rankinglocation}}selected="selected"{{/js_compare}}>{{locname}}</option>
+                {{/each}}
+              </select>
+              <div class="item-content">
+                <div class="item-inner " >
+                  <div class="item-after " id="rankingsmart">
+                    {{locations[locid]}}
+                    <div id = "downcaret" class="downcaret" ><span class="fa fa-chevron-down"></span></div>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div><!-- end of show ranking block-->
+
+      <div id="ranking" class="problemator_list">
+        <div class="content-block">
+          <div class="buttons-row">
+            <a href="#tab_boulder_ranking" class="tab-link active button">Boulder</a>
+            <a href="#tab_sport_ranking" class="tab-link button">Sport</a>
+          </div>
+        </div><!-- end of content block-->
+        <div class="tabs">
+          <div id="tab_boulder_ranking" class="tab active">
+            <div id="list_ranking_boulder">
+
+{{#js_compare  "this.ranking_1m.length==0 AND ranking_6m.length==0 AND $ranking_1m.length==0}
+  <div class="content-block">
+    <span class="title">No boulder problems in the selected gym!</span>
+  </div>
+{{else}}
+  <strong>{{rankinginfo}</strong>
+  <div class="list-block">
+    <div class="list-block-label">
+      <span>Your ranking is {{default rank_1m.rank "unranked"}}. with {{default rank_1m.rankpoints 0}} points</span><br />
+      {{#js_compare "this.rank.reachnext > 0"}}
+      <small>You'll need {{rank_1m.reachnext}} points  (={{rank_1m.whatgrade}}) to gain a rank!</small>
+      {{/js_compare}}
+    </div>
+    <div class="list-block-label">Top 10 | This month</div>
+  <ul>
+  {{each $ranking_1m as $r}
+  {{> "ranking_li"}}
+  {{/each}}
+  </ul>
+  </div>
+
+  <div class="list-block">
+    <div class="list-block-label">
+      <span>Your ranking is {{default rank_6m.rank "unranked"}}. with {{default rank_6m.rankpoints 0}} points</span><br />
+      {{#js_compare "this.rank.reachnext > 0"}}
+      <small>You'll need {{rank_6m.reachnext}} points  (={{rank_6m.whatgrade}}) to gain a rank!</small>
+      {{/js_compare}}
+    </div>
+  <div class="list-block-label">Top 10 | 6 months</div>
+  <ul>
+  {{each $ranking_6m as $r}
+  {{> "ranking_li"}}
+  {{/each}}
+  </ul>
+  </div>
+
+  <div class="list-block">
+    <div class="list-block-label">
+      <span>Your ranking is {{default rank_1y.rank "unranked"}}. with {{default rank_1y.rankpoints 0}} points</span><br />
+      {{#js_compare "this.rank.reachnext > 0"}}
+      <small>You'll need {{rank_1y.reachnext}} points  (={{rank_1y.whatgrade}}) to gain a rank!</small>
+      {{/js_compare}}
+    </div>
+  <div class="list-block-label">Top 10 | 1 year</div>
+  <ul>
+    {{each ranking_1y}}
+  {{> "ranking_li"}}
+  {{/each}}
+  </ul>
+  </div>
+{{/js_compare}}
+
+            </div>
+          </div><!-- end of tab1 -->
+          <div id="tab_sport_ranking" class="tab">
+            <div id="list_ranking_sport">
+              {{include file="problemator/mobile/minio/_ranking_sport.tpl"}}
+            </div>
+          </div><!-- end of tab1 -->
+
+        </div><!--end of tabs-->
+      </div><!-- end of #ranking-->
+    </div><!-- end of page-content-->
+  </div> <!-- end of boulder page-->
+

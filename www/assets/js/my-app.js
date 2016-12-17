@@ -72,6 +72,7 @@ myApp.onPageInit("*",function(page) {
   addCompetitionsPageListeners(pagename);
   addGymInfoPageListeners(pagename);
   addTickArchivePageListeners(pagename);
+  addRankingPageListeners(pagename);
 });
 
 myApp.init(); // init app manually after you've attached all handlers

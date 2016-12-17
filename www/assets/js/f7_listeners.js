@@ -12,6 +12,7 @@ var globalListenersAdded = false;
 var gymInfoPageListenersInitialized = false;
 var singleGroupPageListenerInitialized = false;
 var tickArchivePageListenerInitialized = false;
+var rankingPageListenersInitialized = false;
 
 var doPreprocess = function(content,url,next) {
   var host = window.location.host;
@@ -108,6 +109,15 @@ var doPreprocess = function(content,url,next) {
          }
          var compiledTemplate = Template7.compile(content);
          next(compiledTemplate(dataObj));
+       });
+     } else if ((matches=url.match(/ranking.html/))) {
+       var url = window.api.apicallbase + "ranking/";
+       $.post(url, {compid : compid}, function (data){ 
+         loginCheck(data);
+         var compiledTemplate = Template7.compile(content);
+         data.locations = $.jStorage.get("locations");
+         var dataJSON = JSON.parse(data);
+         next(compiledTemplate(dataJSON));
        });
      } else if ((matches=url.match(/registertocomp.html.*?(\d+)/))) {
        var compid = matches[1];
@@ -367,6 +377,16 @@ var invokeLocationChangeActionSheet = function() {
     text : "Close"
   });
   myApp.actions(buttons);
+}
+
+var addRankingPageListeners = function(pagename) {
+  if ("ranking-page"==pagename && !rankingPageListenersInitialized) {
+
+    // Register partial for ranking single list item
+    Template7.registerPartial('ranking_li','<li data-gender="{{gender}}"> <div class="item-content"> <div class="item-media"> <h5 class="rankingnumber">{{rank}}.</h5> </div> <div class="item-inner"> <div class="item-title body-text-w"> {{#js_compare "this.showinranking==0"}} Salainen nagetti {{else}} {{etunimi}} {{sukunimi}} {{/js_compare}} </div> <div class="item-after"> <span class="body-text-g">{{rankpoints}}<br />&asymp;{{yourgrade}}</span> </div> </div> </div> </li>');
+
+    rankingPageListenersInitialized  = true;
+  }
 }
 
 var addTickArchivePageListeners = function(pagename) {
