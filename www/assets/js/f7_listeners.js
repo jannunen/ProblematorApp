@@ -246,6 +246,9 @@ var doPreprocess = function(content,url,next) {
 
 var addGlobalListeners = function() {
    if (!globalListenersAdded) {
+    $(document).on("click",".changelocation_picker",function() {
+      invokeLocationChangeActionSheet();
+    });
     $$(document).on("click",".btn_logout",function() {
       $.jsonp(window.api.apicallbase+"logout",{},function() {
         Cookies.remove("loginok");
@@ -482,9 +485,6 @@ var addTickArchivePageListeners = function(pagename) {
 }
 var addGymInfoPageListeners = function(pagename) {
   if ("gyminfo-page"==pagename && !gymInfoPageListenersInitialized) {
-    $(document).on("click",".changelocation_picker",function() {
-      invokeLocationChangeActionSheet();
-    });
     gymInfoPageListenersInitialized = true;
   }
 }

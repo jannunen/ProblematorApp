@@ -18,7 +18,7 @@
         <div class="content-block-inner bg-light">
           <div class="row">
             <div class="col-33 body-text-w">
-              <span id="curloc">{{#if locinfo}}{{locinfo.name}}{{/if}}</span>
+              <a href="#" class="text-y changelocation_picker"><span id="curloc">{{#if locinfo}}{{locinfo.name}}{{/if}} <span class="text-w fa fa-chevron-down"></span></span></a>
               <input type="hidden" name="location" id="location" value="{{#if locinfo}}{{locinfo.id}}{{/if}}" />
             </div>
             <div class="col-66 body-text-w text-right">
