@@ -1,0 +1,52 @@
+<!-- Top Navbar-->
+<div class="navbar">
+  <div class="navbar-inner">
+    <div class="left">
+      <a href="#" class="link back">
+        <span class="fa-stack fa-md">
+          <i class="fa fa-circle-thin fa-stack-2x"></i>
+          <i class="fa fa-chevron-left fa-stack-1x"></i>
+        </span>
+      </a>
+    </div>
+    <div class="center sliding"><h3>Points per route</h3></div>
+    <div class="right">
+      <a href="#" class="link icon-only open-panel">
+        <i class="fa fa-bars"></i>
+      </a>
+    </div>
+  </div>
+</div> <!-- end of navbar -->
+
+
+<div class="page" data-page="pointsperroute-page">
+  <div class="page-content" id="pointsperroute">
+    <div class="content-block">
+      <!-- Buttons row as tabs controller -->
+      <div class="buttons-row">
+        {{#each series}}
+        <a href="#tab{{index}}" class="tab-link {{#js_compare "this.index==0"}}active{{/js_compare}} button">{{nimi}}</a>
+        {{/each}}
+      </div>
+    </div>
+
+    <div class="tabs">
+      <!-- Tab 1, active by default -->
+      {{#each points}}
+      <div id="tab{{index}}" class="tab">
+        <div class="content-block">
+        {{#each this}}
+         {{problems[@key]}}
+        {{/each}}
+
+        </div>
+      </div>
+      {{/each}}
+    </div> <!-- //tabs -->
+      
+  </div>
+</div>
+
+
+
+

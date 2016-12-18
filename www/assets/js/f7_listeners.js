@@ -13,7 +13,8 @@ var gymInfoPageListenersInitialized = false;
 var singleGroupPageListenerInitialized = false;
 var tickArchivePageListenerInitialized = false;
 var rankingPageListenersInitialized = false;
-var competitionPageListenersInitialized = false;
+var competitionPageListenersInitialized = false; // Singular
+var competitionsPageListenersInitialized = false; // Plural =)
 var settingsPageListenersInitialized = false;
 var registerToCompListenersInitialized = false;
 
@@ -84,6 +85,13 @@ var doPreprocess = function(content,url,next) {
       var compiledTemplate = Template7.compile(content);
       var html = compiledTemplate(data);
       next(html);
+    });
+  } else if ((matches=url.match(/pointsperroute.html.*?(\d+)/))) {
+    var compid = matches[1];
+    $.jsonp(window.api.apicallbase+"pointsperroute/?comp_id="+compid,{},function(data) {
+      debugger;
+      var compiledTemplate = Template7.compile(content);
+      next(compiledTemplate(data));
     });
   } else if ((matches=url.match(/gyminfo.html/))) {
 
@@ -814,15 +822,17 @@ window.updateDoneAmount = function() {
   var done = $(".comp_problem_list").find("button.done").length;
   $("span.done").html(done+"<small class='ofall normal'>/"+all+"</small>");
 }
-
-var addCompetitionsPageListeners = function(pagename) {
-  if ("competitions"==pagename) {
+var addCompetitionPageListeners = function(pagename) {
+  if ("competition-page"==pagename) {
     // On every comp page listeners should be placed here.
     window.setupTimeLeftTimer();
     window.updateDoneAmount();
 
     // Only once initialized should be here
     if (!competitionPageListenersInitialized) {
+
+      console.log("Adding competition page listeners");
+
 
       $(document).on("click",".trieschange",function() {
         var val = -1;
@@ -848,7 +858,6 @@ var addCompetitionsPageListeners = function(pagename) {
           var self = $(this);
           var url = window.api.apicallbase + "comp_savepretick/";
           $.jsonp(url,{compid : $("#compid").val(), problemid : problemid, tries : newval},function(back) {
-            debugger;
             self.removeAttr("disabled");
             if (back.error) {
               myApp.alert(back.error);
@@ -875,9 +884,9 @@ var addCompetitionsPageListeners = function(pagename) {
         var self = $(this);
         if ($(this).hasClass("notdone")) {
           var url = window.api.apicallbase + "comp_savetick/";
-          $$.post(url,{compid : $("#compid").val(), problemid : problemid, tries : tries},function(back) {
-            if (back.match(/error/i)) {
-              myApp.alert(back);
+          $.jsonp(url,{compid : $("#compid").val(), problemid : problemid, tries : tries},function(back) {
+            if (back.error) {
+              myApp.alert(back.error);
               return false;
             }
             // Change classes accordingly
@@ -890,9 +899,9 @@ var addCompetitionsPageListeners = function(pagename) {
           });
         } else {
           var url = window.api.apicallbase + "comp_removetick/";
-          $$.post(url,{compid : $("#compid").val(), problemid : problemid, tries : tries},function(back) {
-            if (back.match(/error/i)) {
-              myApp.alert(back);
+          $.jsonp(url,{compid : $("#compid").val(), problemid : problemid, tries : tries},function(back) {
+            if (back.error) {
+              myApp.alert(back.error);
               return false;
             }
             // Change classes accordingly
@@ -905,6 +914,20 @@ var addCompetitionsPageListeners = function(pagename) {
           });
         }
       });
+
+
+      competitionPageListenersInitialized = true;
+    }
+  }
+}
+
+var addCompetitionsPageListeners = function(pagename) {
+  if ("competitions"==pagename) {
+    // Only once initialized should be here
+    if (!competitionsPageListenersInitialized) {
+
+      console.log("Adding competitiong page listeners");
+
 
       $$(document).on("keyup",".search_competitions",function(e) {
         var val = $(this).val();

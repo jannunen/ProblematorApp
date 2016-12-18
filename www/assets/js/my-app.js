@@ -110,11 +110,12 @@ myApp.onPageInit("*",function(page) {
   addSingleProblemListeners(pagename);
   addProblemsPageListeners(pagename);
   addDashBoardListeners(pagename);
-  addCompetitionsPageListeners(pagename);
   addGymInfoPageListeners(pagename);
   addTickArchivePageListeners(pagename);
   addRankingPageListeners(pagename);
   addRegisterToCompPageListeners(pagename);
+  addCompetitionPageListeners(pagename);
+  addCompetitionsPageListeners(pagename);
 });
 
 myApp.init(); // init app manually after you've attached all handlers
