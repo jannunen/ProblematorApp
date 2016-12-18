@@ -14,6 +14,8 @@ var singleGroupPageListenerInitialized = false;
 var tickArchivePageListenerInitialized = false;
 var rankingPageListenersInitialized = false;
 
+var pieBoulder = pieSport = null;
+
 var doPreprocess = function(content,url,next) {
   var host = window.location.host;
   var pos = -1;
@@ -75,6 +77,7 @@ var doPreprocess = function(content,url,next) {
          }
          loginCheck(data);
          myApp.hidePreloader();
+         $.jSotraget.set("dashboard",data);
          $.jStorage.set("climbinfo",data.climbinfo);
          $.jStorage.set("grades",data.grades);
          $.jStorage.set("locations",data.locations);
@@ -245,7 +248,44 @@ var doPreprocess = function(content,url,next) {
 }
 
 var addGlobalListeners = function() {
-   if (!globalListenersAdded) {
+  // Do every time. Check that some gym is selected.
+    var gymid = Cookies.get("nativeproblematorlocation");
+    if (isNaN(parseInt(gymid))) {
+      invokeLocationChangeActionSheet();
+    }
+  if (!globalListenersAdded) {
+    $(document).on("click",".compadhoc",function() {
+      var compid = $(this).data("compid");
+      var url = window.api.apicallbase +"adhocregistrate/?compid="+compid;
+      $.jsonp(url,{},function() {
+        myApp.alert("All set. Now you can go ahead and click get 'open competition' button");
+      });
+      myApp.closeModal();
+      return false;
+    });
+    $(document).on("click",".opencompetitionpage",function() {
+      // First check if user has registered to the competition, if is, open the comp page.
+      var compid = $(this).data("compid");
+      var url = window.api.apicallbase +  "checkregistration/?compid="+compid;
+      $.jsonp(url,{},function(back) {
+        loginCheck(back);
+        if (!back.error) {
+          // USer has not registered. Open a modal dialog enabling the registration
+          if (back.message.match(/haven.*?paid for the comp/i)) {
+            myApp.alert(data.message);
+          } else {
+            mainView.router.loadPage("static/registertocomp.html?compid="+compid);
+          }
+
+        } else {
+          // Go ahead and load the comp page.
+          var url2 = "static/competition.html?compid=" + compid;
+          mainView.router.loadPage(url2);
+        }
+      });
+      return false;
+    });
+
     $(document).on("click",".changelocation_picker",function() {
       invokeLocationChangeActionSheet();
     });
@@ -319,38 +359,6 @@ var addGlobalListeners = function() {
 }
 var initPieChartsForGymInfo = function() {
 
-  // For gym info donut
-  if (pieBoulder == null && $("#pie-gym-boulder").length) {
-    var done = $("#pie-gym-boulder").data("done");
-    var all = $("#pie-gym-boulder").data("all");
-    pieBoulder = Morris.Donut({
-      element: 'pie-gym-boulder',
-      labelColor : "#636159",
-      data: [
-        {label: "Done", value: done},
-        {label: "Total", value: all}
-      ],
-      colors : ["#decc00","#636159"]
-    }); // Morris
-  }
-
-  if (pieSport == null && $("#pie-gym-sport").length) {
-    var done = $("#pie-gym-sport").data("done");
-    var all = $("#pie-gym-sport").data("all");
-    pieSport = Morris.Donut({
-      element: 'pie-gym-sport',
-      labelColor : "#636159",
-      data: [
-        {label: "Done", value: done},
-        {label: "Total", value: all}
-      ],
-      colors : ["#decc00","#636159"]
-
-    }); // Morris
-  }
-
-  pieSport.redraw();
-  pieBoulder.redraw();
 
 }
 var invokeLocationChangeActionSheet = function() {
@@ -484,6 +492,40 @@ var addTickArchivePageListeners = function(pagename) {
   }
 }
 var addGymInfoPageListeners = function(pagename) {
+  console.log("Initializing pie charts for gym info");
+  
+  // For gym info donut
+  if (pieBoulder == null && $("#pie-gym-boulder").length) {
+    var done = $("#pie-gym-boulder").data("done");
+    var all = $("#pie-gym-boulder").data("all");
+    pieBoulder = Morris.Donut({
+      element: 'pie-gym-boulder',
+      labelColor : "#636159",
+      data: [
+        {label: "Done", value: done},
+        {label: "Total", value: all}
+      ],
+      colors : ["#decc00","#636159"]
+    }); // Morris
+  }
+
+  if (pieSport == null && $("#pie-gym-sport").length) {
+    var done = $("#pie-gym-sport").data("done");
+    var all = $("#pie-gym-sport").data("all");
+    pieSport = Morris.Donut({
+      element: 'pie-gym-sport',
+      labelColor : "#636159",
+      data: [
+        {label: "Done", value: done},
+        {label: "Total", value: all}
+      ],
+      colors : ["#decc00","#636159"]
+
+    }); // Morris
+  }
+
+  //pieSport.redraw();
+  //pieBoulder.redraw();
   if ("gyminfo-page"==pagename && !gymInfoPageListenersInitialized) {
     gymInfoPageListenersInitialized = true;
   }
@@ -495,10 +537,6 @@ var addDashBoardListeners = function(pagename) {
       Cookies.set("whatsnew"+ver,true,{ expires: 7650 });
       myApp.alert("1. Competitions, check upcoming/ongoing competitions on the dashboard.<br />2. Circuits. Complete them!<br />3. Native version from Google Play and App Store!","What's new?");
     }  
-    var gymid = Cookies.get("nativeproblematorlocation");
-    if (isNaN(parseInt(gymid))) {
-      invokeLocationChangeActionSheet();
-    }
     //if (!chartsInitialized) {
 
     chartsInitialized = true;
@@ -784,8 +822,8 @@ var addCompetitionsPageListeners = function(pagename) {
         // Do a search
         var url = window.api.apicallbase+"search_competitions";
         $.jsonp(url,{text : val},function(back) {
-          var tpl = $("script#search_competitions_hit_item").html();
-          var ctpl = Template7.compile(tpl);
+          debugger;
+          var ctpl = myApp.templates.search_competitions_hit_item;
           var html = ctpl({groups : back});    
           $(".search_results").empty().append(html);
 
@@ -1416,6 +1454,9 @@ var initializeTemplates = function(myApp) {
   var ctpl = Template7.compile(t1);
   myApp.templates.rankings = ctpl;
 
+  t1 ='{{#if groups}} {{#each groups}} <li> <a href="#" data-compid="{{id}}" class="opencompetitionpage item-content item-link"> <div class="item-inner"> <div class="item-title-row"> <div class="item-title text-w">{{name}}</div> <div class="item-after"><span class="fa fa-users"></span>{{usercount}}</div> </div> </div> </a> </li> {{else}} <li> <div class="item-content"> <div class="item-inner"> <div class="item-title text-w">No search results...</div> </div> </div> </li> {{/each}} {{/if}}';
+  var ctpl = Template7.compile(t1);
+  myApp.templates.search_competitions_hit_item = ctpl;
 
 }
 

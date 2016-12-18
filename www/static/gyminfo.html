@@ -38,11 +38,11 @@
     </div>
     <div class="row no-gutter">
       <div class="col-50">
-	<div id="pie-gym-boulder" data-done="" data-all=""></div>
+        <div id="pie-gym-boulder" data-done="{{default ascentsingyms.boulder 0}}" data-all="{{default locinfo.problemcount.boulder 0}}"></div>
 	<span class="body-text-g">{{ascentsingyms.boulder}} of {{locinfo.problemcount.boulder}} done</span>
       </div>
       <div class="col-50">
-	<div id="pie-gym-sport"></div>
+        <div id="pie-gym-sport" data-done="{{default ascentsingyms.sport 0}}" data-all="{{default locinfo.problemcount.sport 0}}"></div>
 	<span class="body-text-g">{{ascentsingyms.sport}} of {{locinfo.problemcount.sport}} done</span>
       </div>
     </div>
