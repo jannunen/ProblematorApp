@@ -1,21 +1,28 @@
-<div data-page="competition-page" class="page cached">
-  <div class="navbar">
-    <div class="navbar-inner">
-      <div class="left sliding"><a name="pagetop" href="#" class="back link">
-          <span class="fa-stack fa-md">
-            <i class="fa fa-circle-thin fa-stack-2x"></i>
-            <i class="fa fa-chevron-left fa-stack-1x"></i>
-          </span>
-      </a></div>
-      <div class="center sliding"><h3>Competition</h3></div>
-      <div class="right">
-        <a href="#" class="link icon-only open-panel"> <i class="fa fa-bars"></i></a>
-      </div>
+<!-- Top Navbar-->
+<div class="navbar">
+  <div class="navbar-inner">
+    <div class="left">
+      <a href="#" class="link back">
+        <span class="fa-stack fa-md">
+          <i class="fa fa-circle-thin fa-stack-2x"></i>
+          <i class="fa fa-chevron-left fa-stack-1x"></i>
+        </span>
+      </a>
+    </div>
+    <div class="center sliding"><h3>Competition</h3></div>
+    <div class="right">
+      <a href="#" class="link icon-only open-panel">
+        <i class="fa fa-bars"></i>
+      </a>
     </div>
   </div>
+</div> <!-- end of navbar -->
+
+<div data-page="competition-page" class="page">
   <div class="page-content" id="problemlist">
     <div class="text-w content-block">
       <!-- Show time left -->
+      <strong class="text-w">{{comp.compname}}</strong><br />
       <div class="row bg-blue pad10">
         <div class="col-10 ">
           <span class="text-w fa fa-clock-o fa-2x"></span>

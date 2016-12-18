@@ -15,6 +15,7 @@ var tickArchivePageListenerInitialized = false;
 var rankingPageListenersInitialized = false;
 var competitionPageListenersInitialized = false;
 var settingsPageListenersInitialized = false;
+var registerToCompListenersInitialized = false;
 
 var pieBoulder = pieSport = null;
 
@@ -99,22 +100,20 @@ var doPreprocess = function(content,url,next) {
     // Load problems page data and compile the template
     //
     var compid = matches[1];
-    var url = window.api.apicallbase + "competition/?compid="+compid+"&jsonp=false";
+    var url = window.api.apicallbase + "competition/?compid="+compid;
     $.jsonp(url, {}, function (data){ 
       loginCheck(data);
-      if (data.success) {
-      } else {
+      if (data.error) {
         myApp.alert(data.msg);
         mainView.router.back();
         return true;
       }
       var compiledTemplate = Template7.compile(content);
-      next(compiledTemplate(dataObj));
+      next(compiledTemplate(data));
     });
   } else if ((matches=url.match(/ranking.html/))) {
     var url = window.api.apicallbase + "ranking/";
     $.jsonp(url, {compid : compid}, function (data){ 
-      loginCheck(data);
       var compiledTemplate = Template7.compile(content);
       var set = $.jStorage.get("mysettings");
       if (set.rankinglocation == null) {
@@ -266,15 +265,13 @@ var addGlobalListeners = function() {
       var compid = $(this).data("compid");
       var url = window.api.apicallbase +  "checkregistration/?compid="+compid;
       $.jsonp(url,{},function(back) {
-        loginCheck(back);
-        if (!back.error) {
+        if (back.error) {
           // USer has not registered. Open a modal dialog enabling the registration
           if (back.message.match(/haven.*?paid for the comp/i)) {
             myApp.alert(data.message);
           } else {
             mainView.router.loadPage("static/registertocomp.html?compid="+compid);
           }
-
         } else {
           // Go ahead and load the comp page.
           var url2 = "static/competition.html?compid=" + compid;
@@ -710,6 +707,20 @@ var addProblemsPageListeners = function(pagename) {
 
   if ("problems-page"==pagename) {
     if (!problemsPageListenersInitialized) {
+      $(document).on("click",".see_wallimage",function() {
+	var url = $(this).data("href");
+	var myPhotoBrowserPage = myApp.photoBrowser({
+	  photos : [ url ],
+	  type: 'standalone',
+	  theme : 'dark',
+	  zoom : true,
+	  swipeToClose : true,
+	  backLinkText: 'Back'
+	});
+	myPhotoBrowserPage.open();
+	return false;
+      });
+
       if (Cookies.get("problemlisthelpshown"+ver)==null) {
         // Show problem help
         var problemlistHelp = [
@@ -762,13 +773,139 @@ var addProblemsPageListeners = function(pagename) {
   }
 }
 
+window.spinner = 0;
+window.compEnded = false;
+
+window.setupTimeLeftTimer = function() {
+ // Find the competition end time, and setup timer
+  var updateTime = function() {
+    var end = $("span.timeleft").data("ends");
+    var endTime = moment(end);
+    var now = moment();
+    var duration = moment.duration(endTime.diff(now));
+    var hours = Math.floor(duration.asHours());
+    var minutes = Math.floor(duration.minutes());
+    if (hours > 0) {
+      if (minutes < 10) {
+        minutes = "0"+minutes;
+      }
+      if (hours < 10) {
+        hours = "0"+hours;
+      }
+      /*
+      var chars = "|/-\\|/-\\";
+      */
+      var chars = " :";
+      var spinIndex = window.spinner++ % chars.length;
+      var sep = chars[spinIndex];
+      $("span.timeleft").html(hours+sep+minutes+" <small class='normal'>left in the competition</small>");
+    } else {
+      $("span.timeleft").text("Time is up!");
+      // Disable all buttons
+        //$("button").attr("disabled","disabled");
+      window.compEnded = true;
+    }
+    setTimeout(updateTime,1000);
+  }
+  setTimeout(updateTime,1000);
+}
+window.updateDoneAmount = function() {
+  var all = $(".comp_problem_list").find("button.donestatus").length;
+  var done = $(".comp_problem_list").find("button.done").length;
+  $("span.done").html(done+"<small class='ofall normal'>/"+all+"</small>");
+}
 
 var addCompetitionsPageListeners = function(pagename) {
   if ("competitions"==pagename) {
     // On every comp page listeners should be placed here.
+    window.setupTimeLeftTimer();
+    window.updateDoneAmount();
 
     // Only once initialized should be here
     if (!competitionPageListenersInitialized) {
+
+      $(document).on("click",".trieschange",function() {
+        var val = -1;
+        if ($(this).hasClass("triesplus")) {
+          val = 1;
+        }
+        var problemid = $(this).siblings("input.tries").data("pid");
+        var curval = parseInt($(this).siblings("input.tries").val());
+        var newval = curval + val;
+        var min = $(this).siblings("input.tries").attr("min") || 1;
+        var max = $(this).siblings("input.tries").attr("max") || 10;
+        if (newval < min) {
+          newval = min;
+        }
+        if (newval > max) {
+          newval = max;
+        }
+        $(this).siblings("input.tries").val(newval);
+        // If not done, save to pretick.
+        $(this).attr("disabled","disabled");
+        var self = $(this);
+        if ($(this).parent().parent().parent().find("button.donestatus").hasClass("notdone")) {
+          var self = $(this);
+          var url = window.api.apicallbase + "comp_savepretick/";
+          $.jsonp(url,{compid : $("#compid").val(), problemid : problemid, tries : newval},function(back) {
+            debugger;
+            self.removeAttr("disabled");
+            if (back.error) {
+              myApp.alert(back.error);
+              return false;
+            }
+          });
+        } else {
+          var self = $(this);
+          // Update try amount in real tick
+          var url = window.api.apicallbase + "comp_savetick/";
+          $.jsonp(url,{compid : $("#compid").val(), problemid : problemid, tries : newval},function(back) {
+            self.removeAttr("disabled");
+            if (back.error) {
+              myApp.alert(back.error);
+              return false;
+            }
+          });
+        }
+      });
+
+      $(document).on("click",".done, .notdone",function() {
+        var tries = $(this).parent().parent().find("input.tries").val();
+        var problemid = $(this).parent().parent().find("input.tries").data("pid");
+        var self = $(this);
+        if ($(this).hasClass("notdone")) {
+          var url = window.api.apicallbase + "comp_savetick/";
+          $$.post(url,{compid : $("#compid").val(), problemid : problemid, tries : tries},function(back) {
+            if (back.match(/error/i)) {
+              myApp.alert(back);
+              return false;
+            }
+            // Change classes accordingly
+            self.removeClass("notdone");
+            self.removeClass("color-gray");
+            self.addClass("done");
+            self.addClass("color-yellow");
+            self.text("DONE");
+            updateDoneAmount();
+          });
+        } else {
+          var url = window.api.apicallbase + "comp_removetick/";
+          $$.post(url,{compid : $("#compid").val(), problemid : problemid, tries : tries},function(back) {
+            if (back.match(/error/i)) {
+              myApp.alert(back);
+              return false;
+            }
+            // Change classes accordingly
+            self.removeClass("done");
+            self.removeClass("color-yellow");
+            self.addClass("notdone");
+            self.addClass("color-gray");
+            self.text("NOT DONE");
+            updateDoneAmount();
+          });
+        }
+      });
+
       $$(document).on("keyup",".search_competitions",function(e) {
         var val = $(this).val();
         val = val.trim();
@@ -1390,6 +1527,45 @@ var saveTickFunction = function(self,action, callback) {
   });
 };
 
+var addRegisterToCompPageListeners = function(pagename) {
+  if ("registertocomp-page"==pagename && !registerToCompListenersInitialized) {
+    $(document).on("click",".joincomp",function() {
+
+      var formdata = $(this).parents("form").serialize();
+      // Check that serie is selected
+      if ($(".regcategory:checked").length ==0) {
+	myApp.alert("Please choose a category first!");
+	return false;
+      }
+      var url = window.api.apicallbase + "joincomp";
+      $.jsonp(url,formdata,function(back) {
+	mainView.router.refreshPreviousPage();
+
+	myApp.alert(back.message,function() {
+	  if (!back.error) {
+	    mainView.router.back();
+	  }
+	});
+      });
+    });
+    $(document).on("click",".regcategory",function() {
+      var opt = $(this);
+      var price = opt.data("price");
+      var maxparticipants = opt.data("maxparticipants");
+      var info = opt.data("info");
+      var data = {
+	price : price,
+	info : info,
+	maxparticipants: maxparticipants
+      };
+      var ctpl = myApp.templates.regcatinfo;
+      var html = ctpl(data);
+      $("#catinfo").empty().html(html);
+    });
+
+   registerToCompListenersInitialized = false;
+ }
+}
 
 var initializeTemplates = function(myApp) {
   // Register partial for ranking single list item
@@ -1423,5 +1599,10 @@ var initializeTemplates = function(myApp) {
   t1 ='{{#if groups}} {{#each groups}} <li> <a href="#" data-compid="{{id}}" class="opencompetitionpage item-content item-link"> <div class="item-inner"> <div class="item-title-row"> <div class="item-title text-w">{{name}}</div> <div class="item-after"><span class="fa fa-users"></span>{{usercount}}</div> </div> </div> </a> </li> {{else}} <li> <div class="item-content"> <div class="item-inner"> <div class="item-title text-w">No search results...</div> </div> </div> </li> {{/each}} {{/if}}';
   var ctpl = Template7.compile(t1);
   myApp.templates.search_competitions_hit_item = ctpl;
+
+  // reg cat info
+  t1 = '<br /><br /> <div class="row"> <div class="col-40"> <strong class="text-w">Price</strong> </div> <div class="col-60"> {{price}} </div> </div> <div class="row"> <div class="col-40"> <strong class="text-w">Max participants</strong> </div> <div class="col-60"> {{#js_compare "this.maxparticipants==0"}}Not limited{{else}}{{maxparticipants}}{{/js_compare}} </div> </div> <div class="row"> <div class="col-40"> <strong class="text-w">Info</strong> </div> <div class="col-60"> {{#if info}}{{info}}{{else}}No special info{{/if}} </div> </div>';
+  var ctpl = Template7.compile(t1);
+  myApp.templates.regcatinfo = ctpl;
 
 }

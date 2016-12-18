@@ -101,6 +101,7 @@ myApp.onPageInit("*",function(page) {
     // Redirect to dashboard
     mainView.router.loadPage("static/dashboard.html");
   }
+  // Add listeners to all pages used
   addIndexPageListeners(pagename);
   addGroupMemberListeners(pagename);
   addInviteMemberPageListeners(pagename);
@@ -113,6 +114,7 @@ myApp.onPageInit("*",function(page) {
   addGymInfoPageListeners(pagename);
   addTickArchivePageListeners(pagename);
   addRankingPageListeners(pagename);
+  addRegisterToCompPageListeners(pagename);
 });
 
 myApp.init(); // init app manually after you've attached all handlers

@@ -221,9 +221,9 @@
     </div>
     -->
     <div class="content-block bg-light nomargin"> <div class="content-block-inner bg-light text-center center ">
+        {{#js_compare "this.upcoming && this.upcoming.length> 0"}}
         <span class="text-w">Upcoming competitions</span> <br />
         <small class="text-y">{{sizeof upcoming}} upcoming competition(s)<br /></small> 
-        {{#js_compare "this.upcoming && this.upcoming.length> 0"}}
         <a href="static/upcoming_competitions.html" class="upcoming_competitions button button-fill button-big color-yellow">OPEN COMP LIST</a><br />
         {{/js_compare}}
         {{#js_compare "this.comps && this.comps.length  > 0"}}
