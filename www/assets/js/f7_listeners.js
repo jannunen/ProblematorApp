@@ -17,8 +17,12 @@ var competitionPageListenersInitialized = false; // Singular
 var competitionsPageListenersInitialized = false; // Plural =)
 var settingsPageListenersInitialized = false;
 var registerToCompListenersInitialized = false;
+var moreStatsPageListenersInitialized = false;
 
 var pieBoulder = pieSport = null;
+var randomColorGenerator = function () { 
+  return '#' + (Math.random().toString(16) + '0000000').slice(2, 8); 
+};
 
 var doPreprocess = function(content,url,next) {
   var host = window.location.host;
@@ -100,6 +104,24 @@ var doPreprocess = function(content,url,next) {
       var compiledTemplate = Template7.compile(content);
       next(compiledTemplate(data));
     });
+  } else if ((matches=url.match(/morestats.html/))) {
+    var generateYears = function() {
+      var now = moment().format("YYYY");
+      var past = now-5;
+      var years = {};
+      var start = past;
+      for (start=past; past <= now; past++) {
+        years[past]=past;
+      }
+      return years;
+    }
+    // $.jsonp(window.api.apicallbase+"morestats",{},function(data) {
+    var data = {};
+      data.years = generateYears();
+      data.curyear=moment().format("YYYY");
+      var compiledTemplate = Template7.compile(content);
+      next(compiledTemplate(data));
+    //});
   } else if ((matches=url.match(/pointsperroute.html.*?(\d+)/))) {
     var compid = matches[1];
     $.jsonp(window.api.apicallbase+"pointsperroute/?comp_id="+compid,{},function(data) {
@@ -1075,6 +1097,44 @@ var addGroupMemberListeners = function(pagename) {
     }
   }
 }
+var addMoreStatsPageListeners= function(pagename,url) {
+  if ("morestats-page"==pagename) { 
+      var year = $("#morestatsyear").val();
+      var getGradePie = function() {
+        var url = window.api.apicallbase + "gradespread";
+        $.jsonp(url,{year : year},function(back) {
+          var dataset = {data : [], backgroundColor : []};
+          var data = {
+            labels : back.labels,
+            datasets : [dataset]
+          };
+          ;
+          var i = 0;
+          back.data.forEach(function(item) {
+            dataset.data.push(item);
+            dataset.backgroundColor.push(randomColorGenerator());
+          });
+          var options = {};
+
+          var myPieChart = new Chart($("#gradepie"),{
+            type : 'pie',
+            data : data,
+            options : options}
+          );
+        });
+      }
+      //getWeeklySpread();
+      //getVisitsPerWeek();
+      //getScorePerMonth();
+      getGradePie();
+      //loadVisits();
+
+    if (!moreStatsPageListenersInitialized) {
+      moreStatsPageListenersInitialized  = true;
+    }
+  }
+}
+
 var addSettingsPageListeners = function(pagename,url) {
   if ("settings-page"==pagename) { 
     if (!settingsPageListenersInitialized) {
@@ -1089,7 +1149,6 @@ var addSettingsPageListeners = function(pagename,url) {
         }
 
         $.jsonp(url,formData,function(back) {
-          debugger;
           myApp.alert(back.message);
         });
         return false;

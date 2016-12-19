@@ -117,6 +117,7 @@ myApp.onPageInit("*",function(page) {
   addCompetitionPageListeners(pagename);
   addCompetitionsPageListeners(pagename);
   addSettingsPageListeners(pagename);
+  addMoreStatsPageListeners(pagename);
 });
 
 myApp.init(); // init app manually after you've attached all handlers
