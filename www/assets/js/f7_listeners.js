@@ -89,7 +89,6 @@ var doPreprocess = function(content,url,next) {
   } else if ((matches=url.match(/pointsperroute.html.*?(\d+)/))) {
     var compid = matches[1];
     $.jsonp(window.api.apicallbase+"pointsperroute/?comp_id="+compid,{},function(data) {
-      debugger;
       var compiledTemplate = Template7.compile(content);
       next(compiledTemplate(data));
     });
