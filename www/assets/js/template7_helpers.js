@@ -9,6 +9,22 @@ Template7.registerHelper('stringify', function (context){
 	// Need to replace any single quotes in the data with the HTML char to avoid string being cut short
 	return str.split("'").join('&#39;');
 });
+Template7.registerHelper('html_options',function(values, selected, options) {
+  var optLines= "";
+  if (values) {
+    for (var idx in values) {
+      var val = values[idx];
+      optLines += "<option value='"+idx+"'";
+       if (selected && selected == val) {
+         optLines += " selected='selected' ";
+       }
+      optLines += ">"+val+"</option>";
+    }
+     
+  }
+  return optLines;
+});
+
 Template7.registerHelper('select_options',function(values, selected, options) {
   var optLines= "";
   if (values) {

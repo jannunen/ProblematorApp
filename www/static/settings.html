@@ -1,0 +1,181 @@
+<!-- Top Navbar-->
+<div class="navbar">
+  <div class="navbar-inner">
+    <div class="left">
+      <a href="#" class="link back">
+        <span class="fa-stack fa-md">
+          <i class="fa fa-circle-thin fa-stack-2x"></i>
+          <i class="fa fa-chevron-left fa-stack-1x"></i>
+        </span>
+      </a>
+    </div>
+    <div class="center sliding"><h3>Settings</h3></div>
+    <div class="right">
+      <a href="#" class="link icon-only open-panel">
+        <i class="fa fa-bars"></i>
+      </a>
+    </div>
+  </div>
+</div> <!-- end of navbar -->
+
+
+<div class="page" data-page="settings-page">
+  <div class="page-content" id="settings">
+    <div class="content-block">
+      <form id="frmsettings" action="#" method="POST" class="ajax-submit" data-ajax="true">
+        <div class="list-block">
+          <ul>
+
+
+            <li class="bg-light">
+              <div class="item-content">
+                <div class="item-inner">
+                  <div class="item-title label">
+                    <div class="row">
+                      <div class="col-40" style="padding-top : 12px;">First name</div>
+                      <div class="col-60"> <input type="text" name="etunimi" value="{{climber.etunimi}}" /></div>
+
+                      <div class="col-40" style="padding-top : 12px;">Last name</div>
+                      <div class="col-60"> <input type="text" name="sukunimi" value="{{climber.sukunimi}}" /></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+
+            <li class="bg-dark">
+              <div class="item-content">
+                <div class="item-inner">
+                  <div class="item-title label">
+                    <span class="body-text-g">Terminate account</span>
+                    <a href="#" class="body-text-w problemator-link opt-out">Click to terminate account</a>
+                  </div>
+                </div>
+              </div>
+            </li>
+
+            <li class="bg-light">
+              <div class="item-content">
+                <div class="item-inner">
+                  <div class="item-title label">
+                    <span class="body-text-g">Gender (used in ranking gender selection)</span>
+
+                    <div class="item-input">
+                      <label class="label-radio item-content text-w">
+                        <!-- Checked by default -->
+                        <input type="radio" name="gender" value="a" {{#js_compare "this.settings.gender=='a'"}}checked="checked"{{/js_compare}}>
+                        <div class="item-inner">
+                          <div class="item-title">I rather not disclose</div>
+                        </div>
+                      </label>
+                      <label class="label-radio item-content text-w">
+                        <!-- Checked by default -->
+                        <input type="radio" name="gender" value="m" {{#js_compare "this.settings.gender=='m'"}}checked="checked"{{/js_compare}}>
+                        <div class="item-inner">
+                          <div class="item-title">Male</div>
+                        </div>
+                      </label>
+                      <label class="label-radio item-content text-w">
+                        <!-- Checked by default -->
+                        <input type="radio" name="gender" value="f" {{#js_compare "this.settings.gender=='f'"}}checked="checked"{{/js_compare}}>
+                        <div class="item-inner">
+                          <div class="item-title">Female</div>
+                        </div>
+                      </label>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </li>
+
+
+            <!-- Switch (Checkbox) -->
+            <li class="bg-dark">
+              <div class="item-content">
+                <div class="item-inner">
+                  <div class="item-title label">
+                    <span class="body-text-g">Ranking visibility</span>
+                    <label class="label-switch body-text-w">
+                      <input id="showinranking" type="checkbox" name="showinranking" {{#js_compare "this.settings.showinranking==1"}}checked="checked"{{/js_compare}}  value="1" />
+                      <div class="checkbox"></div>
+                    </label>
+                    <small class="text-g">White = off, Yellow=on</small>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li class="bg-light">
+              <div class="item-content">
+                <div class="item-inner">
+                  <div class="item-title label">
+                    <span class="body-text-g">Ascents are public?</span>
+                    <label class="label-switch body-text-w">
+                      <input id="publicascents" type="checkbox" name="publicascents" {{#js_compare "this.settings.publicascents==1"}}checked="checked"{{/js_compare}}  value="1" />
+                      <div class="checkbox"></div>
+                    </label>
+                    <small class="text-g">White = Private ascents, Yellow=Public ascents</small>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li class="bg-dark">
+              <div class="item-content">
+                <div class="item-inner">
+                  <div class="item-title label">
+                    <span class="body-text-g">Sport climbing default ascent type</span>
+                      <label class="label-radio item-content text-w">
+                        <!-- Checked by default -->
+                        <input type="radio" name="sport_tick_ascent_type" value="0" {{#js_compare "this.settings.sport_tick_ascent_type==0"}}checked="checked"{{/js_compare}}>
+                        <div class="item-inner">
+                          <div class="item-title">Lead</div>
+                        </div>
+                      </label>
+                      <label class="label-radio item-content text-w">
+                        <!-- Checked by default -->
+                        <input type="radio" name="sport_tick_ascent_type" value="1" {{#js_compare "this.settings.sport_tick_ascent_type==1"}}checked="checked"{{/js_compare}}>
+                        <div class="item-inner">
+                          <div class="item-title">Top rope</div>
+                        </div>
+                      </label>
+
+                  </div>
+                </div>
+              </div>
+            </li>
+
+            <li class="bg-light">
+              <div class="item-content">
+                <div class="item-inner">
+                  <div class="item-title label">
+                    <span class="body-text-g">Default ranking gym</span>
+                    <div class="item-input">
+                      <select name="default_gym" class="body-text-w" id="default_gym" >
+                        <option value="">Use active gym</option>
+                        <option value="all">All gyms</option>
+                        {{select_options locations settings.default_gym}}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </li>
+
+          </ul>
+          <div class="list-block-label">
+            <div class="row">
+              <div class="col-100">
+                <a href="#" id="btn_savesettings" >Save settings</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>      
+    </div>
+  </div>
+</div>
+
+
+
+

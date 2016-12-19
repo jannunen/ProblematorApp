@@ -79,12 +79,26 @@ var doPreprocess = function(content,url,next) {
       myApp.hidePreloader();
       $.jStorage.set("dashboard",data);
       $.jStorage.set("climbinfo",data.climbinfo);
+      $.jStorage.set("climber",data.climber);
       $.jStorage.set("grades",data.grades);
       $.jStorage.set("locations",data.locations);
       $.jStorage.set("mysettings",data.mysettings);
+      $.jStorage.set("locinfo",data.locinfo);
       var compiledTemplate = Template7.compile(content);
       var html = compiledTemplate(data);
       next(html);
+    });
+  } else if ((matches=url.match(/settings.html/))) {
+    $.jsonp(window.api.apicallbase+"settings",{},function(settings) {
+      data = {};
+      data.settings = settings;
+      data.climber = $.jStorage.get("climber");
+      data.genders = {"a" : "I rather not disclose","m" : "Male","f" : "Female"};
+      data.locations = $.jStorage.get("locations");
+      data.problematorlocation = Cookies.get("nativeproblematorlocation");
+      data.locinfo = $.jStorage.get("locinfo");
+      var compiledTemplate = Template7.compile(content);
+      next(compiledTemplate(data));
     });
   } else if ((matches=url.match(/pointsperroute.html.*?(\d+)/))) {
     var compid = matches[1];
@@ -885,7 +899,7 @@ var addCompetitionPageListeners = function(pagename) {
           var url = window.api.apicallbase + "comp_savetick/";
           $.jsonp(url,{compid : $("#compid").val(), problemid : problemid, tries : tries},function(back) {
             if (back.error) {
-              myApp.alert(back.error);
+              myApp.alert(back.message);
               return false;
             }
             // Change classes accordingly
@@ -1062,12 +1076,21 @@ var addGroupMemberListeners = function(pagename) {
   }
 }
 var addSettingsPageListeners = function(pagename,url) {
-  if ("settingspage"==pagename) { 
+  if ("settings-page"==pagename) { 
     if (!settingsPageListenersInitialized) {
       $(document).on("click","#btn_savesettings",function() {
-        $("#frmsettings").ajaxSubmit(function(back) {
-          myApp.alert(back, 'Info');
+        var url = window.api.apicallbase + "savesettings";
+        var formData = myApp.formToJSON($("#frmsettings"));
+        if (formData.showinranking && formData.showinranking.length==1) {
+          formData.showinranking =1;
+        }
+        if (formData.publicascents && formData.publicascents.length==1) {
+          formData.publicascents =1;
+        }
 
+        $.jsonp(url,formData,function(back) {
+          debugger;
+          myApp.alert(back.message);
         });
         return false;
       });
