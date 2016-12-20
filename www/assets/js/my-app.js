@@ -123,6 +123,7 @@ myApp.onPageInit("*",function(page) {
   addSettingsPageListeners(pagename);
   addMoreStatsPageListeners(pagename);
   addSignupPageListeners(pagename);
+  addForgotPageListeners(pagename);
 });
 
 myApp.init(); // init app manually after you've attached all handlers

@@ -19,6 +19,7 @@ var settingsPageListenersInitialized = false;
 var registerToCompListenersInitialized = false;
 var moreStatsPageListenersInitialized = false;
 var signupPageListenersInitialized = false;
+var forgotPageListenersInitialized = false;
 
 var pieBoulder = pieSport = null;
 var randomColorGenerator = function () { 
@@ -71,6 +72,15 @@ var doPreprocess = function(content,url,next) {
       next(compiledTemplate(dataJSON));
     });
   } else if ((matches=url.match(/signup.html/))) {
+       myApp.hidePreloader();
+       myApp.closeModal();
+    // ADd timeout, so modal has time to close
+    setTimeout(function() {
+      var compiledTemplate = Template7.compile(content);
+      var html = compiledTemplate();
+      next(html);
+    },100);
+  } else if ((matches=url.match(/forgot.html/))) {
        myApp.hidePreloader();
        myApp.closeModal();
     // ADd timeout, so modal has time to close
@@ -309,8 +319,16 @@ var addGlobalListeners = function() {
       $.jsonp(url,formData,function(back) {
         myApp.alert(back.message);
       });
-      
     });
+
+    $(document).on("submit","#frm_forgot",function() {
+      var formData = myApp.formToJSON($(this));
+      var url = window.api.apicallbase + "forgot";
+      $.jsonp(url,formData,function(back) {
+        myApp.alert(back.message);
+      });
+    });
+
     $(document).on("click","#facebook-login",function() {
       facebookConnectPlugin.login(["public_profile"],function(userData) {
 
@@ -1731,11 +1749,18 @@ var addRegisterToCompPageListeners = function(pagename) {
     registerToCompListenersInitialized = false;
   }
 }
+  var addForgotPageListeners = function(pagename) {
+     if ("forgot-page"==pagename) {
+       myApp.hidePreloader();
+       myApp.closeModal();
+       if (!forgotPageListenersInitialized) {
+         forgotPageListenersInitialized = true;
+       }
+     }
+  }
   var addSignupPageListeners = function(pagename) {
 
-       debugger;
      if ("signup-page"==pagename) {
-       debugger;
        myApp.hidePreloader();
        myApp.closeModal();
        if (!signupPageListenersInitialized) {
