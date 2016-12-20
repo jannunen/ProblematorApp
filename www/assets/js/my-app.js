@@ -50,7 +50,7 @@ var loginCheck = function(data) {
     $.jStorage.remove("uid");
     myApp.loginScreen();
   }  else {
-    window.uid =          $.jStorage.get("uid");
+    window.uid = $.jStorage.get("uid");
     $("#userid").val(window.uid);
   }
 }
@@ -127,6 +127,8 @@ myApp.onPageInit("*",function(page) {
 });
 
 myApp.init(); // init app manually after you've attached all handlers
+
+// Initialize templates. 
 initializeTemplates(myApp);
 
 

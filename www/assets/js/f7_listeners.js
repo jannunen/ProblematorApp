@@ -1769,6 +1769,17 @@ var addRegisterToCompPageListeners = function(pagename) {
      }
   }
 
+/**
+ * Initialize templates.
+ *
+ * Templates are initialized here for many reasons instead of having them in index.html
+ *
+ * For once: They should not be precompiled, but for some reason f7 tries to precompile them
+ * and it ends up in JS error and the app fails. So that's why they are here.
+ *
+ * Second: They are compiled here once and they are then faster to use, because they are
+ * not recompiled in preprocess (or somewhere else) when they are used again.
+ */
 var initializeTemplates = function(myApp) {
   // Register partial for ranking single list item
   Template7.registerPartial('ranking_li','<li data-gender="{{gender}}"> <div class="item-content"> <div class="item-media"> <h5 class="rankingnumber">{{rank}}.</h5> </div> <div class="item-inner"> <div class="item-title body-text-w"> {{#js_compare "this.showinranking==0"}} Secret nuggett {{else}} {{etunimi}} {{sukunimi}} {{/js_compare}} </div> <div class="item-after"> <span class="body-text-g">{{rankpoints}}<br />&asymp;<small>{{yourgrade}}</small></span> </div> </div> </div> </li>');
