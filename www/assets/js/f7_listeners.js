@@ -1713,15 +1713,18 @@ var saveTickFunction = function(self,action, callback) {
 var addRegisterToCompPageListeners = function(pagename) {
   if ("registertocomp-page"==pagename && !registerToCompListenersInitialized) {
     $(document).on("click",".joincomp",function() {
+      var self = $(this);
+      self.attr("disabled","disabled");
 
-      var formdata = $(this).parents("form").serialize();
+      var formData = myApp.formToJSON($(this).parents("form"));
       // Check that serie is selected
       if ($(".regcategory:checked").length ==0) {
         myApp.alert("Please choose a category first!");
         return false;
       }
       var url = window.api.apicallbase + "joincomp";
-      $.jsonp(url,formdata,function(back) {
+      $.jsonp(url,formData,function(back) {
+        self.removeAttr("disabled");
         mainView.router.refreshPreviousPage();
 
         myApp.alert(back.message,function() {
