@@ -9,6 +9,7 @@ var myApp = new Framework7({
     }
   },
   modalTitle : "Problemator",
+  swipeBackPage : true,
   pushState: true,
   template7Pages: false,
   precompileTemplates : false,
@@ -34,6 +35,7 @@ var mainView = myApp.addView('.view-main', {
 
 // Handle Cordova Device Ready Event
 $$(document).on('deviceready', function() {
+    //alert("Device is ready!");
     console.log("Device is ready!");
 
 });
@@ -44,11 +46,11 @@ var loginCheck = function(data) {
   if (data && data.match(/Login.failed/i)) {
     // myApp.alert("Session expired");
     window.uid = null;
-    Cookies.remove("loginok");
-    Cookies.remove("uid");
+    $.jStorage.remove("loginok");
+    $.jStorage.remove("uid");
     myApp.loginScreen();
   }  else {
-    window.uid =          Cookies.get("uid");
+    window.uid =          $.jStorage.get("uid");
     $("#userid").val(window.uid);
   }
 }
@@ -95,9 +97,9 @@ myApp.onPageInit("*",function(page) {
   }
   addGlobalListeners();
 
-  if (!Cookies.get("loginok")) {
+  if (!$.jStorage.get("loginok")) {
     myApp.loginScreen();
-    return false;
+    return true;
   }
   if (pagename=="index") {
     // Redirect to dashboard

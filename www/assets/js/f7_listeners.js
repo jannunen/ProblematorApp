@@ -71,16 +71,18 @@ var doPreprocess = function(content,url,next) {
     });
   } else if ((matches=url.match(/dashboard.html/))) {
     var newgymid = undefined;
-    var apiurl = window.api.apicallbase+"dashinfo/?id="+Cookies.get("uid");
-    debugger;
+    var apiurl = window.api.apicallbase+"dashinfo/?id="+$.jStorage.get("uid");
     // Check if new gym id is given here
     if ((matches=url.match(/dashboard.html.*?(\d+)/))) {
       newgymid = matches[1];
       apiurl += "&newgymid="+newgymid;
       // Cookie for location must be set, because it's changed
-      Cookies.set("nativeproblematorlocation",newgymid);
+      $.jStorage.set("nativeproblematorlocation",newgymid);
     }
-    $.jsonp(apiurl,{},function(data) {
+    var gymid =  $.jStorage.get("nativeproblematorlocation");
+    $.jsonp(apiurl,{problematorlocation : gymid},function(data) {
+
+      myApp.closeModal(".login-screen");
       myApp.hidePreloader();
       $.jStorage.set("dashboard",data);
       $.jStorage.set("climbinfo",data.climbinfo);
@@ -100,7 +102,7 @@ var doPreprocess = function(content,url,next) {
       data.climber = $.jStorage.get("climber");
       data.genders = {"a" : "I rather not disclose","m" : "Male","f" : "Female"};
       data.locations = $.jStorage.get("locations");
-      data.problematorlocation = Cookies.get("nativeproblematorlocation");
+      data.problematorlocation = $.jStorage.get("nativeproblematorlocation");
       data.locinfo = $.jStorage.get("locinfo");
       var compiledTemplate = Template7.compile(content);
       next(compiledTemplate(data));
@@ -131,7 +133,7 @@ var doPreprocess = function(content,url,next) {
     });
   } else if ((matches=url.match(/gyminfo.html/))) {
 
-    $.jsonp(window.api.apicallbase+"gyminfo/?id="+Cookies.get("nativeproblematorlocation"),{},function(data) {
+    $.jsonp(window.api.apicallbase+"gyminfo/?id="+$.jStorage.get("nativeproblematorlocation"),{},function(data) {
       var compiledTemplate = Template7.compile(content);
       data.locations = $.jStorage.get("locations");
 
@@ -167,7 +169,7 @@ var doPreprocess = function(content,url,next) {
         rankings : data,
         locations : $.jStorage.get("locations"),
         rankinglocation : set.rankinglocation,
-        problematorlocation : Cookies.get("nativeproblematorlocation"),
+        problematorlocation : $.jStorage.get("nativeproblematorlocation"),
       }
       next(compiledTemplate(pass));
     });
@@ -197,7 +199,7 @@ var doPreprocess = function(content,url,next) {
     // Load problems page data and compile the template
     //
     var url = window.api.apicallbase + "circuits";
-    var gymid = Cookies.get("nativeproblematorlocation");
+    var gymid = $.jStorage.get("nativeproblematorlocation");
     $.jsonp(url, {gymid : gymid}, function (data){ 
       var compiledTemplate = Template7.compile(content);
       next(compiledTemplate(data));
@@ -242,7 +244,7 @@ var doPreprocess = function(content,url,next) {
     // List groups 
     var url = window.api.apicallbase + "groups/";
     $.jsonp(url, {}, function (data){
-      if (!Cookies.get("loginok")) {
+      if (!$.jStorage.get("loginok")) {
         return false;
       }
       var compiledTemplate = Template7.compile(content);
@@ -264,7 +266,7 @@ var doPreprocess = function(content,url,next) {
     var pid = matches[1];
     var url = window.api.apicallbase + "problem";
     $.jsonp(url, {id : pid}, function (data){ 
-      if (!Cookies.get("loginok")) {
+      if (!$.jStorage.get("loginok")) {
         return false;
       }
       var compiledTemplate = Template7.compile(content);
@@ -289,12 +291,36 @@ var doPreprocess = function(content,url,next) {
 } // End of preprocess
 
 var addGlobalListeners = function() {
-  // Do every time. Check that some gym is selected.
-  var gymid = Cookies.get("nativeproblematorlocation");
-  if (isNaN(parseInt(gymid))) {
-    invokeLocationChangeActionSheet();
-  }
   if (!globalListenersAdded) {
+    
+    $(document).on("click","#facebook-login",function() {
+      facebookConnectPlugin.login(["public_profile"],function(userData) {
+
+        var fbuid = userData.authResponse.userID;
+        var accessToken = userData.authResponse.accessToken;
+        // Authenticate to Problemator API with facebook, should return api-auth-token if ok
+        var url = window.api.apicallbase + "fblogin";
+        var loc = $.jStorage.get("nativeproblematorlocation");
+        $.jsonp(url,{fbuid : fbuid, access_token : accessToken,loc : loc},function(back) {
+
+          $.jStorage.deleteKey("api-auth-token");
+          $.jStorage.set("api-auth-token",back.JWT);
+          $.jStorage.set("loginok",true);
+          $.jStorage.set("uid",back.uid);
+          window.uid = back.uid;
+
+          myApp.closeModal();
+          
+          // If here, go ahead and load index 
+          // (dashboard.html should call api and have the new api-auth-key in use)
+          document.location.href="index.html";
+        });
+      },function(error) {
+        alert("from login "+JSON.stringify(error));
+      });
+      return false;
+    });
+
     $(document).on("click",".compadhoc",function() {
       var compid = $(this).data("compid");
       var url = window.api.apicallbase +"adhocregistrate/?compid="+compid;
@@ -330,8 +356,8 @@ var addGlobalListeners = function() {
     });
     $$(document).on("click",".btn_logout",function() {
       $.jsonp(window.api.apicallbase+"logout",{},function() {
-        Cookies.remove("loginok");
-        Cookies.remove("uid");
+        $.jStorage.deleteKey("loginok");
+        $.jStorage.deleteKey("uid");
         $.jStorage.deleteKey("api-auth-token");
         window.uid = null;
         $("#userid").val("");
@@ -364,21 +390,19 @@ var addGlobalListeners = function() {
       console.log("Loggin in with "+username+" and password "+password);
       var url = window.api.apicallbase + "dologin?native=true"; 
       var opt = {"username": username,"password":password, "authenticate" : true};
-      if (Cookies.get("nativeproblematorlocation")) {
-        opt.problematorlocation = Cookies.get("nativeproblematorlocation");
+      if ($.jStorage.get("nativeproblematorlocation")) {
+        opt.problematorlocation = $.jStorage.get("nativeproblematorlocation");
       }
       $.jsonp(url,opt,function(data) {
         try {
           console.log(JSON.stringify(data));
           if (data && !data.error) {
 
-            //Cookies.set("nativeproblematorlocation",data.loc);
-            Cookies.set("loginok",true);
-            Cookies.set("uid",data.uid);
+            $.jStorage.set("loginok",true);
+            $.jStorage.set("uid",data.uid);
             // Save the auth token and start using that
             $.jStorage.deleteKey("api-auth-token");
             console.log("New token "+data.JWT);
-            debugger;
             $.jStorage.set("api-auth-token",data.JWT);
 
             window.uid = data.uid;
@@ -407,9 +431,10 @@ var initPieChartsForGymInfo = function() {
 var invokeLocationChangeActionSheet = function() {
   var selectGym = function(id) {
     myApp.alert("Please wait, changing the gym");
+    console.log("new gym "+id);
     mainView.router.loadPage("static/dashboard.html?newgymid="+id); 
   }
-  var gymid = Cookies.get("nativeproblematorlocation");
+  var gymid = $.jStorage.get("nativeproblematorlocation");
   var buttons = [];
   var locs = $.jStorage.get("locations");
   buttons.push({
@@ -728,11 +753,17 @@ var addDashBoardListeners = function(pagename) {
 
   if ("dash"==pagename) {
     initializeDashBoardCharts(); // Do this on every page load
+    
+    // Do every time. Check that some gym is selected.
+    var gymid = $.jStorage.get("nativeproblematorlocation");
+    if (isNaN(parseInt(gymid))) {
+      invokeLocationChangeActionSheet();
+    }
 
     if (!dashBoardListenersInitialized) {
       myApp.hidePreloader();
-      if (Cookies.get("whatsnew"+ver)==undefined) {
-        Cookies.set("whatsnew"+ver,true,{ expires: 7650 });
+      if ($.jStorage.get("whatsnew"+ver)==undefined) {
+        $.jStorage.set("whatsnew"+ver,true,{ expires: 7650 });
         myApp.alert("1. Competitions, check upcoming/ongoing competitions on the dashboard.<br />2. Circuits. Complete them!<br />3. Native version from Google Play and App Store!","What's new?");
       }  
 
@@ -760,20 +791,20 @@ var addProblemsPageListeners = function(pagename) {
   if ("problems-page"==pagename) {
     if (!problemsPageListenersInitialized) {
       $(document).on("click",".see_wallimage",function() {
-	var url = $(this).data("href");
-	var myPhotoBrowserPage = myApp.photoBrowser({
-	  photos : [ url ],
-	  type: 'standalone',
-	  theme : 'dark',
-	  zoom : true,
-	  swipeToClose : true,
-	  backLinkText: 'Back'
-	});
-	myPhotoBrowserPage.open();
-	return false;
+        var url = $(this).data("href");
+        var myPhotoBrowserPage = myApp.photoBrowser({
+          photos : [ url ],
+          type: 'standalone',
+          theme : 'dark',
+          zoom : true,
+          swipeToClose : true,
+          backLinkText: 'Back'
+        });
+        myPhotoBrowserPage.open();
+        return false;
       });
 
-      if (Cookies.get("problemlisthelpshown"+ver)==null) {
+      if ($.jStorage.get("problemlisthelpshown"+ver)==null) {
         // Show problem help
         var problemlistHelp = [
           {
@@ -801,13 +832,13 @@ var addProblemsPageListeners = function(pagename) {
           'bgcolor': '#30312e',
           'fontcolor': '#fff'
         }
-        Cookies.set("problemlisthelpshown"+ver,true);
+        $.jStorage.set("problemlisthelpshown"+ver,true);
         window.helpScreen = myApp.welcomescreen(problemlistHelp, options);
       }
       $(document).on("click","#quicktick",function() {
         $(this).attr("disabled","disabled");
         var self = this;
-        var gymid = Cookies.get("nativeproblematorlocation");
+        var gymid = $.jStorage.get("nativeproblematorlocation");
 
         var probs = $("#quickproblems").val();
         var url = window.api.apicallbase + "saveticks/";
@@ -829,7 +860,7 @@ window.spinner = 0;
 window.compEnded = false;
 
 window.setupTimeLeftTimer = function() {
- // Find the competition end time, and setup timer
+  // Find the competition end time, and setup timer
   var updateTime = function() {
     var end = $("span.timeleft").data("ends");
     var endTime = moment(end);
@@ -854,7 +885,7 @@ window.setupTimeLeftTimer = function() {
     } else {
       $("span.timeleft").text("Time is up!");
       // Disable all buttons
-        //$("button").attr("disabled","disabled");
+      //$("button").attr("disabled","disabled");
       window.compEnded = true;
     }
     setTimeout(updateTime,1000);
@@ -1108,35 +1139,35 @@ var addGroupMemberListeners = function(pagename) {
 }
 var addMoreStatsPageListeners= function(pagename,url) {
   if ("morestats-page"==pagename) { 
-      var year = $("#morestatsyear").val();
-      var getGradePie = function() {
-        var url = window.api.apicallbase + "gradespread";
-        $.jsonp(url,{year : year},function(back) {
-          var dataset = {data : [], backgroundColor : []};
-          var data = {
-            labels : back.labels,
-            datasets : [dataset]
-          };
-          ;
-          var i = 0;
-          back.data.forEach(function(item) {
-            dataset.data.push(item);
-            dataset.backgroundColor.push(randomColorGenerator());
-          });
-          var options = {};
-
-          var myPieChart = new Chart($("#gradepie"),{
-            type : 'pie',
-            data : data,
-            options : options}
-          );
+    var year = $("#morestatsyear").val();
+    var getGradePie = function() {
+      var url = window.api.apicallbase + "gradespread";
+      $.jsonp(url,{year : year},function(back) {
+        var dataset = {data : [], backgroundColor : []};
+        var data = {
+          labels : back.labels,
+          datasets : [dataset]
+        };
+        ;
+        var i = 0;
+        back.data.forEach(function(item) {
+          dataset.data.push(item);
+          dataset.backgroundColor.push(randomColorGenerator());
         });
-      }
-      //getWeeklySpread();
-      //getVisitsPerWeek();
-      //getScorePerMonth();
-      getGradePie();
-      //loadVisits();
+        var options = {};
+
+        var myPieChart = new Chart($("#gradepie"),{
+          type : 'pie',
+          data : data,
+          options : options}
+        );
+      });
+    }
+    //getWeeklySpread();
+    //getVisitsPerWeek();
+    //getScorePerMonth();
+    getGradePie();
+    //loadVisits();
 
     if (!moreStatsPageListenersInitialized) {
       moreStatsPageListenersInitialized  = true;
@@ -1148,6 +1179,8 @@ var addSettingsPageListeners = function(pagename,url) {
   if ("settings-page"==pagename) { 
     if (!settingsPageListenersInitialized) {
       $(document).on("click","#btn_savesettings",function() {
+        var self = $(this);
+        self.attr("disabled","disabled");
         var url = window.api.apicallbase + "savesettings";
         var formData = myApp.formToJSON($("#frmsettings"));
         if (formData.showinranking && formData.showinranking.length==1) {
@@ -1158,6 +1191,7 @@ var addSettingsPageListeners = function(pagename,url) {
         }
 
         $.jsonp(url,formData,function(back) {
+          self.removeAttr("disabled");
           myApp.alert(back.message);
         });
         return false;
@@ -1344,7 +1378,7 @@ var addInviteMemberPageListeners = function(pagename) {
 var addSingleProblemListeners = function(pagename) {
 
   if ((matches=pagename.match(/problem(\d+)/))) {
-    if (Cookies.get("problemhelpshown"+ver)==null) {
+    if ($.jStorage.get("problemhelpshown"+ver)==null) {
       // Show problem help
       var problemsHelp = [
         {
@@ -1372,7 +1406,7 @@ var addSingleProblemListeners = function(pagename) {
         'bgcolor': '#30312e',
         'fontcolor': '#fff'
       }
-      Cookies.set("problemhelpshown"+ver,true);
+      $.jStorage.set("problemhelpshown"+ver,true);
       window.problemHelpScreen = myApp.welcomescreen(problemsHelp, options);
     }
     // This has to be loaded every time a problem page is loaded.
@@ -1647,18 +1681,18 @@ var addRegisterToCompPageListeners = function(pagename) {
       var formdata = $(this).parents("form").serialize();
       // Check that serie is selected
       if ($(".regcategory:checked").length ==0) {
-	myApp.alert("Please choose a category first!");
-	return false;
+        myApp.alert("Please choose a category first!");
+        return false;
       }
       var url = window.api.apicallbase + "joincomp";
       $.jsonp(url,formdata,function(back) {
-	mainView.router.refreshPreviousPage();
+        mainView.router.refreshPreviousPage();
 
-	myApp.alert(back.message,function() {
-	  if (!back.error) {
-	    mainView.router.back();
-	  }
-	});
+        myApp.alert(back.message,function() {
+          if (!back.error) {
+            mainView.router.back();
+          }
+        });
       });
     });
     $(document).on("click",".regcategory",function() {
@@ -1667,17 +1701,17 @@ var addRegisterToCompPageListeners = function(pagename) {
       var maxparticipants = opt.data("maxparticipants");
       var info = opt.data("info");
       var data = {
-	price : price,
-	info : info,
-	maxparticipants: maxparticipants
+        price : price,
+        info : info,
+        maxparticipants: maxparticipants
       };
       var ctpl = myApp.templates.regcatinfo;
       var html = ctpl(data);
       $("#catinfo").empty().html(html);
     });
 
-   registerToCompListenersInitialized = false;
- }
+    registerToCompListenersInitialized = false;
+  }
 }
 
 var initializeTemplates = function(myApp) {
