@@ -72,6 +72,7 @@ var doPreprocess = function(content,url,next) {
   } else if ((matches=url.match(/dashboard.html/))) {
     var newgymid = undefined;
     var apiurl = window.api.apicallbase+"dashinfo/?id="+Cookies.get("uid");
+    debugger;
     // Check if new gym id is given here
     if ((matches=url.match(/dashboard.html.*?(\d+)/))) {
       newgymid = matches[1];
@@ -331,9 +332,12 @@ var addGlobalListeners = function() {
       $.jsonp(window.api.apicallbase+"logout",{},function() {
         Cookies.remove("loginok");
         Cookies.remove("uid");
+        $.jStorage.deleteKey("api-auth-token");
         window.uid = null;
         $("#userid").val("");
-        document.location.href="index.html";
+        setTimeout(function() {
+          document.location.href="index.html";
+        },500);
       });
     });
     // Confirm terminate account
@@ -372,7 +376,10 @@ var addGlobalListeners = function() {
             Cookies.set("loginok",true);
             Cookies.set("uid",data.uid);
             // Save the auth token and start using that
-            $.jStorage.set("JWT",data.JWT);
+            $.jStorage.deleteKey("api-auth-token");
+            console.log("New token "+data.JWT);
+            debugger;
+            $.jStorage.set("api-auth-token",data.JWT);
 
             window.uid = data.uid;
             // Initialize index page.

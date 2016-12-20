@@ -57,7 +57,7 @@ $.jsonp = function(url,_data,callback,options) {
   if (options && options.method) {
     _method = options.method;
   }
-  _data["api-auth-token"] = $.jStorage.get("JWT");
+  _data["api-auth-token"] = $.jStorage.get("api-auth-token");
  $.ajax({
    method : _method,
    url : url,
