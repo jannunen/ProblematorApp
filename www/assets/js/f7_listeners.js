@@ -371,6 +371,8 @@ var addGlobalListeners = function() {
             //Cookies.set("nativeproblematorlocation",data.loc);
             Cookies.set("loginok",true);
             Cookies.set("uid",data.uid);
+            // Save the auth token and start using that
+            $.jStorage.set("JWT",data.JWT);
 
             window.uid = data.uid;
             // Initialize index page.

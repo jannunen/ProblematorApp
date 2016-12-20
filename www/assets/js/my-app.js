@@ -57,25 +57,27 @@ $.jsonp = function(url,_data,callback,options) {
   if (options && options.method) {
     _method = options.method;
   }
+  _data["api-auth-token"] = $.jStorage.get("JWT");
  $.ajax({
    method : _method,
-        url : url,
-        jsonp : 'callback',
-        dataType : 'jsonp',
-        data : _data,
-        withCredentials : true,
-        complete : function(xhr,status) {
-          console.log("back from jsonp with status "+status+", url: "+url);
-          if (!url.match(/dologin/)) {
-            loginCheck(xhr.responseJSON);
-          }
-          if (callback != undefined) {
-          callback(xhr.responseJSON);
-          }
-        },
-        error : function(data, status, thrown) {
-          console.log("back from jsonp with ERROR "+thrown.message+", url: "+url);
-        }
+   url : url,
+   jsonp : 'callback',
+   dataType : 'jsonp',
+   crossDomain : true,
+   withCredentials : true,
+   data : _data,
+   complete : function(xhr,status) {
+     console.log("back from jsonp with status "+status+", url: "+url);
+     if (!url.match(/dologin/)) {
+       loginCheck(xhr.responseJSON);
+     }
+     if (callback != undefined) {
+       callback(xhr.responseJSON);
+     }
+   },
+   error : function(data, status, thrown) {
+     console.log("back from jsonp with ERROR "+thrown.message+", url: "+url);
+   }
  });
 } //jsonp
 
