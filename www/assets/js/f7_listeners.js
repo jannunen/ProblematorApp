@@ -18,6 +18,7 @@ var competitionsPageListenersInitialized = false; // Plural =)
 var settingsPageListenersInitialized = false;
 var registerToCompListenersInitialized = false;
 var moreStatsPageListenersInitialized = false;
+var signupPageListenersInitialized = false;
 
 var pieBoulder = pieSport = null;
 var randomColorGenerator = function () { 
@@ -69,6 +70,15 @@ var doPreprocess = function(content,url,next) {
       var dataJSON = {group : data};
       next(compiledTemplate(dataJSON));
     });
+  } else if ((matches=url.match(/signup.html/))) {
+       myApp.hidePreloader();
+       myApp.closeModal();
+    // ADd timeout, so modal has time to close
+    setTimeout(function() {
+      var compiledTemplate = Template7.compile(content);
+      var html = compiledTemplate();
+      next(html);
+    },100);
   } else if ((matches=url.match(/dashboard.html/))) {
     var newgymid = undefined;
     var apiurl = window.api.apicallbase+"dashinfo/?id="+$.jStorage.get("uid");
@@ -293,6 +303,14 @@ var doPreprocess = function(content,url,next) {
 var addGlobalListeners = function() {
   if (!globalListenersAdded) {
     
+    $(document).on("submit","#frm_signup",function() {
+      var formData = myApp.formToJSON($(this));
+      var url = window.api.apicallbase + "dosignup";
+      $.jsonp(url,formData,function(back) {
+        myApp.alert(back.message);
+      });
+      
+    });
     $(document).on("click","#facebook-login",function() {
       facebookConnectPlugin.login(["public_profile"],function(userData) {
 
@@ -1713,6 +1731,18 @@ var addRegisterToCompPageListeners = function(pagename) {
     registerToCompListenersInitialized = false;
   }
 }
+  var addSignupPageListeners = function(pagename) {
+
+       debugger;
+     if ("signup-page"==pagename) {
+       debugger;
+       myApp.hidePreloader();
+       myApp.closeModal();
+       if (!signupPageListenersInitialized) {
+         signupPageListenersInitialized = true;
+       }
+     }
+  }
 
 var initializeTemplates = function(myApp) {
   // Register partial for ranking single list item

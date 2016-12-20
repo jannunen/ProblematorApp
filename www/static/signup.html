@@ -1,0 +1,103 @@
+<!-- Top Navbar-->
+<div class="navbar">
+  <div class="navbar-inner">
+    <div class="left">
+      <a href="#" class="link back">
+        <span class="fa-stack fa-md">
+          <i class="fa fa-circle-thin fa-stack-2x"></i>
+          <i class="fa fa-chevron-left fa-stack-1x"></i>
+        </span>
+      </a>
+    </div>
+    <div class="center sliding"><h3>Signup</h3></div>
+    <div class="right">
+      <a href="#" class="link icon-only open-panel">
+        <i class="fa fa-bars"></i>
+      </a>
+    </div>
+  </div>
+</div> <!-- end of navbar -->
+
+<div class="page" data-page="signup-page">
+  <div class="page-content bg-dark" id="signup">
+    <div class="content-block bg-dark">
+      
+      <form id="frm_signup" method="post" action="#" class="ajax-submit">
+        <div class="list-block">
+          <div class="content-block-title text-center"><img src="assets/images/Problemator_logo_small.svg" /></div>
+          <div class="login-screen-title"><h2>Problemator</h2></div>
+          <div class="content-block-title text-center body-text-w text-center">Climbing is dangerous.<br />You may also get addicted to it!</div>
+          <ul class="bg-dark">
+            <li>
+              <div class="content-block text-center">
+                <h5>Sign up for Problemator</h5>
+              </div>
+            </li>
+            <li>
+              <div class="item-content">
+                <div class="item-inner">
+                  <div class="item-input">
+                    <input type="text" required="required" name="etunimi" id="etunimi" placeholder="First name" value="" />
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="item-content">
+                <div class="item-inner">
+                  <div class="item-input">
+                    <input type="text" required="required" name="sukunimi" id="sukunimi" value="" placeholder="Surname" />
+
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="item-content">
+                <div class="item-inner">
+                  <div class="item-input">
+                    <input type="email" required="required" name="email" id="email" value="" placeholder="Email address" />
+                  </div>
+                  <div class="item-after"></div>
+
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="item-content">
+                <div class="item-inner">
+                  <div class="item-input">
+                    <input type="password"  required="required" name="password" id="password" value="" placeholder="Password" />
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="item-content">
+                <div class="item-inner">
+                  <div class="item-input">
+                    <input type="password" required="required" name="password2" id="password2" value="" placeholder="Confirm password" />
+                  </div>
+                </div>
+              </div>
+            </li>
+
+            <li>
+              <div class="row pad20">
+                <div class="col-50 text-left">
+                  <button type="submit" class="button text-w" name="submit" id="submit">Sign up</button>
+                  <input type="hidden" name="authenticate" value="true" />
+                </div>
+                <div class="col-50 text-center vcenter pad20">
+                  <span class="text-g">or</span> <a class="problemator-link external" href="index.html">Log In</a>
+                </div>
+              </div>
+            </li>
+
+          </ul>
+        </div>
+      </form>                             
+
+    </div>
+  </div>
+</div>
