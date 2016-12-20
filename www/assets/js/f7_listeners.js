@@ -797,6 +797,16 @@ var addDashBoardListeners = function(pagename) {
     }
 
     if (!dashBoardListenersInitialized) {
+
+       $$(document).on("ptr:refresh",'.pull-to-refresh-content',function(e) {
+         var pagename = $(e.target.parentNode).attr("data-page");
+         if ("dash"==pagename) {
+           mainView.router.refreshPage();
+         }
+       });
+       
+
+
       myApp.hidePreloader();
       if ($.jStorage.get("whatsnew"+ver)==undefined) {
         $.jStorage.set("whatsnew"+ver,true,{ expires: 7650 });
