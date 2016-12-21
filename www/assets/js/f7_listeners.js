@@ -294,6 +294,7 @@ var doPreprocess = function(content,url,next) {
     // List group members
     var pid = matches[1];
     var url = window.api.apicallbase + "problem";
+    window.tickSaved = false;
     $.jsonp(url, {id : pid}, function (data){ 
       if (!$.jStorage.get("loginok")) {
         return false;
@@ -1483,7 +1484,7 @@ var addSingleProblemListeners = function(pagename) {
 
       $(document).on("click",".savetick",function() {
         // First, disable this button...
-        tickSaved = true; // Save global tickSaved state
+        window.tickSaved = true; // Save global tickSaved state
         var self = $(this);
         $(this).attr("disabled","disabled");
         var pid = $(this).data("id");

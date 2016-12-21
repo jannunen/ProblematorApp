@@ -1,4 +1,6 @@
 window.ver = "problemator_20161215";
+window.tickSaved = false;
+
 // Initialize app
 var myApp = new Framework7({
   preprocess: function (content, url, next) {
@@ -124,6 +126,26 @@ myApp.onPageInit("*",function(page) {
   addMoreStatsPageListeners(pagename);
   addSignupPageListeners(pagename);
   addForgotPageListeners(pagename);
+});
+
+
+/** WHen going BACK from page... */
+myApp.onPageBack('*', function(page) {
+  var pagename = page.name;
+  var matches = null;
+
+  if ((matches=pagename.match(/problem(\d+)/))) {
+    var probid = matches[1];
+    if (tickSaved != undefined && !tickSaved) {
+      // Tick is not saved, save still the stuff as pretick, so user
+      // can save amount of tries...
+      debugger;
+      saveTickFunction($("a.savetick"),'savepretick',function(back) {
+        // ADd data ignore cache so that the page will be reloaded if user goes back...
+        //$("a[data-problemid="+probid+"]").attr("data-ignore-cache","true");
+      });
+    }
+  }
 });
 
 myApp.init(); // init app manually after you've attached all handlers
