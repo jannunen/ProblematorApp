@@ -29,37 +29,37 @@
         <a href="#tab{{index}}" class="{{#js_compare "this.index==0"}}active{{/js_compare}} tab-link  button">{{nimi}}</a>
         {{/each}}
       </div>
+
+      <div class="tabs">
+
+{{#each points}}
+<div id="tab{{index}}" class="{{#js_compare "this.index==0"}}active{{/js_compare}} tab">
+  <div class="content-block">
+    <div class="row">
+      <div class="col-10 text-w">&nbsp;</div>
+      <div class="col-20 text-w"> # </div>
+      <div class="col-20 text-w">Tag</div>
+      <div class="col-30 text-w"> Points </div>
     </div>
+    <br />
+    {{#each problems}}
 
-    <div class="tabs">
-
-    {{#each points}}
-    <div id="tab{{index}}" class="{{#js_compare "this.index==0"}}active{{/js_compare}} tab">
-      <div class="content-block">
-      <div class="row">
-        <div class="col-10 text-w">&nbsp;</div>
-        <div class="col-20 text-w"> # </div>
-        <div class="col-20 text-w">Tag</div>
-        <div class="col-30 text-w"> Points </div>
-      </div>
-      <br />
-      {{#each problems}}
-
-      <div class="row" style="border-width : 0 0 1px 0;border-style : dotted; border-color : #a0a0a0;">
-        <div class="col-10 text-w">&nbsp;</div>
-        <div class="col-20 text-w"> {{problem.num}} </div>
-        <div class="col-20 text-w"><span class="fa fa-square" style="color : {{problem.htmlcode}}"></span> {{substr problem.tag 7}} </div>
-        <div class="col-30">
+    <div class="row" style="border-width : 0 0 1px 0;border-style : dotted; border-color : #a0a0a0;">
+      <div class="col-10 text-w">&nbsp;</div>
+      <div class="col-20 text-w"> {{problem.num}} </div>
+      <div class="col-20 text-w"><span class="fa fa-square" style="color : {{problem.htmlcode}}"></span> {{substr problem.tag 7}} </div>
+      <div class="col-30">
         <span style="color : white;">{{points}}</span>
-        </div>
-      </div>
-      {{/each}}
       </div>
     </div>
     {{/each}}
+  </div>
+</div>
+{{/each}}
 
-    </div> <!-- //tabs -->
-      
+      </div> <!-- //tabs -->
+
+    </div>
   </div>
 </div>
 

@@ -145,6 +145,14 @@ var doPreprocess = function(content,url,next) {
       var compiledTemplate = Template7.compile(content);
       next(compiledTemplate(data));
     //});
+  } else if ((matches=url.match(/compresults.html.*?(\d+)/))) {
+    var compid = matches[1];
+    $.jsonp(window.api.apicallbase+"compresults/?comp_id="+compid,{},function(data) {
+      // Data is actually contents of the tabs stuffed into JSON
+      var compiledTemplate = Template7.compile(content);
+      var html = compiledTemplate({result_tabs : data.message});
+      next(html);
+    });
   } else if ((matches=url.match(/pointsperroute.html.*?(\d+)/))) {
     var compid = matches[1];
     $.jsonp(window.api.apicallbase+"pointsperroute/?comp_id="+compid,{},function(data) {
@@ -174,6 +182,7 @@ var doPreprocess = function(content,url,next) {
         mainView.router.back();
         return true;
       }
+      data.hostname = window.location.host;
       var compiledTemplate = Template7.compile(content);
       next(compiledTemplate(data));
     });
