@@ -321,7 +321,16 @@ var doPreprocess = function(content,url,next) {
 
 var addGlobalListeners = function() {
   if (!globalListenersAdded) {
-    
+    $$(document).on("ptr:refresh",'.pull-to-refresh-content',function(e) {
+      var pagename = $(e.target.parentNode).attr("data-page");
+      if ("dash"==pagename) {
+        mainView.router.refreshPage();
+      } else if ("problems-page"==pagename) {
+        mainView.router.refreshPage();
+      }
+    });
+
+
     $(document).on("submit","#frm_signup",function() {
       var formData = myApp.formToJSON($(this));
       var url = window.api.apicallbase + "dosignup";
@@ -355,7 +364,7 @@ var addGlobalListeners = function() {
           window.uid = back.uid;
 
           myApp.closeModal();
-          
+
           // If here, go ahead and load index 
           // (dashboard.html should call api and have the new api-auth-key in use)
           document.location.href="index.html";
@@ -798,7 +807,7 @@ var addDashBoardListeners = function(pagename) {
 
   if ("dash"==pagename) {
     initializeDashBoardCharts(); // Do this on every page load
-    
+
     // Do every time. Check that some gym is selected.
     var gymid = $.jStorage.get("nativeproblematorlocation");
     if (isNaN(parseInt(gymid))) {
@@ -807,13 +816,6 @@ var addDashBoardListeners = function(pagename) {
 
     if (!dashBoardListenersInitialized) {
 
-       $$(document).on("ptr:refresh",'.pull-to-refresh-content',function(e) {
-         var pagename = $(e.target.parentNode).attr("data-page");
-         if ("dash"==pagename) {
-           mainView.router.refreshPage();
-         }
-       });
-       
 
 
       myApp.hidePreloader();
@@ -1629,6 +1631,7 @@ var addSingleProblemListeners = function(pagename) {
             if (from == "manageticks") {
               // IF coming from manage ticks from a single problem view.
               myApp.closeModal();
+              mainView.router.refreshPage();
             }
           });
         },function() {
@@ -1774,25 +1777,25 @@ var addRegisterToCompPageListeners = function(pagename) {
     registerToCompListenersInitialized = false;
   }
 }
-  var addForgotPageListeners = function(pagename) {
-     if ("forgot-page"==pagename) {
-       myApp.hidePreloader();
-       myApp.closeModal();
-       if (!forgotPageListenersInitialized) {
-         forgotPageListenersInitialized = true;
-       }
-     }
+var addForgotPageListeners = function(pagename) {
+  if ("forgot-page"==pagename) {
+    myApp.hidePreloader();
+    myApp.closeModal();
+    if (!forgotPageListenersInitialized) {
+      forgotPageListenersInitialized = true;
+    }
   }
-  var addSignupPageListeners = function(pagename) {
+}
+var addSignupPageListeners = function(pagename) {
 
-     if ("signup-page"==pagename) {
-       myApp.hidePreloader();
-       myApp.closeModal();
-       if (!signupPageListenersInitialized) {
-         signupPageListenersInitialized = true;
-       }
-     }
+  if ("signup-page"==pagename) {
+    myApp.hidePreloader();
+    myApp.closeModal();
+    if (!signupPageListenersInitialized) {
+      signupPageListenersInitialized = true;
+    }
   }
+}
 
 /**
  * Initialize templates.
