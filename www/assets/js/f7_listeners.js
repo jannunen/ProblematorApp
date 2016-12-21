@@ -98,6 +98,9 @@ var doPreprocess = function(content,url,next) {
       apiurl += "&newgymid="+newgymid;
       // Cookie for location must be set, because it's changed
       $.jStorage.set("nativeproblematorlocation",newgymid);
+      debugger;
+          document.location.href="index.html";
+
     }
     var gymid =  $.jStorage.get("nativeproblematorlocation");
     $.jsonp(apiurl,{problematorlocation : gymid},function(data) {
@@ -488,6 +491,7 @@ var invokeLocationChangeActionSheet = function() {
     myApp.alert("Please wait, changing the gym");
     console.log("new gym "+id);
     mainView.router.loadPage("static/dashboard.html?newgymid="+id); 
+    return false;
   }
   var gymid = $.jStorage.get("nativeproblematorlocation");
   var buttons = [];
@@ -670,7 +674,7 @@ var initializeDashBoardCharts = function() {
       load = true;
     }
     var loadChart = function(_data) {
-      dashboardLineChart = Morris.Line({
+      window.rankingProgressChart = Morris.Line({
         element: 'ranking_progress',
         data: _data,
         xkey: 'y',
@@ -694,6 +698,7 @@ var initializeDashBoardCharts = function() {
 
         labels: ['BOULDER','SPORT']
       });
+      rankingProgressChart.redraw();
     } //loadChart()
 
     if (load) {
@@ -705,8 +710,7 @@ var initializeDashBoardCharts = function() {
         loadChart(_data);
       });
     } else {
-      var data = $.jStorage.get("lastLoaded_globalrankingprogressdata");
-      loadChart(data);
+      loadChart($.jStorage.get("lastLoaded_globalrankingprogressdata"));
     }
   } // initializeChart
 
@@ -715,7 +719,7 @@ var initializeDashBoardCharts = function() {
       load = true;
     }
     var loadChart = function(_data) {
-      dashboardLineChart = Morris.Line({
+      window.runningLineChart = Morris.Line({
         element: 'running6mo',
         data: _data,
         xkey: 'y',
@@ -745,6 +749,7 @@ var initializeDashBoardCharts = function() {
 
         labels: ['BOULDER','SPORT']
       });
+      runningLineChart.redraw();
     } //loadChart()
 
     if (load) {
@@ -763,7 +768,7 @@ var initializeDashBoardCharts = function() {
 
   var initializeGradeBarsChart = function(load) {
     var loadChart = function(data) {
-      dashboardBarChart = Morris.Bar({
+      window.runningBarChart = Morris.Bar({
         element : 'running6mobars',
         data : data,
         'gridTextSize' : 8,
@@ -776,7 +781,9 @@ var initializeDashBoardCharts = function() {
         labels : ['BOULDER','SPORT'],
         barColors : ['#decc00','#bfb6a8'],
       });
+      runningBarChart.redraw();
     } // loadChart
+
     if (load) {
       var barurl = window.api.apicallbase+"json_running6mogradebars_both/";
       $.jsonp(barurl,{uid : window.uid},function(_data) {
@@ -786,25 +793,37 @@ var initializeDashBoardCharts = function() {
         loadChart(_data);
       });
     } else {
-      loadChart($.jStorage("lastLoaded_gradebarsdata"));
+      loadChart($.jStorage.get("lastLoaded_gradebarsdata"));
     }
   } // var initializeGradeBarsChart
 
   // Load dashboard graphs only once a day (maybe add some invalidating later)
   var lastLoaded = $.jStorage.get("lastLoaded_dashboardcharts"); 
-  lastLoaded = null;
   if (lastLoaded == null) {
     // Assume day before, so the variable gets set and data gets loaded
     lastLoaded = moment().subtract(1,'days');;
   }
   var doLoad =  moment(lastLoaded).isBefore(moment(),'day');
-
-  initializeRankingProgressChart(doLoad);
-  initializeRunningProgressChart(doLoad);
+  // Or if they are already initialized, just redraw
+  if (window.rankingProgressChart) {
+    window.rankingProgressChart.redraw();
+  } else {
+    initializeRankingProgressChart(doLoad);
+  }
+  if (window.runningLineChart) {
+    window.runningLineChart.redraw();
+  } else {
+    initializeRunningProgressChart(doLoad);
+  }
+  if (window.runningBarChart) {
+    window.runningBarChart.redraw();
+  } else {
   initializeGradeBarsChart(doLoad);
+  }
 
 }
 var addDashBoardListeners = function(pagename) {
+debugger;
 
   if ("dash"==pagename) {
     initializeDashBoardCharts(); // Do this on every page load
