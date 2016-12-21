@@ -230,11 +230,11 @@
         <small class="text-y">{{sizeof upcoming}} upcoming competition(s)<br /></small> 
         <a href="static/upcoming_competitions.html" class="upcoming_competitions button button-fill button-big color-yellow">OPEN COMP LIST</a><br />
         {{/js_compare}}
-        {{#js_compare "this.comps && this.comps.length  > 0"}}
+        {{#js_compare "this.ongoing && this.ongoing.length  > 0"}}
         <span class="text-w">Ongoing competitions</span> 
         <ul>
-          {{#each comps}}
-          {** Active comps come here **}
+          {{#each ongoing}}
+          <!-- ongoing comps come here -->
           <li class="item-content">
             <div class="item-inner">
               <a href="#"  data-compid="{{compid}}" style="width : 100%" data-ignore-cache="true" data-reload="true" class="opencompetitionpage text-y button button-fill button-big color-yellow">OPEN {{compname}}</a>
