@@ -1012,6 +1012,7 @@ var addCompetitionPageListeners = function(pagename) {
         var tries = $(this).parent().parent().find("input.tries").val();
         var problemid = $(this).parent().parent().find("input.tries").data("pid");
         var self = $(this);
+        self.attr("disabled","disabled");
         if ($(this).hasClass("notdone")) {
           var url = window.api.apicallbase + "comp_savetick/";
           $.jsonp(url,{compid : $("#compid").val(), problemid : problemid, tries : tries},function(back) {
@@ -1025,6 +1026,7 @@ var addCompetitionPageListeners = function(pagename) {
             self.addClass("done");
             self.addClass("color-yellow");
             self.text("DONE");
+            self.removeAttr("disabled");
             updateDoneAmount();
           });
         } else {
@@ -1040,6 +1042,7 @@ var addCompetitionPageListeners = function(pagename) {
             self.addClass("notdone");
             self.addClass("color-gray");
             self.text("NOT DONE");
+            self.removeAttr("disabled");
             updateDoneAmount();
           });
         }
