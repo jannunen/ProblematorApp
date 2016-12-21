@@ -1,11 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="fi.problemator.mobileapp" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
     <name>Problemator</name>
-    <description>
-        Hello World sample application that responds to the deviceready event.
-    </description>
-    <author email="support@phonegap.com" href="http://phonegap.com">
-        PhoneGap Team
+    <description>Problemator is an app providing climbers to track their indoor ascents</description>
+    <author email="support@problemator.fi" href="https://www.problemator.fi">
+      Cave Oy
     </author>
     <preference name="permissions" value="none" />
     <preference name="phonegap-version" value="3.5.0" />
@@ -41,53 +39,23 @@
     <gap:plugin name="org.apache.cordova.network-information" />
     <gap:plugin name="org.apache.cordova.splashscreen" />
     <gap:plugin name="org.apache.cordova.vibration" />
-    <icon platform="ios" src="res/icons/ios/icon-small.png" width="29" height="29" />
-    <icon platform="ios" src="res/icons/ios/icon-small-2x.png" width="58" height="58" />
-    <icon platform="ios" src="res/icons/ios/icon-40.png" width="40" height="40" />
-    <icon platform="ios" src="res/icons/ios/icon-40-2x.png" width="80" height="80" />
-    <icon platform="ios" src="res/icons/ios/icon-50.png" width="50" height="50" />
-    <icon platform="ios" src="res/icons/ios/icon-50-2x.png" width="100" height="100" />
-    <icon platform="ios" src="res/icons/ios/icon.png" width="57" height="57" />
-    <icon platform="ios" src="res/icons/ios/icon-2x.png" width="114" height="114" />
-    <icon platform="ios" src="res/icons/ios/icon-60.png" width="60" height="60" />
-    <icon platform="ios" src="res/icons/ios/icon-60-2x.png" width="120" height="120" />
-    <icon platform="ios" src="res/icons/ios/icon-60-3x.png" width="180" height="180" />
-    <icon platform="ios" src="res/icons/ios/icon-72.png" width="72" height="72" />
-    <icon platform="ios" src="res/icons/ios/icon-72-2x.png" width="144" height="144" />
-    <icon platform="ios" src="res/icons/ios/icon-76.png" width="76" height="76" />
-    <icon platform="ios" src="res/icons/ios/icon-76-2x.png" width="152" height="152" />
 
-    <splash platform="ios" src="res/screens/ios/screen-iphone-portrait.png" width="320" height="480" />
-    <splash platform="ios" src="res/screens/ios/screen-iphone-portrait-2x.png" width="640" height="960" />
-    <splash platform="ios" src="res/screens/ios/screen-iphone-portrait-568h-2x.png" width="640" height="1136" />
-    <splash platform="ios" src="res/screens/ios/screen-iphone-portrait-667h.png" width="750" height="1334" />
-    <splash platform="ios" src="res/screens/ios/screen-iphone-portrait-736h.png" width="1242" height="2208" />
-    <splash platform="ios" src="res/screens/ios/screen-ipad-portrait.png" width="768" height="1024" />
-    <splash platform="ios" src="res/screens/ios/screen-ipad-portrait-2x.png" width="1536" height="2048" />
 
-    <icon platform="android" qualifier="ldpi" src="res/icons/android/icon-36-ldpi.png"/>
-    <icon platform="android" qualifier="mdpi" src="res/icons/android/icon-48-mdpi.png"/>
-    <icon platform="android" qualifier="hdpi" src="res/icons/android/icon-72-hdpi.png"/>
-    <icon platform="android" qualifier="xhdpi" src="res/icons/android/icon-96-xhdpi.png"/>
-    <icon platform="android" qualifier="xxhdpi" src="res/icons/android/icon-144-xxhdpi.png"/>
-    <icon platform="android" qualifier="xxxhdpi" src="res/icons/android/icon-192-xxxhdpi.png"/>
+      <icon src="icon.png" />
+      <splash src="splash.png" />
 
-    <splash platform="android" qualifier="ldpi" src="res/screens/android/screen-ldpi-portrait.png" />
-    <splash platform="android" qualifier="mdpi" src="res/screens/android/screen-mdpi-portrait.png" />
-    <splash platform="android" qualifier="hdpi" src="res/screens/android/screen-hdpi-portrait.png" />
-    <splash platform="android" qualifier="xhdpi" src="res/screens/android/screen-xhdpi-portrait.png" />
-
-    <icon platform="wp8" src="res/icons/wp8/ApplicationIcon.png" width="99" height="99" />
-    <icon platform="wp8" src="res/icons/wp8/Background.png" width="159" height="159" />
-
-    <icon platform="windows" src="res/icons/windows8/logo.png" width="150" height="150" />
-    <icon platform="windows" src="res/icons/windows8/smalllogo.png" width="30" height="30" />
-    <icon platform="windows" src="res/icons/windows8/storelogo.png" width="50" height="50" />
     <platform name="ios">
-        <dict>
-            <key>NSAllowsArbitraryLoads</key>
-            <true />
-        </dict>
+
+      <dict>  
+	<key>NSExceptionDomains</key>
+	<dict>
+	  <key>problemator.fi</key>
+	  <dict>
+	    <key>NSExceptionMinimumTLSVersion</key>
+	    <string>TLSv1.1</string>
+	  </dict>
+	</dict>
+      </dict>  
         <key>LSApplicationQueriesSchemes</key>
         <array>
           <string>fbapi</string>
