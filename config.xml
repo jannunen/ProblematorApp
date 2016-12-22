@@ -40,10 +40,6 @@
     <gap:plugin name="org.apache.cordova.splashscreen" />
     <gap:plugin name="org.apache.cordova.vibration" />
 
-
-      <icon src="icon.png" />
-      <splash src="splash.png" />
-
     <platform name="ios">
 
       <dict>  
