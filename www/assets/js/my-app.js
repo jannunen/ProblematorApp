@@ -19,7 +19,7 @@ var myApp = new Framework7({
 });
 
 var api = {
-  server : "https://beta.problemator.fi",
+  server : "https://www.problemator.fi",
   api : "/t/problematorapi/",
   version : "v02/",
 
