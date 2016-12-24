@@ -75,6 +75,19 @@ $.jsonp = function(url,_data,callback,options) {
      if (!url.match(/dologin/)) {
        loginCheck(xhr.responseJSON);
      }
+     if (xhr.responseJSON.authenticationfailed) {
+        // Login failed, unset auth stuff and redirect to index
+       $.jStorage.deleteKey("loginok");
+       $.jStorage.deleteKey("uid");
+       $.jStorage.deleteKey("api-auth-token");
+       window.uid = null;
+       $("#userid").val("");
+       setTimeout(function() {
+         document.location.href="index.html";
+       },500);
+       return; 
+
+     }
      if (callback != undefined) {
        callback(xhr.responseJSON);
      }
