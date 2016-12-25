@@ -24,7 +24,6 @@
     <preference name="android-minSdkVersion" value="15" />
     <preference name="android-targetSdkVersion"   value="15" />  
     <preference name="android-installLocation" value="auto" />
-    <gap:plugin name="org.apache.cordova.battery-status" />
     <gap:plugin name="org.apache.cordova.camera" />
     <gap:plugin name="org.apache.cordova.media-capture" />
     <gap:plugin name="org.apache.cordova.console" />
