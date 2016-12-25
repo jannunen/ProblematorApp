@@ -1,13 +1,15 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="fi.problemator.mobileapp" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
+<widget id="fi.problemator.mobileapp" version="1.24.0" versionCode="1" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
     <name>Problemator</name>
     <description>Problemator is an app providing climbers to track their indoor ascents</description>
     <author email="support@problemator.fi" href="https://www.problemator.fi">
       Cave Oy
     </author>
+    <preference name="android-build-tool" value="gradle" />
+
     <preference name="permissions" value="none" />
-    <preference name="phonegap-version" value="3.5.0" />
-    <preference name="orientation" value="default" />
+    <preference name="phonegap-version" value="cli-6.3.0" />
+    <preference name="orientation" value="portrait" />
     <preference name="target-device" value="universal" />
     <preference name="fullscreen" value="true" />
     <preference name="webviewbounce" value="true" />
@@ -19,7 +21,8 @@
     <preference name="show-splash-screen-spinner" value="true" />
     <preference name="auto-hide-splash-screen" value="true" />
     <preference name="disable-cursor" value="false" />
-    <preference name="android-minSdkVersion" value="7" />
+    <preference name="android-minSdkVersion" value="15" />
+    <preference name="android-targetSdkVersion"   value="15" />  
     <preference name="android-installLocation" value="auto" />
     <gap:plugin name="org.apache.cordova.battery-status" />
     <gap:plugin name="org.apache.cordova.camera" />
@@ -39,29 +42,27 @@
     <gap:plugin name="org.apache.cordova.network-information" />
     <gap:plugin name="org.apache.cordova.splashscreen" />
     <gap:plugin name="org.apache.cordova.vibration" />
-
     <platform name="ios">
-
-      <dict>  
-	<key>NSExceptionDomains</key>
-	<dict>
-	  <key>problemator.fi</key>
-	  <dict>
-	    <key>NSExceptionMinimumTLSVersion</key>
-	    <string>TLSv1.1</string>
-	  </dict>
-	</dict>
-      </dict>  
+        <dict>
+            <key>NSExceptionDomains</key>
+            <dict>
+                <key>problemator.fi</key>
+                <dict>
+                    <key>NSExceptionMinimumTLSVersion</key>
+                    <string>TLSv1.1</string>
+                </dict>
+            </dict>
+        </dict>
         <key>LSApplicationQueriesSchemes</key>
         <array>
-          <string>fbapi</string>
-          <string>fb-messenger-api</string>
-          <string>fbauth2</string>
-          <string>fbshareextension</string>
+            <string>fbapi</string>
+            <string>fb-messenger-api</string>
+            <string>fbauth2</string>
+            <string>fbshareextension</string>
         </array>
     </platform>
     <access origin="*" />
-    <plugin name="cordova-plugin-facebook4" spec="^1.7.4">
+    <plugin name="cordova-plugin-facebook4" spec="https://github.com/jeduan/cordova-plugin-facebook4">
         <variable name="APP_ID" value="903410899677635" />
         <variable name="APP_NAME" value="Problemator" />
     </plugin>
