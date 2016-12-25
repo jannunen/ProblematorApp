@@ -41,6 +41,8 @@
     <plugin name="cordova-plugin-network-information" />
     <plugin name="cordova-plugin-splashscreen" />
     <plugin name="cordova-plugin-vibration" />
+    <plugin name="cordova-plugin-whitelist" />
+     <allow-intent href="https://*.problemator.fi/*" />
     <platform name="ios">
         <dict>
             <key>NSExceptionDomains</key>

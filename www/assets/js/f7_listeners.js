@@ -843,7 +843,13 @@ var addDashBoardListeners = function(pagename) {
       }  
 
       dashBoardListenersInitialized = true;
+    } else {
+       // Just redraw the charts
+      window.rankingProgressChart.redraw();
+      window.runningLineChart.redraw();
+      window.runningBarChart.redraw();
     }
+
   } // if pagename
 }
 
