@@ -697,7 +697,6 @@ var initializeDashBoardCharts = function() {
 
         labels: ['BOULDER','SPORT']
       });
-      rankingProgressChart.redraw();
     } //loadChart()
 
     if (load) {
@@ -748,7 +747,6 @@ var initializeDashBoardCharts = function() {
 
         labels: ['BOULDER','SPORT']
       });
-      runningLineChart.redraw();
     } //loadChart()
 
     if (load) {
@@ -780,7 +778,6 @@ var initializeDashBoardCharts = function() {
         labels : ['BOULDER','SPORT'],
         barColors : ['#decc00','#bfb6a8'],
       });
-      runningBarChart.redraw();
     } // loadChart
 
     if (load) {
@@ -804,6 +801,10 @@ var initializeDashBoardCharts = function() {
   }
   var doLoad =  moment(lastLoaded).isBefore(moment(),'day');
   // Or if they are already initialized, just redraw
+    initializeRankingProgressChart(doLoad);
+    initializeRunningProgressChart(doLoad);
+  initializeGradeBarsChart(doLoad);
+  /*
   if (window.rankingProgressChart) {
     window.rankingProgressChart.redraw();
   } else {
@@ -819,6 +820,7 @@ var initializeDashBoardCharts = function() {
   } else {
   initializeGradeBarsChart(doLoad);
   }
+  */
 
 }
 var addDashBoardListeners = function(pagename) {
@@ -845,9 +847,11 @@ var addDashBoardListeners = function(pagename) {
       dashBoardListenersInitialized = true;
     } else {
        // Just redraw the charts
+      /*
       window.rankingProgressChart.redraw();
       window.runningLineChart.redraw();
       window.runningBarChart.redraw();
+      */
     }
 
   } // if pagename
@@ -871,6 +875,21 @@ var addProblemsPageListeners = function(pagename) {
 
   if ("problems-page"==pagename) {
     if (!problemsPageListenersInitialized) {
+      $(document).on("click",".swipetick",function(el) {
+        $(this).attr("disabled","disabled");
+        var self = this;
+        var gymid = $("#location").val();
+        var tag = $(this).attr("data-tag");
+        var pid = $(this).data("pid");
+        var parentli = $(el.target).parents("li");
+         var url = window.api.apicallbase+"savetick";
+        $.jsonp(url,{"problemid" : pid,gymid : gymid},function(back) {
+          myApp.swipeoutClose(parentli); 
+          mainView.router.refreshPage();
+          $(self).removeAttr("disabled");
+        });
+
+      });
       $(document).on("click",".see_wallimage",function() {
         var url = $(this).data("href");
         var myPhotoBrowserPage = myApp.photoBrowser({
