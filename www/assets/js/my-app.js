@@ -42,6 +42,13 @@ $$(document).on('deviceready', function() {
   alert("device is ready");
 
 });
+document.addEventListener("deviceReady", deviceReady, false);
+
+function deviceReady() {
+      // Now safe to use the PhoneGap API
+  alert("device is ready 2");
+}
+
 
 
 var loginCheck = function(data) {
