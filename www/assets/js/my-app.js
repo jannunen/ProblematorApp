@@ -89,7 +89,6 @@ $.jsonp = function(url,_data,callback,options) {
 
      }
      // Check if we have new jwt available. Save it if it exists...
-     debugger;
      if (xhr.responseJSON['jwt']) {
        $.jStorage.set("api-auth-token",xhr.responseJSON['jwt']);
      }
@@ -157,7 +156,6 @@ myApp.onPageBack('*', function(page) {
     if (tickSaved != undefined && !tickSaved) {
       // Tick is not saved, save still the stuff as pretick, so user
       // can save amount of tries...
-      debugger;
       saveTickFunction($("a.savetick"),'savepretick',function(back) {
         // ADd data ignore cache so that the page will be reloaded if user goes back...
         //$("a[data-problemid="+probid+"]").attr("data-ignore-cache","true");

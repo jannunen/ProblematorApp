@@ -413,6 +413,7 @@ var addGlobalListeners = function() {
     });
     $$(document).on("click",".btn_logout",function() {
       $.jsonp(window.api.apicallbase+"logout",{},function() {
+        $.jStorage.deleteKey("lastLoaded_dashboardcharts"); 
         $.jStorage.deleteKey("lastLoaded_globalrankingprogressdata");
         $.jStorage.deleteKey("lastLoaded_runningprogressdata");
         $.jStorage.deleteKey("lastLoaded_gradebarsdata");
@@ -492,11 +493,9 @@ var invokeLocationChangeActionSheet = function() {
   var selectGym = function(id) {
     myApp.alert("Please wait, changing the gym");
     console.log("new gym "+id);
-    debugger;
     // Change the gym (gets the updated jwt at the same time...)
     var url = window.api.apicallbase + "changegym"; 
     $.jsonp(url,{id : id},function(back) {
-      debugger;
       mainView.router.loadPage("static/dashboard.html?newgymid="+id); 
     });
     
