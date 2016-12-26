@@ -39,6 +39,7 @@ var mainView = myApp.addView('.view-main', {
 $$(document).on('deviceready', function() {
     //alert("Device is ready!");
     console.log("Device is ready!");
+  alert("device is ready");
 
 });
 
