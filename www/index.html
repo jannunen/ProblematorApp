@@ -11,10 +11,7 @@
       * Enable inline JS: add 'unsafe-inline' to default-src
     -->
 
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.problemator.fi * gap://ready file:; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.facebook.com; script-src *; connect-src 'self' wss: ws: https://*.problemator.fi">
-    <!--
-      <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
-    -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.problemator.fi gap://ready file:; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.facebook.com; script-src 'self' 'unsafe-eval' https://*.problemator.fi; connect-src 'self' wss://localhost ws://localhost https://*.problemator.fi">
 
     <!-- Required meta tags-->
     <meta charset="utf-8">

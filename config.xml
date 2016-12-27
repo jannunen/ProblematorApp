@@ -1,10 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="fi.problemator.mobileapp" version="1.24.0" versionCode="1" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
+<widget id="fi.problemator.mobileapp" version="1.25.3" versionCode="1" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
     <name>Problemator</name>
     <description>Problemator is an app providing climbers to track their indoor ascents</description>
     <author email="support@problemator.fi" href="https://www.problemator.fi">
       Cave Oy
     </author>
+    <content src="index.html" />
     <preference name="android-build-tool" value="gradle" />
     <preference name="permissions" value="none" />
     <preference name="phonegap-version" value="cli-6.3.0" />
@@ -23,27 +24,21 @@
     <preference name="android-minSdkVersion" value="23" />
     <preference name="android-targetSdkVersion" value="23" />
     <preference name="android-installLocation" value="auto" />
-    <plugin name="cordova-plugin-battery-status" />
-    <plugin name="cordova-plugin-camera" />
-    <plugin name="cordova-plugin-media-capture" />
     <plugin name="cordova-plugin-console" />
-    <plugin name="cordova-plugin-contacts" />
     <plugin name="cordova-plugin-device" />
-    <plugin name="cordova-plugin-device-motion" />
-    <plugin name="cordova-plugin-device-orientation" />
     <plugin name="cordova-plugin-dialogs" />
-    <plugin name="cordova-plugin-file" />
-    <plugin name="cordova-plugin-file-transfer" />
-    <plugin name="cordova-plugin-geolocation" />
     <plugin name="cordova-plugin-globalization" />
-    <plugin name="cordova-plugin-inappbrowser" />
-    <plugin name="cordova-plugin-media" />
     <plugin name="cordova-plugin-network-information" />
     <plugin name="cordova-plugin-splashscreen" />
-    <plugin name="cordova-plugin-vibration" />
     <plugin name="cordova-plugin-whitelist" />
+    <access origin="*" />
     <allow-intent href="https://*.problemator.fi/*" />
+    <platform name="android">
+      <allow-intent href="market:*" />
+    </platform>
     <platform name="ios">
+      <allow-intent href="itms:*" />
+      <allow-intent href="itms-apps:*" />
         <dict>
             <key>NSExceptionDomains</key>
             <dict>
@@ -62,7 +57,6 @@
             <string>fbshareextension</string>
         </array>
     </platform>
-    <access origin="*" />
     <plugin name="cordova-plugin-facebook4" spec="https://github.com/jeduan/cordova-plugin-facebook4">
         <variable name="APP_ID" value="903410899677635" />
         <variable name="APP_NAME" value="Problemator" />
