@@ -324,6 +324,29 @@ var doPreprocess = function(content,url,next) {
 
 var addGlobalListeners = function() {
   if (!globalListenersAdded) {
+      // Untick from single problem
+      $(document).on("click",".untick",function(e) {
+        var tickid = $(this).attr("data-id");
+        var from = $(this).attr("data-from");
+        var self = this;
+        $(this).attr("disabled","disabled");
+        var gymid = $("#location").val();
+        var pid = $(this).data("pid");
+        myApp.confirm('Really untick this problem?', function () {
+          var url = window.api.apicallbase + "untick"; 
+          $.jsonp(url,{"tickid" : tickid,'pid' : pid},function(back) {
+            $(self).removeAttr("disabled");
+            if (from == "manageticks") {
+              // IF coming from manage ticks from a single problem view.
+              myApp.closeModal();
+              mainView.router.refreshPage();
+            }
+          });
+        },function() {
+          $(self).removeAttr("disabled");
+        });
+        return false;
+      });
     $$(document).on("ptr:refresh",'.pull-to-refresh-content',function(e) {
       var pagename = $(e.target.parentNode).attr("data-page");
       if ("dash"==pagename) {
@@ -1651,29 +1674,6 @@ var addSingleProblemListeners = function(pagename) {
         return false;
       });
 
-      // Untick from single problem
-      $(document).on("click",".untick",function(e) {
-        var tickid = $(this).attr("data-id");
-        var from = $(this).attr("data-from");
-        var self = this;
-        $(this).attr("disabled","disabled");
-        var gymid = $("#location").val();
-        var pid = $(this).data("pid");
-        myApp.confirm('Really untick this problem?', function () {
-          var url = window.api.apicallbase + "untick"; 
-          $.jsonp(url,{"tickid" : tickid,'pid' : pid},function(back) {
-            $(self).removeAttr("disabled");
-            if (from == "manageticks") {
-              // IF coming from manage ticks from a single problem view.
-              myApp.closeModal();
-              mainView.router.refreshPage();
-            }
-          });
-        },function() {
-          $(self).removeAttr("disabled");
-        });
-        return false;
-      });
       //
       //
       // Untick from single problem
