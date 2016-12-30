@@ -1416,3 +1416,17 @@ ul.action-buttons li {
    padding : 0px 0 0 2px;
    margin-bottom : 6px;
 }
+.view-main .toolbar  {
+  background-color : #30312e;
+}
+.view-main .toolbar a {
+  text-align : center;
+  color : #decc00;
+}
+.view-main .toolbar a span.fa {
+  color : white ;
+}
+.view-main .toolbar a span.title {
+  display : block;
+  font-size : 10px; 
+}
