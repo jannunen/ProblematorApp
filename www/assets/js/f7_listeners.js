@@ -771,7 +771,7 @@ var initializeRunningProgressChart = function(load) {
   } //loadChart()
 
   if (load) {
-    var url = window.api.apicallbase+"json_running6mo_both/";
+    var url = window.api.apicallbase+"json_rujning6mo_both/";
     $.jsonp(url,{uid : window.uid},function(_data) {
       $.jStorage.set("lastLoaded_dashboardcharts",moment()); 
       $.jStorage.set("lastLoaded_runningprogress",moment());
@@ -1849,7 +1849,7 @@ var initializeTemplates = function(myApp) {
 
 
   // Template for problem global ascents popover
-  var t1 = '<div class="popover ascents popover-about"> <div class="popover-angle"></div> <div class="popover-inner"> <div class="content-block"> <h1>Problem ascents <small>{{count}} time(s)</h1> <br /> <p class="body-text-w">Public ascent list</p><br /> <ul > {{#each ascents}} <li>@{{date_format tstamp "DD.MM.YYYY"}} {{etunimi}} {{sukunimi}} {{#js_compare "this.a_like > 0"}}<span class="text-w">+{{a_like}} <span class="fa fa-thumbs-up"></span></span>{{/js_compare}}</li> {{else}} No public ascents, yet.  {{/each}} </ul><br /> <span class="text-y">Want to include your own ascents? Go to <a class="text-w" href="#settings">settings</a> page and make your ascents public now!</span> </div> </div> </div> ';
+  var t1 = '<div class="popover ascents popover-about"> <div class="popover-angle"></div> <div class="popover-inner"> <div class="content-block"> <h1>Problem ascents <small>{{count}} time(s)</h1> <br /> <p class="body-text-w">Public ascent list</p><br /> <ul > {{#each ascents}} <li>@{{date_format tstamp "DD.MM.YYYY"}} <span class="text-w">{{etunimi}} {{sukunimi}}</span> {{#js_compare "this.a_like > 0"}}<span class="text-w">+{{a_like}} <span class="fa fa-thumbs-up"></span></span>{{/js_compare}}</li> {{else}} No public ascents, yet.  {{/each}} </ul><br /> <span class="text-y">Want to include your own ascents? Go to <a class="text-w" href="#settings">settings</a> page and make your ascents public now!</span> </div> </div> </div> ';
   var ctpl = Template7.compile(t1);
   myApp.templates.global_ascents_popover = ctpl;
 

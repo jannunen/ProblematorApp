@@ -53,6 +53,10 @@ font-weight:300;
 #sidebarnav ul li a {
  margin-left : 4px;
 }
+#sidebarnav.list-nav {
+  padding : 0;
+}
+
 
 #sidebarnav ul li span {
  width : 24px;
@@ -1401,4 +1405,14 @@ color : white;
 }
 ul.action-buttons li {
   margin-bottom : 2px;
+}
+#sidebar li:first-child {
+  border : none;
+}
+#sidebar li {
+   border-width : 1px 0 0 0;
+   border-style : solid;
+   border-color : #ccbb00;
+   padding : 0px 0 0 2px;
+   margin-bottom : 6px;
 }
