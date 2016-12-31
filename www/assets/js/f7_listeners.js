@@ -926,7 +926,8 @@ var addProblemsPageListeners = function(pagename) {
         var url = window.api.apicallbase+"savetick";
         $.jsonp(url,{"problemid" : pid,gymid : gymid},function(back) {
           myApp.swipeoutClose(parentli); 
-          mainView.router.refreshPage();
+          $("h5[tag="+tag+"]").removeClass("white").addClass("text-y");
+          $("#swipe"+pid+" .item-title").append('<span class="fa fa-check problemator-link"></span>');
           $(self).removeAttr("disabled");
         });
 
