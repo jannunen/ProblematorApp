@@ -11,7 +11,7 @@
       * Enable inline JS: add 'unsafe-inline' to default-src
     -->
 
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.problemator.fi gap://ready file:; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.facebook.com; script-src 'self' 'unsafe-eval' https://*.problemator.fi; connect-src 'self' wss://localhost ws://localhost https://*.problemator.fi">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.facebook.com https://*.problemator.fi gap://ready file:; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.facebook.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' http://*.facebook.net https://*.facebook.com https://*.problemator.fi; connect-src 'self' wss://localhost:3000 ws://localhost:3000 https://*.problemator.fi">
 
     <!-- Required meta tags-->
     <meta charset="utf-8">
@@ -104,6 +104,9 @@
           </a>
           <a href="static/circuits.html" class="">
             <span class="fa fa-bicycle fa-1x"></span> <span class="title">Circuits</span>
+          </a>
+          <a href="static/groups.html"  class="">
+            <span class="fa fa-users fa-1x"></span> <span class="title">Groups</span>
           </a>
           <a href="static/competitions.html" class="">
             <span   class="fa fa-trophy fa-1x"></span> <span class="title">Competitions</span>

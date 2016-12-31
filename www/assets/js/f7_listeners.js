@@ -25,6 +25,16 @@ var pieBoulder = pieSport = null;
 var randomColorGenerator = function () { 
   return '#' + (Math.random().toString(16) + '0000000').slice(2, 8); 
 };
+Date.prototype.getWeek = function() {
+  var date = new Date(this.getTime());
+  date.setHours(0, 0, 0, 0);
+  // Thursday in current week decides the year.
+  date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
+  // January 4 is always in week 1.
+  var week1 = new Date(date.getFullYear(), 0, 4);
+  // Adjust to Thursday in week 1 and count number of weeks from date to week1.
+  return 1 + Math.round(((date.getTime() - week1.getTime()) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
+}
 
 var doPreprocess = function(content,url,next) {
   var host = window.location.host;
@@ -757,13 +767,21 @@ var initializeRunningProgressChart = function(load) {
       lineWidth : "2px",
       smooth : true,
 
+      xLabelAngle : 45,
+      xLabelMargin: 1,
+      xLabels : 'month',
+      /*
       xLabelFormat : function(x) {
         var objDate = new Date(x);
         var locale = "en-us";
         var short = objDate.toLocaleString(locale, { month: "short" });
-        return short.toUpperCase();
+        var m = objDate.getMonth()+1;
+	var w = objDate.getWeek();
+        return w+"";
+        //return short.toUpperCase();
 
       },
+      */
       ykeys: ['a','b'],
 
       labels: ['BOULDER','SPORT']
@@ -771,7 +789,7 @@ var initializeRunningProgressChart = function(load) {
   } //loadChart()
 
   if (load) {
-    var url = window.api.apicallbase+"json_rujning6mo_both/";
+    var url = window.api.apicallbase+"json_running6mo_both/";
     $.jsonp(url,{uid : window.uid},function(_data) {
       $.jStorage.set("lastLoaded_dashboardcharts",moment()); 
       $.jStorage.set("lastLoaded_runningprogress",moment());
@@ -1282,11 +1300,7 @@ var addMoreStatsPageListeners= function(pagename,url) {
         );
       });
     }
-    //getWeeklySpread();
-    //getVisitsPerWeek();
-    //getScorePerMonth();
     getGradePie();
-    //loadVisits();
 
     if (!moreStatsPageListenersInitialized) {
       moreStatsPageListenersInitialized  = true;

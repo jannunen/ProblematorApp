@@ -1429,4 +1429,5 @@ ul.action-buttons li {
 .view-main .toolbar a span.title {
   display : block;
   font-size : 10px; 
+  text-transform : uppercase;
 }
