@@ -128,30 +128,10 @@ var doPreprocess = function(content,url,next) {
 
     var gymid =  $.jStorage.get("nativeproblematorlocation");
 
-    // If dashinfo is loaded more than hour ago, reload
-    var dashLastLoaded = $.jStorage.get("lastLoaded_dashinfo");
-    if (dashLastLoaded == null) {
-      dashLastLoaded = moment().subtract(1,'days');
-    } else {
-     dashLastLoaded = moment(dashLastLoaded);
-    }
-    var momnow = moment();
-    dashLastLoaded.add(1,'hours');
-    if ( momnow.isAfter(dashLastLoaded)) {
-      // dashinfo should be called and realoaded
-      $.jsonp(apiurl,{problematorlocation : gymid},function(data) {
-
-	$.jStorage.deleteKey("lastLoaded_dashinfo"); 
-	$.jStorage.set("lastLoaded_dashinfo",moment()); 
-	$.jStorage.deleteKey("lastLoaded_dashinfodata");
-	$.jStorage.set("lastLoaded_dashinfodata",data);
-
-	initDash(content,next,data);
-      });
-    } else {
-      // Use the data saved
-      initDash(content,next,$.jStorage.get("lastLoaded_dashinfodata"));
-    }
+    // dashinfo should be called and realoaded
+    $.jsonp(apiurl,{problematorlocation : gymid},function(data) {
+      initDash(content,next,data);
+    });
   } else if ((matches=url.match(/settings.html/))) {
     $.jsonp(window.api.apicallbase+"settings",{},function(settings) {
       data = {};
@@ -1354,10 +1334,6 @@ var addSettingsPageListeners = function(pagename,url) {
 
         $.jsonp(url,formData,function(back) {
           self.removeAttr("disabled");
-	  // After saving settings, invalidate dashinfo, because the settings are
-	  // reloaded there.
-	  $.jStorage.deleteKey("lastLoaded_dashinfo"); 
-	  $.jStorage.deleteKey("lastLoaded_dashinfodata");
 
           myApp.alert(back.message);
         });

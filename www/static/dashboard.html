@@ -18,7 +18,7 @@
       <div class="pull-to-refresh-arrow"></div>
     </div>
     <div id="status">
-      <div class="content-block bg-light nomargin">
+      <div class="content-block bg-light nomargin ">
         <div class="content-block-inner bg-light">
           <div class="row">
             <div class="col-33 body-text-w">
@@ -26,7 +26,7 @@
               <input type="hidden" name="location" id="location" value="{{#if locinfo}}{{locinfo.id}}{{/if}}" />
             </div>
             <div class="col-66 body-text-w text-right">
-	      {{#js_compare "this.climber.id==246"}}{{server}}{{/js_compare}}
+              {{#js_compare "this.climber.id==246"}}{{server}}{{/js_compare}}
               {{#if climber}}
               {{climber.etunimi}} {{climber.sukunimi}} <small class="text-g">{{climber.id}}</small>
               {{/if}}
@@ -247,7 +247,7 @@
       </div>
     </div>
 
-    <div class="content-block bg-light nomargin">
+    <div class="content-block bg-light nomargin ">
       <div class="content-block-inner bg-light">
         <div class="body-text-w">Past 12 months</div>
 	<br />
