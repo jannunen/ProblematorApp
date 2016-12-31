@@ -111,22 +111,45 @@ var doPreprocess = function(content,url,next) {
       document.location.href="index.html";
     }
 
-    var gymid =  $.jStorage.get("nativeproblematorlocation");
-    $.jsonp(apiurl,{problematorlocation : gymid},function(data) {
-
+    var initDash = function(content,next,data) {
       myApp.closeModal(".login-screen");
       myApp.hidePreloader();
       $.jStorage.set("dashboard",data);
       $.jStorage.set("climbinfo",data.climbinfo);
       $.jStorage.set("climber",data.climber);
-      $.jStorage.set("grades",data.grades);
-      $.jStorage.set("locations",data.locations);
       $.jStorage.set("mysettings",data.mysettings);
       $.jStorage.set("locinfo",data.locinfo);
+      data.locations = $.jStorage.get("locations");
+      data.grades = $.jStorage.get("grades");
       var compiledTemplate = Template7.compile(content);
       var html = compiledTemplate(data);
       next(html);
-    });
+    }
+
+    var gymid =  $.jStorage.get("nativeproblematorlocation");
+
+    // If dashinfo is loaded more than hour ago, reload
+    var dashLastLoaded = moment($.jStorage.get("lastLoaded_dashinfo")); 
+    if (dashLastLoaded == null) {
+      dashLastLoaded = moment().subtract(1,'days');
+      }
+    var momnow = moment();
+    dashLastLoaded.add(1,'hours');
+    if ( momnow.isAfter(dashLastLoaded)) {
+      // dashinfo should be called and realoaded
+      $.jsonp(apiurl,{problematorlocation : gymid},function(data) {
+
+	$.jStorage.deleteKey("lastLoaded_dashinfo"); 
+	$.jStorage.set("lastLoaded_dashinfo",moment()); 
+	$.jStorage.deleteKey("lastLoaded_dashinfodata");
+	$.jStorage.set("lastLoaded_dashinfodata",data);
+
+	initDash(content,next,data);
+      });
+    } else {
+      // Use the data saved
+      initDash(content,next,$.jStorage.get("lastLoaded_dashinfodata"));
+    }
   } else if ((matches=url.match(/settings.html/))) {
     $.jsonp(window.api.apicallbase+"settings",{},function(settings) {
       data = {};
@@ -494,6 +517,11 @@ var addGlobalListeners = function() {
 
             $.jStorage.set("loginok",true);
             $.jStorage.set("uid",data.uid);
+
+	    // Save locations and grades
+	    $.jStorage.set("grades",data.grades);
+	    $.jStorage.set("locations",data.locations);
+
             // Save the auth token and start using that
             $.jStorage.deleteKey("api-auth-token");
             console.log("New token "+data.JWT);
@@ -1325,6 +1353,11 @@ var addSettingsPageListeners = function(pagename,url) {
 
         $.jsonp(url,formData,function(back) {
           self.removeAttr("disabled");
+	  // After saving settings, invalidate dashinfo, because the settings are
+	  // reloaded there.
+	  $.jStorage.deleteKey("lastLoaded_dashinfo"); 
+	  $.jStorage.deleteKey("lastLoaded_dashinfodata");
+
           myApp.alert(back.message);
         });
         return false;
