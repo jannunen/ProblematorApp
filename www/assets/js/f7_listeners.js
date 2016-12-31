@@ -737,7 +737,7 @@ var initializeRankingProgressChart = function(load) {
       xkey: 'y',
       hideHover : 'always',
       pointSize : 0,
-      lineColors : ['#decc00','#bfb6a8'],
+      lineColors : ['#decc00','#fff'],
       lineWidth : "2px",
       smooth : true,
       yLabelFormat : function(y) {
@@ -790,7 +790,7 @@ var initializeRunningProgressChart = function(load) {
         }
         return near;
       },
-      lineColors : ['#decc00','#bfb6a8'],
+      lineColors : ['#decc00','#fff'],
       lineWidth : "2px",
       smooth : true,
 
@@ -842,7 +842,7 @@ var initializeGradeBarsChart = function(load) {
       stacked : true,
       ykeys : ['a','b'],
       labels : ['BOULDER','SPORT'],
-      barColors : ['#decc00','#bfb6a8'],
+      barColors : ['#decc00','#fff'],
     });
   } // loadChart
 
