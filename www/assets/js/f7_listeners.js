@@ -40,7 +40,6 @@ var doPreprocess = function(content,url,next) {
   var host = window.location.host;
   var pos = -1;
   if (url.match(/index.html/)) {
-    // Just return index.html as is
     next(content);
   }
   if ((pos=url.indexOf(host))>0) {
@@ -119,8 +118,9 @@ var doPreprocess = function(content,url,next) {
       $.jStorage.set("climber",data.climber);
       $.jStorage.set("mysettings",data.mysettings);
       $.jStorage.set("locinfo",data.locinfo);
-      data.locations = $.jStorage.get("locations");
-      data.grades = $.jStorage.get("grades");
+      $.jStorage.set("grades",data.grades);
+      $.jStorage.set("locations",data.locations);
+      data.server = $.jStorage.get("server");
       var compiledTemplate = Template7.compile(content);
       var html = compiledTemplate(data);
       next(html);
@@ -129,10 +129,12 @@ var doPreprocess = function(content,url,next) {
     var gymid =  $.jStorage.get("nativeproblematorlocation");
 
     // If dashinfo is loaded more than hour ago, reload
-    var dashLastLoaded = moment($.jStorage.get("lastLoaded_dashinfo")); 
+    var dashLastLoaded = $.jStorage.get("lastLoaded_dashinfo");
     if (dashLastLoaded == null) {
       dashLastLoaded = moment().subtract(1,'days');
-      }
+    } else {
+     dashLastLoaded = moment(dashLastLoaded);
+    }
     var momnow = moment();
     dashLastLoaded.add(1,'hours');
     if ( momnow.isAfter(dashLastLoaded)) {
@@ -159,6 +161,7 @@ var doPreprocess = function(content,url,next) {
       data.locations = $.jStorage.get("locations");
       data.problematorlocation = $.jStorage.get("nativeproblematorlocation");
       data.locinfo = $.jStorage.get("locinfo");
+      data.server = $.jStorage.get("server");
       var compiledTemplate = Template7.compile(content);
       next(compiledTemplate(data));
     });
@@ -517,10 +520,6 @@ var addGlobalListeners = function() {
 
             $.jStorage.set("loginok",true);
             $.jStorage.set("uid",data.uid);
-
-	    // Save locations and grades
-	    $.jStorage.set("grades",data.grades);
-	    $.jStorage.set("locations",data.locations);
 
             // Save the auth token and start using that
             $.jStorage.deleteKey("api-auth-token");
@@ -1344,6 +1343,8 @@ var addSettingsPageListeners = function(pagename,url) {
         self.attr("disabled","disabled");
         var url = window.api.apicallbase + "savesettings";
         var formData = myApp.formToJSON($("#frmsettings"));
+	server = formData.server;
+	$.jStorage.set("server",server);
         if (formData.showinranking && formData.showinranking.length==1) {
           formData.showinranking =1;
         }

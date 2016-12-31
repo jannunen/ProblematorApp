@@ -24,6 +24,10 @@ var api = {
   version : "v02/",
 
 };
+var server = $.jStorage.get("server");
+if (server != null && server == "beta") {
+ api.server = "https://beta.problemator.fi";
+}
 window.api = api;
 api.apicallbase = api.server+api.api+api.version;
 
