@@ -1365,6 +1365,7 @@ margin : 2px;
 #problemlist .item-media h5 {
    width : 35px;
    font-size : 20px;
+   font-weight : bold;
 }
 button.donestatus {
 width : 100px;
