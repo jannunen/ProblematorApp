@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="fi.problemator.mobileapp" version="1.31.06" versionCode="2" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
+<widget id="fi.problemator.mobileapp" version="1.32.00" versionCode="2" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
     <name>Problemator</name>
     <description>Problemator is an app providing climbers to track their indoor ascents</description>
     <author email="support@problemator.fi" href="https://www.problemator.fi">

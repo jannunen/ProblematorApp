@@ -47,9 +47,9 @@ var doPreprocess = function(content,url,next) {
     if (remainder == "" || remainder=="/") {
       var compiledTemplate = Template7.compile(content);
       if (next != null && next != undefined) {
-        next(compiledTemplate());
+	next(compiledTemplate());
       } else {
-        return compiledTemplate();
+	return compiledTemplate();
       }
     }
   }
@@ -71,18 +71,18 @@ var doPreprocess = function(content,url,next) {
     var url = window.api.apicallbase + "group/";
     $.jsonp(url, {id : groupid}, function (data){ 
       if (data==null) {
-        myApp.alert("The group does not exist anymore!",function() {
-          document.location.href="index.html";
-        });
-        return true;
+	myApp.alert("The group does not exist anymore!",function() {
+	  document.location.href="index.html";
+	});
+	return true;
       }
       var compiledTemplate = Template7.compile(content);
       var dataJSON = {group : data};
       next(compiledTemplate(dataJSON));
     });
   } else if ((matches=url.match(/signup.html/))) {
-       myApp.hidePreloader();
-       myApp.closeModal();
+    myApp.hidePreloader();
+    myApp.closeModal();
     // ADd timeout, so modal has time to close
     setTimeout(function() {
       var compiledTemplate = Template7.compile(content);
@@ -90,8 +90,8 @@ var doPreprocess = function(content,url,next) {
       next(html);
     },100);
   } else if ((matches=url.match(/forgot.html/))) {
-       myApp.hidePreloader();
-       myApp.closeModal();
+    myApp.hidePreloader();
+    myApp.closeModal();
     // ADd timeout, so modal has time to close
     setTimeout(function() {
       var compiledTemplate = Template7.compile(content);
@@ -152,16 +152,16 @@ var doPreprocess = function(content,url,next) {
       var years = {};
       var start = past;
       for (start=past; past <= now; past++) {
-        years[past]=past;
+	years[past]=past;
       }
       return years;
     }
     // $.jsonp(window.api.apicallbase+"morestats",{},function(data) {
     var data = {};
-      data.years = generateYears();
-      data.curyear=moment().format("YYYY");
-      var compiledTemplate = Template7.compile(content);
-      next(compiledTemplate(data));
+    data.years = generateYears();
+    data.curyear=moment().format("YYYY");
+    var compiledTemplate = Template7.compile(content);
+    next(compiledTemplate(data));
     //});
   } else if ((matches=url.match(/compresults.html.*?(\d+)/))) {
     var compid = matches[1];
@@ -196,9 +196,9 @@ var doPreprocess = function(content,url,next) {
     $.jsonp(url, {}, function (data){ 
       loginCheck(data);
       if (data.error) {
-        myApp.alert(data.msg);
-        mainView.router.back();
-        return true;
+	myApp.alert(data.msg);
+	mainView.router.back();
+	return true;
       }
       data.hostname = window.location.host;
       var compiledTemplate = Template7.compile(content);
@@ -210,13 +210,13 @@ var doPreprocess = function(content,url,next) {
       var compiledTemplate = Template7.compile(content);
       var set = $.jStorage.get("mysettings");
       if (set.rankinglocation == null) {
-        set.rankinglocation = "0";
+	set.rankinglocation = "0";
       }
       var pass = { 
-        rankings : data,
-        locations : $.jStorage.get("locations"),
-        rankinglocation : set.rankinglocation,
-        problematorlocation : $.jStorage.get("nativeproblematorlocation"),
+	rankings : data,
+	locations : $.jStorage.get("locations"),
+	rankinglocation : set.rankinglocation,
+	problematorlocation : $.jStorage.get("nativeproblematorlocation"),
       }
       next(compiledTemplate(pass));
     });
@@ -292,7 +292,7 @@ var doPreprocess = function(content,url,next) {
     var url = window.api.apicallbase + "groups/";
     $.jsonp(url, {}, function (data){
       if (!$.jStorage.get("loginok")) {
-        return false;
+	return false;
       }
       var compiledTemplate = Template7.compile(content);
       var html = compiledTemplate(data);
@@ -315,7 +315,7 @@ var doPreprocess = function(content,url,next) {
     window.tickSaved = false;
     $.jsonp(url, {id : pid}, function (data){ 
       if (!$.jStorage.get("loginok")) {
-        return false;
+	return false;
       }
       var compiledTemplate = Template7.compile(content);
       data.grades = $.jStorage.get("grades");
@@ -340,35 +340,35 @@ var doPreprocess = function(content,url,next) {
 
 var addGlobalListeners = function() {
   if (!globalListenersAdded) {
-      // Untick from single problem
-      $(document).on("click",".untick",function(e) {
-        var tickid = $(this).attr("data-id");
-        var from = $(this).attr("data-from");
-        var self = this;
-        $(this).attr("disabled","disabled");
-        var gymid = $("#location").val();
-        var pid = $(this).data("pid");
-        myApp.confirm('Really untick this problem?', function () {
-          var url = window.api.apicallbase + "untick"; 
-          $.jsonp(url,{"tickid" : tickid,'pid' : pid},function(back) {
-            $(self).removeAttr("disabled");
-            if (from == "manageticks") {
-              // IF coming from manage ticks from a single problem view.
-              myApp.closeModal();
-              mainView.router.refreshPage();
-            }
-          });
-        },function() {
-          $(self).removeAttr("disabled");
-        });
-        return false;
+    // Untick from single problem
+    $(document).on("click",".untick",function(e) {
+      var tickid = $(this).attr("data-id");
+      var from = $(this).attr("data-from");
+      var self = this;
+      $(this).attr("disabled","disabled");
+      var gymid = $("#location").val();
+      var pid = $(this).data("pid");
+      myApp.confirm('Really untick this problem?', function () {
+	var url = window.api.apicallbase + "untick"; 
+	$.jsonp(url,{"tickid" : tickid,'pid' : pid},function(back) {
+	  $(self).removeAttr("disabled");
+	  if (from == "manageticks") {
+	    // IF coming from manage ticks from a single problem view.
+	    myApp.closeModal();
+	    mainView.router.refreshPage();
+	  }
+	});
+      },function() {
+	$(self).removeAttr("disabled");
       });
+      return false;
+    });
     $$(document).on("ptr:refresh",'.pull-to-refresh-content',function(e) {
       var pagename = $(e.target.parentNode).attr("data-page");
       if ("dash"==pagename) {
-        mainView.router.refreshPage();
+	mainView.router.refreshPage();
       } else if ("problems-page"==pagename) {
-        mainView.router.refreshPage();
+	mainView.router.refreshPage();
       }
     });
 
@@ -377,7 +377,7 @@ var addGlobalListeners = function() {
       var formData = myApp.formToJSON($(this));
       var url = window.api.apicallbase + "dosignup";
       $.jsonp(url,formData,function(back) {
-        myApp.alert(back.message);
+	myApp.alert(back.message);
       });
     });
 
@@ -385,34 +385,34 @@ var addGlobalListeners = function() {
       var formData = myApp.formToJSON($(this));
       var url = window.api.apicallbase + "forgot";
       $.jsonp(url,formData,function(back) {
-        myApp.alert(back.message);
+	myApp.alert(back.message);
       });
     });
 
     $(document).on("click","#facebook-login",function() {
       facebookConnectPlugin.login(["public_profile"],function(userData) {
 
-        var fbuid = userData.authResponse.userID;
-        var accessToken = userData.authResponse.accessToken;
-        // Authenticate to Problemator API with facebook, should return api-auth-token if ok
-        var url = window.api.apicallbase + "fblogin";
-        var loc = $.jStorage.get("nativeproblematorlocation");
-        $.jsonp(url,{fbuid : fbuid, access_token : accessToken,loc : loc},function(back) {
+	var fbuid = userData.authResponse.userID;
+	var accessToken = userData.authResponse.accessToken;
+	// Authenticate to Problemator API with facebook, should return api-auth-token if ok
+	var url = window.api.apicallbase + "fblogin";
+	var loc = $.jStorage.get("nativeproblematorlocation");
+	$.jsonp(url,{fbuid : fbuid, access_token : accessToken,loc : loc},function(back) {
 
-          $.jStorage.deleteKey("api-auth-token");
-          $.jStorage.set("api-auth-token",back.JWT);
-          $.jStorage.set("loginok",true);
-          $.jStorage.set("uid",back.uid);
-          window.uid = back.uid;
+	  $.jStorage.deleteKey("api-auth-token");
+	  $.jStorage.set("api-auth-token",back.JWT);
+	  $.jStorage.set("loginok",true);
+	  $.jStorage.set("uid",back.uid);
+	  window.uid = back.uid;
 
-          myApp.closeModal();
+	  myApp.closeModal();
 
-          // If here, go ahead and load index 
-          // (dashboard.html should call api and have the new api-auth-key in use)
-          document.location.href="index.html";
-        });
+	  // If here, go ahead and load index 
+	  // (dashboard.html should call api and have the new api-auth-key in use)
+	  document.location.href="index.html";
+	});
       },function(error) {
-        alert("from login "+JSON.stringify(error));
+	alert("from login "+JSON.stringify(error));
       });
       return false;
     });
@@ -421,7 +421,7 @@ var addGlobalListeners = function() {
       var compid = $(this).data("compid");
       var url = window.api.apicallbase +"adhocregistrate/?compid="+compid;
       $.jsonp(url,{},function() {
-        myApp.alert("All set. Now you can go ahead and click get 'open competition' button");
+	myApp.alert("All set. Now you can go ahead and click get 'open competition' button");
       });
       myApp.closeModal();
       return false;
@@ -431,18 +431,18 @@ var addGlobalListeners = function() {
       var compid = $(this).data("compid");
       var url = window.api.apicallbase +  "checkregistration/?compid="+compid;
       $.jsonp(url,{},function(back) {
-        if (back.error) {
-          // USer has not registered. Open a modal dialog enabling the registration
-          if (back.message.match(/haven.*?paid for the comp/i)) {
-            myApp.alert(data.message);
-          } else {
-            mainView.router.loadPage("static/registertocomp.html?compid="+compid);
-          }
-        } else {
-          // Go ahead and load the comp page.
-          var url2 = "static/competition.html?compid=" + compid;
-          mainView.router.loadPage(url2);
-        }
+	if (back.error) {
+	  // USer has not registered. Open a modal dialog enabling the registration
+	  if (back.message.match(/haven.*?paid for the comp/i)) {
+	    myApp.alert(data.message);
+	  } else {
+	    mainView.router.loadPage("static/registertocomp.html?compid="+compid);
+	  }
+	} else {
+	  // Go ahead and load the comp page.
+	  var url2 = "static/competition.html?compid=" + compid;
+	  mainView.router.loadPage(url2);
+	}
       });
       return false;
     });
@@ -452,36 +452,36 @@ var addGlobalListeners = function() {
     });
     $$(document).on("click",".btn_logout",function() {
       $.jsonp(window.api.apicallbase+"logout",{},function() {
-        $.jStorage.deleteKey("lastLoaded_dashboardcharts"); 
-        $.jStorage.deleteKey("lastLoaded_globalrankingprogressdata");
-        $.jStorage.deleteKey("lastLoaded_runningprogressdata");
-        $.jStorage.deleteKey("lastLoaded_gradebarsdata");
-        $.jStorage.deleteKey("loginok");
-        $.jStorage.deleteKey("uid");
-        $.jStorage.deleteKey("api-auth-token");
-        window.uid = null;
-        $("#userid").val("");
-        setTimeout(function() {
-          document.location.href="index.html";
-        },500);
+	$.jStorage.deleteKey("lastLoaded_dashboardcharts"); 
+	$.jStorage.deleteKey("lastLoaded_globalrankingprogressdata");
+	$.jStorage.deleteKey("lastLoaded_runningprogressdata");
+	$.jStorage.deleteKey("lastLoaded_gradebarsdata");
+	$.jStorage.deleteKey("loginok");
+	$.jStorage.deleteKey("uid");
+	$.jStorage.deleteKey("api-auth-token");
+	window.uid = null;
+	$("#userid").val("");
+	setTimeout(function() {
+	  document.location.href="index.html";
+	},500);
       });
     });
     // Confirm terminate account
     $$(document).on("click",".opt-out",function() {
       myApp.confirm("This action cannot be undone! All your data will be lost.","Are you sure?",function() {
-        var url = window.api.apicallbase + "terminate_account";
-        $.jsonp(url).done(function(back) {
-          myApp.alert(back);
-          setTimeout(function() {
-            document.location.href="/index.html";
-          },5000);
-        });
+	var url = window.api.apicallbase + "terminate_account";
+	$.jsonp(url).done(function(back) {
+	  myApp.alert(back);
+	  setTimeout(function() {
+	    document.location.href="/index.html";
+	  },5000);
+	});
       });
     });
     $$(document).on('click','.loginbutton', function (e) {
       if ($("#problematorlocation").val()=="") {
-        myApp.alert("Please select a gym","Gym not selected");
-        return false;
+	myApp.alert("Please select a gym","Gym not selected");
+	return false;
       }
       var username = $(this).parents("form").find('input[name="username"]').val();
       var password = $(this).parents("form").find('input[name="password"]').val();
@@ -491,33 +491,33 @@ var addGlobalListeners = function() {
       var url = window.api.apicallbase + "dologin?native=true"; 
       var opt = {"username": username,"password":password, "authenticate" : true};
       if ($.jStorage.get("nativeproblematorlocation")) {
-        opt.problematorlocation = $.jStorage.get("nativeproblematorlocation");
+	opt.problematorlocation = $.jStorage.get("nativeproblematorlocation");
       }
       $.jsonp(url,opt,function(data) {
-        try {
-          console.log(JSON.stringify(data));
-          if (data && !data.error) {
+	try {
+	  console.log(JSON.stringify(data));
+	  if (data && !data.error) {
 
-            $.jStorage.set("loginok",true);
-            $.jStorage.set("uid",data.uid);
+	    $.jStorage.set("loginok",true);
+	    $.jStorage.set("uid",data.uid);
 
-            // Save the auth token and start using that
-            $.jStorage.deleteKey("api-auth-token");
-            console.log("New token "+data.JWT);
-            $.jStorage.set("api-auth-token",data.JWT);
+	    // Save the auth token and start using that
+	    $.jStorage.deleteKey("api-auth-token");
+	    console.log("New token "+data.JWT);
+	    $.jStorage.set("api-auth-token",data.JWT);
 
-            window.uid = data.uid;
-            // Initialize index page.
-            myApp.closeModal();
-            document.location.href="index.html";
-          } else {
-            // Possibly login failed
-            //
-            myApp.alert(data.message);
-          }
-        } catch(e) {
-          myApp.alert(data);
-        }
+	    window.uid = data.uid;
+	    // Initialize index page.
+	    myApp.closeModal();
+	    document.location.href="index.html";
+	  } else {
+	    // Possibly login failed
+	    //
+	    myApp.alert(data.message);
+	  }
+	} catch(e) {
+	  myApp.alert(data);
+	}
       });
       return false;
     });
@@ -538,7 +538,7 @@ var invokeLocationChangeActionSheet = function() {
     $.jsonp(url,{id : id},function(back) {
       mainView.router.loadPage("static/dashboard.html?newgymid="+id); 
     });
-    
+
 
     return false;
   }
@@ -584,13 +584,13 @@ var addRankingPageListeners = function(pagename) {
       //console.log("Gymid "+gymid);
       var url = window.api.apicallbase + "ranking"; 
       $.jsonp(url,{gymid : gymid},function(data) {
-        var ctpl = window.myApp.templates.rankings;
-        var html = ctpl(data.boulder);
-        $("#list_ranking_boulder").empty().append(html);
+	var ctpl = window.myApp.templates.rankings;
+	var html = ctpl(data.boulder);
+	$("#list_ranking_boulder").empty().append(html);
 
-        ctpl = window.myApp.templates.rankings;
-        html = ctpl(data.sport);
-        $("#list_ranking_sport").empty().append(html);
+	ctpl = window.myApp.templates.rankings;
+	html = ctpl(data.sport);
+	$("#list_ranking_sport").empty().append(html);
       });
       return false;
     });
@@ -607,58 +607,125 @@ var addTickArchivePageListeners = function(pagename) {
     $.jsonp(url,{},function(datesWithTicks) {
       var evts = [];
       for (var idx in datesWithTicks) {
-        var dstr = datesWithTicks[idx];
-        var mom = moment(dstr);
-        evts.push(mom.toDate());
+	var dstr = datesWithTicks[idx];
+	var mom = moment(dstr);
+	evts.push(mom.toDate());
       }
       var calendarInline = myApp.calendar({
-        container: '#calendar-inline-container',
-        value: [new Date()],
-        weekHeader: true,
-        events : evts,
+	container: '#calendar-inline-container',
+	value: [new Date()],
+	weekHeader: true,
+	events : evts,
 
-        onDayClick : function(p,dayContainer,year,month,day) {
-          // Find events for clicked day.
-          month = parseInt(month) + 1;
-          var date = year+"-"+month+"-"+day;
-          var url = window.api.apicallbase + "tickarchive";	 
-          $("#tickContainer").empty().append('<div class="text-w"><span class="fa fa-spinner "></span>  Loading...</div>');
-          $.jsonp(url,{date : date},function(back) {
-            var ctpl = window.myApp.templates.tickarchive_list;
-            var html = ctpl({ticksinday : back});
-            $("#tickContainer").empty().append(html);
-          });
-        },
-        onOpen: function (p) {
+	onDayClick : function(p,dayContainer,year,month,day) {
+	  // Find events for clicked day.
+	  month = parseInt(month) + 1;
+	  var date = year+"-"+month+"-"+day;
+	  var url = window.api.apicallbase + "tickarchive";	 
+	  $("#tickContainer").empty().append('<div class="text-w"><span class="fa fa-spinner "></span>  Loading...</div>');
+	  $.jsonp(url,{date : date},function(back) {
+	    var ctpl = window.myApp.templates.tickarchive_list;
+	    var html = ctpl({ticksinday : back});
+	    $("#tickContainer").empty().append(html);
+	  });
+	},
+	onOpen: function (p) {
 
-          var amt = $("div[data-year="+p.currentYear+"][data-month="+p.currentMonth+"] .picker-calendar-day-has-events").not(".picker-calendar-day-next").length;
-          $("#traindays").html(amt);
-          $$('.calendar-custom-toolbar .center').text(monthNames[p.currentMonth] +', ' + p.currentYear);
-          $$('.calendar-custom-toolbar .left .link').on('click', function () {
-            calendarInline.prevMonth();
-          });
-          $$('.calendar-custom-toolbar .right .link').on('click', function () {
-            calendarInline.nextMonth();
-          });
+	  var amt = $("div[data-year="+p.currentYear+"][data-month="+p.currentMonth+"] .picker-calendar-day-has-events").not(".picker-calendar-day-next").length;
+	  $("#traindays").html(amt);
+	  $$('.calendar-custom-toolbar .center').text(monthNames[p.currentMonth] +', ' + p.currentYear);
+	  $$('.calendar-custom-toolbar .left .link').on('click', function () {
+	    calendarInline.prevMonth();
+	  });
+	  $$('.calendar-custom-toolbar .right .link').on('click', function () {
+	    calendarInline.nextMonth();
+	  });
 
-        },
-        onMonthYearChangeStart: function (p,year,month) {
-          var amt = $("div[data-year="+year+"][data-month="+month+"] .picker-calendar-day-has-events").not(".picker-calendar-day-next").length;
-          $("#traindays").html(amt);
-          $$('.calendar-custom-toolbar .center').text(monthNames[p.currentMonth] +', ' + p.currentYear);
-        }
+	},
+	onMonthYearChangeStart: function (p,year,month) {
+	  var amt = $("div[data-year="+year+"][data-month="+month+"] .picker-calendar-day-has-events").not(".picker-calendar-day-next").length;
+	  $("#traindays").html(amt);
+	  $$('.calendar-custom-toolbar .center').text(monthNames[p.currentMonth] +', ' + p.currentYear);
+	}
       });
     });//jsonp
 
     if (!tickArchivePageListenerInitialized) {
+      $(document).on("click",".sharetodayticks",function() {
+        if ($.jStorage.get("showed_sharetodayticks")) {
+	 alert("Share window might not work on first try, please try clicking the share button a couple times.");
+	 $.jStorage.set("showed_sharetodayticks",moment());
+	}
+	var sessionDate = moment(date);
+	var sessionStart = moment(date);
+	var sessionEnd = moment(date);
+	var first = $("#tickContainer .item-title").last();
+	var firstMatch = first.text().match(/(\d+:\d+)/);
+	var hoursmins = firstMatch[1].split(/:/);
+	sessionStart.hour(hoursmins[0]);
+	sessionStart.minute(hoursmins[1]);
+
+	var last = $("#tickContainer .item-title").first();
+	var lastMatch = last.text().match(/(\d+:\d+)/);
+	hoursmins = lastMatch[1].split(/:/);
+	sessionEnd.hour(hoursmins[0]);
+	sessionEnd.minute(hoursmins[1]);
+
+	var diff = Math.abs(sessionStart.diff(sessionEnd,'minutes'));
+
+	this.createGradeString = function(source) {
+	  var grades = [];
+	  var string = "";
+	  $("#tickContainer .item-media").map(function() {
+	    var grade = $(this).text().trim();
+	    if (grades[grade]==undefined) {
+	      grades[grade] = 0;
+	    }
+	    grades[grade]++;
+	  });
+	  var keys = Object.keys(grades),
+	    i, len = keys.length;
+
+	  keys.sort();
+	  keys.reverse();
+
+	  for (i = 0; i < len; i++) {
+	    k = keys[i];
+	    string += k + " x"+grades[k]+", ";
+	  }
+	  string = string.trim();
+	  string = string.substr(0,string.length-1);
+	  return string;
+
+	};
+	var uid = $.jStorage.get("uid");
+	var date = $(this).data("date");
+	gradeString = this.createGradeString($(this));
+	if (""==gradeString) {
+	  alert("Nothing climbed, nothing to share...");
+	  return;
+	}
+	var targeturl = window.api.server + "/t/problemator/profile/"+uid+"/training_log/#"+date;
+	var _caption = "Training session ("+diff+"minutes) on "+sessionDate.format("DD.MM.YYYY") + " "+ gradeString;
+	console.log(_caption);
+	facebookConnectPlugin.showDialog({
+	  method: "share",
+	  href : targeturl,
+	  caption : _caption ,
+	}, function onShareSuccess (result) {
+	  console.log("Posted. ", result);
+	}, function onShareFail(results) {
+	  console.log(result);
+	});
+      });
 
       // These should be initialized only once
       $(document).on("click",".swipeuntick",function(el) {
-        $(this).attr("disabled","disabled");
-        var tickid = $(this).attr("data-tickid");
-        var url = window.api.apicallbase + "untick";	 
-        $.jsonp(url,{"tickid" : tickid},function(back) {
-        });
+	$(this).attr("disabled","disabled");
+	var tickid = $(this).attr("data-tickid");
+	var url = window.api.apicallbase + "untick";	 
+	$.jsonp(url,{"tickid" : tickid},function(back) {
+	});
       });
 
       tickArchivePageListenerInitialized = true;
@@ -675,13 +742,13 @@ var addGymInfoPageListeners = function(pagename) {
       var done = $("#pie-gym-boulder").data("done");
       var all = $("#pie-gym-boulder").data("all");
       pieBoulder = Morris.Donut({
-        element: 'pie-gym-boulder',
-        labelColor : "#636159",
-        data: [
-          {label: "Done", value: done},
-          {label: "Total", value: all}
-        ],
-        colors : ["#decc00","#636159"]
+	element: 'pie-gym-boulder',
+	labelColor : "#636159",
+	data: [
+	  {label: "Done", value: done},
+	  {label: "Total", value: all}
+	],
+	colors : ["#decc00","#636159"]
       }); // Morris
     }
 
@@ -689,13 +756,13 @@ var addGymInfoPageListeners = function(pagename) {
       var done = $("#pie-gym-sport").data("done");
       var all = $("#pie-gym-sport").data("all");
       pieSport = Morris.Donut({
-        element: 'pie-gym-sport',
-        labelColor : "#636159",
-        data: [
-          {label: "Done", value: done},
-          {label: "Total", value: all}
-        ],
-        colors : ["#decc00","#636159"]
+	element: 'pie-gym-sport',
+	labelColor : "#636159",
+	data: [
+	  {label: "Done", value: done},
+	  {label: "Total", value: all}
+	],
+	colors : ["#decc00","#636159"]
 
       }); // Morris
     }
@@ -721,14 +788,14 @@ var initializeRankingProgressChart = function(load) {
       lineWidth : "2px",
       smooth : true,
       yLabelFormat : function(y) {
-        return -y;
+	return -y;
       },
 
       xLabelFormat : function(x) {
-        var objDate = new Date(x);
-        var locale = "en-us";
-        var short = objDate.toLocaleString(locale, { month: "short" });
-        return short.toUpperCase();
+	var objDate = new Date(x);
+	var locale = "en-us";
+	var short = objDate.toLocaleString(locale, { month: "short" });
+	return short.toUpperCase();
 
       },
       ykeys: ['a','b'],
@@ -762,13 +829,13 @@ var initializeRunningProgressChart = function(load) {
       hideHover : 'always',
       pointSize : 0,
       yLabelFormat : function (x) { 
-        // ROund to nearest 500
-        var near = Math.round(x/500)*500;
-        near = window.ggrades[near];
-        if (near==undefined) {
-          return "";
-        }
-        return near;
+	// ROund to nearest 500
+	var near = Math.round(x/500)*500;
+	near = window.ggrades[near];
+	if (near==undefined) {
+	  return "";
+	}
+	return near;
       },
       lineColors : ['#decc00','#fff'],
       lineWidth : "2px",
@@ -779,13 +846,13 @@ var initializeRunningProgressChart = function(load) {
       xLabels : 'month',
       /*
       xLabelFormat : function(x) {
-        var objDate = new Date(x);
-        var locale = "en-us";
-        var short = objDate.toLocaleString(locale, { month: "short" });
-        var m = objDate.getMonth()+1;
+	var objDate = new Date(x);
+	var locale = "en-us";
+	var short = objDate.toLocaleString(locale, { month: "short" });
+	var m = objDate.getMonth()+1;
 	var w = objDate.getWeek();
-        return w+"";
-        //return short.toUpperCase();
+	return w+"";
+      //return short.toUpperCase();
 
       },
       */
@@ -880,8 +947,8 @@ var addDashBoardListeners = function(pagename) {
 
       myApp.hidePreloader();
       if ($.jStorage.get("whatsnew"+ver)==undefined) {
-        $.jStorage.set("whatsnew"+ver,true,{ expires: 7650 });
-        myApp.alert("1. Competitions, check upcoming/ongoing competitions on the dashboard.<br />2. Circuits. Complete them!<br />3. Native version from Google Play and App Store!","What's new?");
+	$.jStorage.set("whatsnew"+ver,true,{ expires: 7650 });
+	myApp.alert("1. Competitions, check upcoming/ongoing competitions on the dashboard.<br />2. Circuits. Complete them!<br />3. Native version from Google Play and App Store!","What's new?");
       }  
 
       dashBoardListenersInitialized = true;
@@ -889,9 +956,9 @@ var addDashBoardListeners = function(pagename) {
       // Just redraw the charts
       console.log("Trying to REDRAW charts!");
       setTimeout(function() {
-        initializeRankingProgressChart(false);
-        initializeRunningProgressChart(false);
-        initializeGradeBarsChart(false);
+	initializeRankingProgressChart(false);
+	initializeRunningProgressChart(false);
+	initializeGradeBarsChart(false);
       },200);
     }
 
@@ -917,79 +984,79 @@ var addProblemsPageListeners = function(pagename) {
   if ("problems-page"==pagename) {
     if (!problemsPageListenersInitialized) {
       $(document).on("click",".swipetick",function(el) {
-        $(this).attr("disabled","disabled");
-        var self = this;
-        var gymid = $("#location").val();
-        var tag = $(this).attr("data-tag");
-        var pid = $(this).data("pid");
-        var parentli = $(el.target).parents("li");
-        var url = window.api.apicallbase+"savetick";
-        $.jsonp(url,{"problemid" : pid,gymid : gymid},function(back) {
-          myApp.swipeoutClose(parentli); 
-          $("h5[tag="+tag+"]").removeClass("white").addClass("text-y");
-          $("#swipe"+pid+" .item-title").append('<span class="fa fa-check problemator-link"></span>');
-          $(self).removeAttr("disabled");
-        });
+	$(this).attr("disabled","disabled");
+	var self = this;
+	var gymid = $("#location").val();
+	var tag = $(this).attr("data-tag");
+	var pid = $(this).data("pid");
+	var parentli = $(el.target).parents("li");
+	var url = window.api.apicallbase+"savetick";
+	$.jsonp(url,{"problemid" : pid,gymid : gymid},function(back) {
+	  myApp.swipeoutClose(parentli); 
+	  $("h5[tag="+tag+"]").removeClass("white").addClass("text-y");
+	  $("#swipe"+pid+" .item-title").append('<span class="fa fa-check problemator-link"></span>');
+	  $(self).removeAttr("disabled");
+	});
 
       });
       $(document).on("click",".see_wallimage",function() {
-        var url = $(this).data("href");
-        var myPhotoBrowserPage = myApp.photoBrowser({
-          photos : [ url ],
-          type: 'standalone',
-          theme : 'dark',
-          zoom : true,
-          swipeToClose : true,
-          backLinkText: 'Back'
-        });
-        myPhotoBrowserPage.open();
-        return false;
+	var url = $(this).data("href");
+	var myPhotoBrowserPage = myApp.photoBrowser({
+	  photos : [ url ],
+	  type: 'standalone',
+	  theme : 'dark',
+	  zoom : true,
+	  swipeToClose : true,
+	  backLinkText: 'Back'
+	});
+	myPhotoBrowserPage.open();
+	return false;
       });
 
       if ($.jStorage.get("problemlisthelpshown"+ver)==null) {
-        // Show problem help
-        var problemlistHelp = [
-          {
-            id: 'slide0',
-            picture: '<div class="tutorialicon"><img src="assets/images/help/problemlisthelp1.png" /></div>',
-            text: 'Swipe problem to quick tick a problem (Userful for fast re-ticking). Works only with mobile phone. <a href="#" class="text-y" onclick="helpScreen.next();">Next slide</a>'
-          },
-          {
-            id: 'slide1',
-            picture: '<div class="tutorialicon"><img src="assets/images/help/problemlisthelp2.png" /></div>',
-            text: 'Use Problem tags to quick tick problems. You can tick several at once by separating tags with a comma (,) <a href="#" class="text-y" onclick="helpScreen.next();">Next slide</a>'
-          },
-          {
-            id: 'slide2',
-            picture: '<div class="tutorialicon"><img src="assets/images/help/problemlisthelp3.png" /></div>',
-            text: 'Click a problem to go to the Problem Details -page. There you can rate, grade, tick and give feedback. <a href="#" class="text-y" onclick="helpScreen.next();">Next slide</a>'
-          },
-          {
-            id: 'slide3',
-            picture: '<div class="tutorialicon"><img src="assets/images/help/problemlisthelp4.png" /></div>',
-            text: 'It looks like this. Happy cranking! <a href="#" class="text-y" onclick="helpScreen.close();">Got it!</a>'
-          },
-        ];
-        var options = {
-          'bgcolor': '#30312e',
-          'fontcolor': '#fff'
-        }
-        $.jStorage.set("problemlisthelpshown"+ver,true);
-        window.helpScreen = myApp.welcomescreen(problemlistHelp, options);
+	// Show problem help
+	var problemlistHelp = [
+	  {
+	    id: 'slide0',
+	    picture: '<div class="tutorialicon"><img src="assets/images/help/problemlisthelp1.png" /></div>',
+	    text: 'Swipe problem to quick tick a problem (Userful for fast re-ticking). Works only with mobile phone. <a href="#" class="text-y" onclick="helpScreen.next();">Next slide</a>'
+	  },
+	  {
+	    id: 'slide1',
+	    picture: '<div class="tutorialicon"><img src="assets/images/help/problemlisthelp2.png" /></div>',
+	    text: 'Use Problem tags to quick tick problems. You can tick several at once by separating tags with a comma (,) <a href="#" class="text-y" onclick="helpScreen.next();">Next slide</a>'
+	  },
+	  {
+	    id: 'slide2',
+	    picture: '<div class="tutorialicon"><img src="assets/images/help/problemlisthelp3.png" /></div>',
+	    text: 'Click a problem to go to the Problem Details -page. There you can rate, grade, tick and give feedback. <a href="#" class="text-y" onclick="helpScreen.next();">Next slide</a>'
+	  },
+	  {
+	    id: 'slide3',
+	    picture: '<div class="tutorialicon"><img src="assets/images/help/problemlisthelp4.png" /></div>',
+	    text: 'It looks like this. Happy cranking! <a href="#" class="text-y" onclick="helpScreen.close();">Got it!</a>'
+	  },
+	];
+	var options = {
+	  'bgcolor': '#30312e',
+	  'fontcolor': '#fff'
+	}
+	$.jStorage.set("problemlisthelpshown"+ver,true);
+	window.helpScreen = myApp.welcomescreen(problemlistHelp, options);
       }
       $(document).on("click","#quicktick",function() {
-        $(this).attr("disabled","disabled");
-        var self = this;
-        var gymid = $.jStorage.get("nativeproblematorlocation");
+	$(this).attr("disabled","disabled");
+	var self = this;
+	var gymid = $.jStorage.get("nativeproblematorlocation");
 
-        var probs = $("#quickproblems").val();
-        var url = window.api.apicallbase + "saveticks/";
-        $.jsonp(url,{"ticks" : probs,gymid : gymid},function(back) {
-          loginCheck(back);
-          myApp.alert(back.message);
-          mainView.router.refreshPage();
-          $(self).removeAttr("disabled");
-        });
+	var probs = $("#quickproblems").val();
+	var url = window.api.apicallbase + "saveticks/";
+	$.jsonp(url,{"ticks" : probs,gymid : gymid},function(back) {
+	  loginCheck(back);
+	  myApp.alert(back.message);
+	  mainView.router.refreshPage();
+	  $(self).removeAttr("disabled");
+	});
       });
 
       problemsPageListenersInitialized = true;
@@ -1012,10 +1079,10 @@ window.setupTimeLeftTimer = function() {
     var minutes = Math.floor(duration.minutes());
     if (hours > 0) {
       if (minutes < 10) {
-        minutes = "0"+minutes;
+	minutes = "0"+minutes;
       }
       if (hours < 10) {
-        hours = "0"+hours;
+	hours = "0"+hours;
       }
       /*
       var chars = "|/-\\|/-\\";
@@ -1052,87 +1119,87 @@ var addCompetitionPageListeners = function(pagename) {
 
 
       $(document).on("click",".trieschange",function() {
-        var val = -1;
-        if ($(this).hasClass("triesplus")) {
-          val = 1;
-        }
-        var problemid = $(this).siblings("input.tries").data("pid");
-        var curval = parseInt($(this).siblings("input.tries").val());
-        var newval = curval + val;
-        var min = $(this).siblings("input.tries").attr("min") || 1;
-        var max = $(this).siblings("input.tries").attr("max") || 10;
-        if (newval < min) {
-          newval = min;
-        }
-        if (newval > max) {
-          newval = max;
-        }
-        $(this).siblings("input.tries").val(newval);
-        // If not done, save to pretick.
-        $(this).attr("disabled","disabled");
-        var self = $(this);
-        if ($(this).parent().parent().parent().find("button.donestatus").hasClass("notdone")) {
-          var self = $(this);
-          var url = window.api.apicallbase + "comp_savepretick/";
-          $.jsonp(url,{compid : $("#compid").val(), problemid : problemid, tries : newval},function(back) {
-            self.removeAttr("disabled");
-            if (back.error) {
-              myApp.alert(back.error);
-              return false;
-            }
-          });
-        } else {
-          var self = $(this);
-          // Update try amount in real tick
-          var url = window.api.apicallbase + "comp_savetick/";
-          $.jsonp(url,{compid : $("#compid").val(), problemid : problemid, tries : newval},function(back) {
-            self.removeAttr("disabled");
-            if (back.error) {
-              myApp.alert(back.error);
-              return false;
-            }
-          });
-        }
+	var val = -1;
+	if ($(this).hasClass("triesplus")) {
+	  val = 1;
+	}
+	var problemid = $(this).siblings("input.tries").data("pid");
+	var curval = parseInt($(this).siblings("input.tries").val());
+	var newval = curval + val;
+	var min = $(this).siblings("input.tries").attr("min") || 1;
+	var max = $(this).siblings("input.tries").attr("max") || 10;
+	if (newval < min) {
+	  newval = min;
+	}
+	if (newval > max) {
+	  newval = max;
+	}
+	$(this).siblings("input.tries").val(newval);
+	// If not done, save to pretick.
+	$(this).attr("disabled","disabled");
+	var self = $(this);
+	if ($(this).parent().parent().parent().find("button.donestatus").hasClass("notdone")) {
+	  var self = $(this);
+	  var url = window.api.apicallbase + "comp_savepretick/";
+	  $.jsonp(url,{compid : $("#compid").val(), problemid : problemid, tries : newval},function(back) {
+	    self.removeAttr("disabled");
+	    if (back.error) {
+	      myApp.alert(back.error);
+	      return false;
+	    }
+	  });
+	} else {
+	  var self = $(this);
+	  // Update try amount in real tick
+	  var url = window.api.apicallbase + "comp_savetick/";
+	  $.jsonp(url,{compid : $("#compid").val(), problemid : problemid, tries : newval},function(back) {
+	    self.removeAttr("disabled");
+	    if (back.error) {
+	      myApp.alert(back.error);
+	      return false;
+	    }
+	  });
+	}
       });
 
       $(document).on("click",".done, .notdone",function() {
-        var tries = $(this).parent().parent().find("input.tries").val();
-        var problemid = $(this).parent().parent().find("input.tries").data("pid");
-        var self = $(this);
-        self.attr("disabled","disabled");
-        if ($(this).hasClass("notdone")) {
-          var url = window.api.apicallbase + "comp_savetick/";
-          $.jsonp(url,{compid : $("#compid").val(), problemid : problemid, tries : tries},function(back) {
-            if (back.error) {
-              myApp.alert(back.message);
-              return false;
-            }
-            // Change classes accordingly
-            self.removeClass("notdone");
-            self.removeClass("color-gray");
-            self.addClass("done");
-            self.addClass("color-yellow");
-            self.text("DONE");
-            self.removeAttr("disabled");
-            updateDoneAmount();
-          });
-        } else {
-          var url = window.api.apicallbase + "comp_removetick/";
-          $.jsonp(url,{compid : $("#compid").val(), problemid : problemid, tries : tries},function(back) {
-            if (back.error) {
-              myApp.alert(back.error);
-              return false;
-            }
-            // Change classes accordingly
-            self.removeClass("done");
-            self.removeClass("color-yellow");
-            self.addClass("notdone");
-            self.addClass("color-gray");
-            self.text("NOT DONE");
-            self.removeAttr("disabled");
-            updateDoneAmount();
-          });
-        }
+	var tries = $(this).parent().parent().find("input.tries").val();
+	var problemid = $(this).parent().parent().find("input.tries").data("pid");
+	var self = $(this);
+	self.attr("disabled","disabled");
+	if ($(this).hasClass("notdone")) {
+	  var url = window.api.apicallbase + "comp_savetick/";
+	  $.jsonp(url,{compid : $("#compid").val(), problemid : problemid, tries : tries},function(back) {
+	    if (back.error) {
+	      myApp.alert(back.message);
+	      return false;
+	    }
+	    // Change classes accordingly
+	    self.removeClass("notdone");
+	    self.removeClass("color-gray");
+	    self.addClass("done");
+	    self.addClass("color-yellow");
+	    self.text("DONE");
+	    self.removeAttr("disabled");
+	    updateDoneAmount();
+	  });
+	} else {
+	  var url = window.api.apicallbase + "comp_removetick/";
+	  $.jsonp(url,{compid : $("#compid").val(), problemid : problemid, tries : tries},function(back) {
+	    if (back.error) {
+	      myApp.alert(back.error);
+	      return false;
+	    }
+	    // Change classes accordingly
+	    self.removeClass("done");
+	    self.removeClass("color-yellow");
+	    self.addClass("notdone");
+	    self.addClass("color-gray");
+	    self.text("NOT DONE");
+	    self.removeAttr("disabled");
+	    updateDoneAmount();
+	  });
+	}
       });
 
 
@@ -1150,19 +1217,19 @@ var addCompetitionsPageListeners = function(pagename) {
 
 
       $$(document).on("keyup",".search_competitions",function(e) {
-        var val = $(this).val();
-        val = val.trim();
-        if (val != "" && val.length > 1) {
-          $(".searching").html('<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>');
-          // Do a search
-          var url = window.api.apicallbase+"search_competitions";
-          $.jsonp(url,{text : val},function(back) {
-            var ctpl = myApp.templates.search_competitions_hit_item;
-            var html = ctpl({groups : back});    
-            $(".search_results").empty().append(html);
+	var val = $(this).val();
+	val = val.trim();
+	if (val != "" && val.length > 1) {
+	  $(".searching").html('<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>');
+	  // Do a search
+	  var url = window.api.apicallbase+"search_competitions";
+	  $.jsonp(url,{text : val},function(back) {
+	    var ctpl = myApp.templates.search_competitions_hit_item;
+	    var html = ctpl({groups : back});    
+	    $(".search_results").empty().append(html);
 
-          });
-        }
+	  });
+	}
       });
       competitionPageListenersInitialized = true;
     }
@@ -1175,8 +1242,8 @@ var addGroupPageListeners = function(pagename) {
       var invid = $$(this).data("invid");
       var url = window.api.apicallbase + "acceptinvitation";
       $.jsonp(url,{invid: invid},function(back) {
-        myApp.closeModal();
-        mainView.router.refreshPage();
+	myApp.closeModal();
+	mainView.router.refreshPage();
       });
       return false;
 
@@ -1185,8 +1252,8 @@ var addGroupPageListeners = function(pagename) {
       var invid = $$(this).data("invid");
       var url = window.api.apicallbase + "declineinvitation";
       $.jsonp(url,{invid: invid},function(back) {
-        myApp.closeModal();
-        mainView.router.refreshPage();
+	myApp.closeModal();
+	mainView.router.refreshPage();
       });
       return false;
 
@@ -1197,17 +1264,17 @@ var addGroupPageListeners = function(pagename) {
       var gid = $$(this).data("gid");
       var clickedLink = this;
       var popoverHTML = '<div class="popover invitation-popup">'+
-        '<div class="popover-inner">'+
-        '<div class="list-block">'+
-        '<ul>'+
-        '<li><a href="/t/problematormobile/group/'+gid+'" class="item-link list-button accept-invitation" >Open group</a></li>'+
-        '<li><a href="#" class="item-link list-button accept-invitation" data-invid="'+invid+'">Accept invitation</a></li>'+
-        '<li><a href="#" class="item-link list-button decline-invitation" data-invid="'+invid+'">Decline invitation</a></li>'+
-        '<li><a href="#" class="item-link list-button close-popover">Close</a></li>'+
-        '</ul>'+
-        '</div>'+
-        '</div>'+
-        '</div>'
+	'<div class="popover-inner">'+
+	'<div class="list-block">'+
+	'<ul>'+
+	'<li><a href="/t/problematormobile/group/'+gid+'" class="item-link list-button accept-invitation" >Open group</a></li>'+
+	'<li><a href="#" class="item-link list-button accept-invitation" data-invid="'+invid+'">Accept invitation</a></li>'+
+	'<li><a href="#" class="item-link list-button decline-invitation" data-invid="'+invid+'">Decline invitation</a></li>'+
+	'<li><a href="#" class="item-link list-button close-popover">Close</a></li>'+
+	'</ul>'+
+	'</div>'+
+	'</div>'+
+	'</div>'
       myApp.popover(popoverHTML, clickedLink);
       $$(".invitation-popup").on("opened",function() {
       });
@@ -1217,13 +1284,13 @@ var addGroupPageListeners = function(pagename) {
       //var uid = $("#userid").val();
       var url = window.api.apicallbase + "addgroup";
       $.jsonp(url,{name : gname},function(back) {
-        if (!back.error) {
-          //  inform about group creation
-          myApp.alert(back.message);
-          mainView.router.refreshPage();
-        } else {
-          myApp.alert(back.message);
-        }
+	if (!back.error) {
+	  //  inform about group creation
+	  myApp.alert(back.message);
+	  mainView.router.refreshPage();
+	} else {
+	  myApp.alert(back.message);
+	}
       });
 
     });
@@ -1231,15 +1298,15 @@ var addGroupPageListeners = function(pagename) {
       var val = $(this).val();
       val = val.trim();
       if (val != "" && val.length > 1) {
-        $(".searching").html('<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>');
-        // Do a search
-        var url = window.api.apicallbase+"search_groups";
-        $.jsonp(url,{text : val},function(back) {
-          var ctpl = myApp.templates.single_group_search_item;
-          var html = ctpl({groups : back});    
-          $(".search_results").empty().append(html);
+	$(".searching").html('<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>');
+	// Do a search
+	var url = window.api.apicallbase+"search_groups";
+	$.jsonp(url,{text : val},function(back) {
+	  var ctpl = myApp.templates.single_group_search_item;
+	  var html = ctpl({groups : back});    
+	  $(".search_results").empty().append(html);
 
-        });
+	});
       }
     });
 
@@ -1250,33 +1317,33 @@ var addGroupMemberListeners = function(pagename) {
   if ("list_group_members"==pagename) { 
     if (!groupMemberPageListenersInitialized) {
       $$(document).on("click",".remove_user_from_group",function() {
-        var self = $(this);
-        var li = $(this).parents("li");
-        myApp.confirm("Are you sure?",function() {
-          var url = window.api.apicallbase + "remove_user_from_group";
-          var gid = self.data("gid");
-          var uid = self.data("userid");
-          $.jsonp(url,{gid : gid,uid : uid},function(back) {
-            myApp.alert(back.message);
-            if (!back.error) {
-              // Remove from the list
-              mainView.router.refreshPage();
-            }
-          });
-        });
+	var self = $(this);
+	var li = $(this).parents("li");
+	myApp.confirm("Are you sure?",function() {
+	  var url = window.api.apicallbase + "remove_user_from_group";
+	  var gid = self.data("gid");
+	  var uid = self.data("userid");
+	  $.jsonp(url,{gid : gid,uid : uid},function(back) {
+	    myApp.alert(back.message);
+	    if (!back.error) {
+	      // Remove from the list
+	      mainView.router.refreshPage();
+	    }
+	  });
+	});
       });
       $$(document).on("keyup",".filter_members",function(e) {
-        // 
-        var val = $(this).val();
-        if (e.which == 27) {
-          $(this).val("");
-          return;
-        }
-        if (val != "") {
-          $(this).parents(".single_group").find(".groupmembers div.username:not(:contains('"+val+"'))").parents("li").slideUp();
-        } else {
-          $(this).parents(".single_group").find(".groupmembers li").show();
-        }
+	// 
+	var val = $(this).val();
+	if (e.which == 27) {
+	  $(this).val("");
+	  return;
+	}
+	if (val != "") {
+	  $(this).parents(".single_group").find(".groupmembers div.username:not(:contains('"+val+"'))").parents("li").slideUp();
+	} else {
+	  $(this).parents(".single_group").find(".groupmembers li").show();
+	}
       });
       groupMemberPageListenersInitialized = true;
     }
@@ -1288,24 +1355,24 @@ var addMoreStatsPageListeners= function(pagename,url) {
     var getGradePie = function() {
       var url = window.api.apicallbase + "gradespread";
       $.jsonp(url,{year : year},function(back) {
-        var dataset = {data : [], backgroundColor : []};
-        var data = {
-          labels : back.labels,
-          datasets : [dataset]
-        };
-        ;
-        var i = 0;
-        back.data.forEach(function(item) {
-          dataset.data.push(item);
-          dataset.backgroundColor.push(randomColorGenerator());
-        });
-        var options = {};
+	var dataset = {data : [], backgroundColor : []};
+	var data = {
+	  labels : back.labels,
+	  datasets : [dataset]
+	};
+	;
+	var i = 0;
+	back.data.forEach(function(item) {
+	  dataset.data.push(item);
+	  dataset.backgroundColor.push(randomColorGenerator());
+	});
+	var options = {};
 
-        var myPieChart = new Chart($("#gradepie"),{
-          type : 'pie',
-          data : data,
-          options : options}
-        );
+	var myPieChart = new Chart($("#gradepie"),{
+	  type : 'pie',
+	  data : data,
+	  options : options}
+	);
       });
     }
     getGradePie();
@@ -1320,25 +1387,25 @@ var addSettingsPageListeners = function(pagename,url) {
   if ("settings-page"==pagename) { 
     if (!settingsPageListenersInitialized) {
       $(document).on("click","#btn_savesettings",function() {
-        var self = $(this);
-        self.attr("disabled","disabled");
-        var url = window.api.apicallbase + "savesettings";
-        var formData = myApp.formToJSON($("#frmsettings"));
+	var self = $(this);
+	self.attr("disabled","disabled");
+	var url = window.api.apicallbase + "savesettings";
+	var formData = myApp.formToJSON($("#frmsettings"));
 	server = formData.server;
 	$.jStorage.set("server",server);
-        if (formData.showinranking && formData.showinranking.length==1) {
-          formData.showinranking =1;
-        }
-        if (formData.publicascents && formData.publicascents.length==1) {
-          formData.publicascents =1;
-        }
+	if (formData.showinranking && formData.showinranking.length==1) {
+	  formData.showinranking =1;
+	}
+	if (formData.publicascents && formData.publicascents.length==1) {
+	  formData.publicascents =1;
+	}
 
-        $.jsonp(url,formData,function(back) {
-          self.removeAttr("disabled");
+	$.jsonp(url,formData,function(back) {
+	  self.removeAttr("disabled");
 
-          myApp.alert(back.message);
-        });
-        return false;
+	  myApp.alert(back.message);
+	});
+	return false;
       });
       settingsPageListenersInitialized  = true;
     }
@@ -1352,12 +1419,12 @@ var addSingleGroupPageListeners = function(pagename,url) {
       var gid = $(this).data("gid");
       var url = window.api.apicallbase + "join_group";
       myApp.confirm("Are you sure you want to join this group?",function() {
-        $.jsonp(url,{gid : gid},function(back) {
-          myApp.closeModal();
-          myApp.alert(back.message);
-          mainView.router.refreshPage();
+	$.jsonp(url,{gid : gid},function(back) {
+	  myApp.closeModal();
+	  myApp.alert(back.message);
+	  mainView.router.refreshPage();
 
-        });  
+	});  
       });
     });
 
@@ -1365,18 +1432,18 @@ var addSingleGroupPageListeners = function(pagename,url) {
       var gid = $(this).data("gid");
       var url = window.api.apicallbase + "leave_group";
       myApp.confirm("Are you sure you want to leave this group?",function() {
-        $.jsonp(url,{gid : gid},function(back) {
-          myApp.closeModal();
-          myApp.alert(back.message,"Problemator",function() {
-            mainView.router.back({
-              url : "static/groups.html",
-              ignoreCache : true,
-              force : true
-            })
-          });
-          mainView.router.refreshPage();
+	$.jsonp(url,{gid : gid},function(back) {
+	  myApp.closeModal();
+	  myApp.alert(back.message,"Problemator",function() {
+	    mainView.router.back({
+	      url : "static/groups.html",
+	      ignoreCache : true,
+	      force : true
+	    })
+	  });
+	  mainView.router.refreshPage();
 
-        });  
+	});  
       });
     });
 
@@ -1388,45 +1455,45 @@ var addSingleGroupPageListeners = function(pagename,url) {
 
       var clickedLink = this;
       var popoverHTML = '<div class="popover groupmenu-popup">'+
-        '<div class="popover-inner">'+
-        '<div class="list-block">'+
-        '<ul>';
+	'<div class="popover-inner">'+
+	'<div class="list-block">'+
+	'<ul>';
       popoverHTML += '<li><a href="static/list_group_members.html?group='+gid+'" class="item-link list-button  close-popover" >Show members</a></li>';
       if (isadmin) {
-        popoverHTML += '<li><a href="#" class="item-link list-button  open-groupsettings close-popover" >Edit group</a></li>';
+	popoverHTML += '<li><a href="#" class="item-link list-button  open-groupsettings close-popover" >Edit group</a></li>';
       }
       if (iscreator) {
-        popoverHTML += '<li><a href="#" class="item-link list-button  delete_group close-popover" data-gid="'+gid+'">Delete group</a></li>';
+	popoverHTML += '<li><a href="#" class="item-link list-button  delete_group close-popover" data-gid="'+gid+'">Delete group</a></li>';
       }
 
       '</ul>'+
-        '</div>'+
-        '</div>'+
-        '</div>'
+	'</div>'+
+	'</div>'+
+	'</div>'
       myApp.popover(popoverHTML, clickedLink);
 
       var addGroupMenuPopoverListeners = function() {
-        $$(".groupmenu-popup").on("opened",function() {
-          addGroupMenuPopoverListeners();
-        });
+	$$(".groupmenu-popup").on("opened",function() {
+	  addGroupMenuPopoverListeners();
+	});
       }
     });
 
     $$(document).on("click",".delete_group",function() {
       var gid = $(this).data("gid");
       myApp.confirm("ALL the members, rankings etc. will be deleted.<br /><br />This action cannot be undone.","Are you sure?",function(back) {
-        var url = window.api.apicallbase +"delete_group";
-        $.jsonp(url,{gid : gid},function(back) {
-          if (!back.error) {
-            mainView.router.refreshPreviousPage();
-            myApp.alert(back.message,function() {
-              mainView.router.refreshPreviousPage();
-              mainView.router.back();
-            });
-          } else {
-            myApp.alert(back.message);
-          }
-        });
+	var url = window.api.apicallbase +"delete_group";
+	$.jsonp(url,{gid : gid},function(back) {
+	  if (!back.error) {
+	    mainView.router.refreshPreviousPage();
+	    myApp.alert(back.message,function() {
+	      mainView.router.refreshPreviousPage();
+	      mainView.router.back();
+	    });
+	  } else {
+	    myApp.alert(back.message);
+	  }
+	});
       },function() {
 
       });
@@ -1451,9 +1518,9 @@ var addSingleGroupPageListeners = function(pagename,url) {
       var data = myApp.formToJSON(this);
       var url = window.api.apicallbase + "save_groupsettings";
       $.jsonp(url,data,function(back) {
-        myApp.alert(back.message);
-        mainView.router.refreshPage();
-        mainView.router.refreshPreviousPage();
+	myApp.alert(back.message);
+	mainView.router.refreshPage();
+	mainView.router.refreshPreviousPage();
       });
       return false;
     });
@@ -1466,52 +1533,52 @@ var addInviteMemberPageListeners = function(pagename) {
   if ("invite_group_member"==pagename) { 
     if (!inviteMemberPageListenersInitialized) {
       $$(document).on("click",".send_invitations",function() {
-        var emails = $(".invited_email").length;
-        if (emails == 0) {
-          myApp.alert("Add email(s) to invite first.");
-          return;
-        } else {
-          emails = $(".invited_email").map(function() {
-            return $(this).find(".item-title").text().trim();
-          }).get().join(",");
-          var url = window.api.apicallbase + "send_invitations";
-          var msg = $(".invite_msg").val();
-          var add_admin = $(".add_admin_rights").is(":checked") ? "1" : "0";
-          var groupid = $("#groupid").val();
-          $.jsonp(url,{groupid: groupid, emails : emails,msg : msg, add_admin : add_admin},function(back) {
-            myApp.alert(back.message,"Problemator");
-            if (!back.error) {
-              // Go back 
-              mainView.router.back();
-            }
-          });
-        }
+	var emails = $(".invited_email").length;
+	if (emails == 0) {
+	  myApp.alert("Add email(s) to invite first.");
+	  return;
+	} else {
+	  emails = $(".invited_email").map(function() {
+	    return $(this).find(".item-title").text().trim();
+	  }).get().join(",");
+	  var url = window.api.apicallbase + "send_invitations";
+	  var msg = $(".invite_msg").val();
+	  var add_admin = $(".add_admin_rights").is(":checked") ? "1" : "0";
+	  var groupid = $("#groupid").val();
+	  $.jsonp(url,{groupid: groupid, emails : emails,msg : msg, add_admin : add_admin},function(back) {
+	    myApp.alert(back.message,"Problemator");
+	    if (!back.error) {
+	      // Go back 
+	      mainView.router.back();
+	    }
+	  });
+	}
       });
 
       // What to do when plus is clicked and email is added to the list
       $$(document).on("click",".add_invite_email",function() {
-        // Validate email and add to emails list.
-        var email =  $(this).parent(".item-after").siblings(".item-input").find("input.invite_email").val(); 
-        if (email == undefined || !email.match(/^[^@]+@[^@]+\.[^@]+$/)) {
-          myApp.alert("Not a valid email.","Error");
-        } else {
-          // Make sure that the placeholder is gone
-          $(".no_emails_yet").remove();
+	// Validate email and add to emails list.
+	var email =  $(this).parent(".item-after").siblings(".item-input").find("input.invite_email").val(); 
+	if (email == undefined || !email.match(/^[^@]+@[^@]+\.[^@]+$/)) {
+	  myApp.alert("Not a valid email.","Error");
+	} else {
+	  // Make sure that the placeholder is gone
+	  $(".no_emails_yet").remove();
 
-          // Append to list
-          var html = $(myApp.templates.single_invited_email());
-          $(html).find(".item-title").text(email);
-          $(".invited_emails_list").append(html.html());
+	  // Append to list
+	  var html = $(myApp.templates.single_invited_email());
+	  $(html).find(".item-title").text(email);
+	  $(".invited_emails_list").append(html.html());
 
-          // And empty the input field.
-          $(this).parent(".item-after").siblings(".item-input").find("input.invite_email").val(""); 
+	  // And empty the input field.
+	  $(this).parent(".item-after").siblings(".item-input").find("input.invite_email").val(""); 
 
-          // Listener for removing an email from list
-          //
-          $$(".remove_invite_email").on("click",function() {
-            $(this).parents("li").remove();
-          });
-        }
+	  // Listener for removing an email from list
+	  //
+	  $$(".remove_invite_email").on("click",function() {
+	    $(this).parents("li").remove();
+	  });
+	}
       });
       inviteMemberPageListenersInitialized  = true;
     }
@@ -1524,30 +1591,30 @@ var addSingleProblemListeners = function(pagename) {
     if ($.jStorage.get("problemhelpshown"+ver)==null) {
       // Show problem help
       var problemsHelp = [
-        {
-          id: 'slide0',
-          picture: '<div class="tutorialicon"><img src="assets/images/help/savetickhelp1.png" /></div>',
-          text: 'You can change <strong>tick date</strong> by clicking the date above the "SAVE TICK"-button. <a href="#" class="text-y" onclick="problemHelpScreen.next();">Next slide</a>'
-        },
-        {
-          id: 'slide1',
-          picture: '<div class="tutorialicon"><img src="assets/images/help/savetickhelp2.png" /></div>',
-          text: 'You can manage (=view and delete ) your ticks (after ticking) by clicking MANAGE x TICKS... below the "SAVE TICK"-button <a href="#" class="text-y" onclick="problemHelpScreen.next();">Next slide</a>'
-        },
-        {
-          id: 'slide2',
-          picture: '<div class="tutorialicon"><img src="assets/images/help/savetickhelp3.png" /></div>',
-          text: 'You can save your <strong>tries</strong> by clicking the spinner up/down and going back. Your tries will be automatically saved! <a href="#" class="text-y" onclick="problemHelpScreen.next();">Next slide</a>'
-        },
-        {
-          id: 'slide3',
-          picture: '<div class="tutorialicon"><img src="assets/images/help/savetickhelp4.png" /></div>',
-          text: 'Give feedback! Show your like, love and dislike of the problems. Report dirty/dangerous problems and send open feedback to routesetter. <a href="#" class="text-y" onclick="problemHelpScreen.close();">Got it!</a>'
-        },
+	{
+	  id: 'slide0',
+	  picture: '<div class="tutorialicon"><img src="assets/images/help/savetickhelp1.png" /></div>',
+	  text: 'You can change <strong>tick date</strong> by clicking the date above the "SAVE TICK"-button. <a href="#" class="text-y" onclick="problemHelpScreen.next();">Next slide</a>'
+	},
+	{
+	  id: 'slide1',
+	  picture: '<div class="tutorialicon"><img src="assets/images/help/savetickhelp2.png" /></div>',
+	  text: 'You can manage (=view and delete ) your ticks (after ticking) by clicking MANAGE x TICKS... below the "SAVE TICK"-button <a href="#" class="text-y" onclick="problemHelpScreen.next();">Next slide</a>'
+	},
+	{
+	  id: 'slide2',
+	  picture: '<div class="tutorialicon"><img src="assets/images/help/savetickhelp3.png" /></div>',
+	  text: 'You can save your <strong>tries</strong> by clicking the spinner up/down and going back. Your tries will be automatically saved! <a href="#" class="text-y" onclick="problemHelpScreen.next();">Next slide</a>'
+	},
+	{
+	  id: 'slide3',
+	  picture: '<div class="tutorialicon"><img src="assets/images/help/savetickhelp4.png" /></div>',
+	  text: 'Give feedback! Show your like, love and dislike of the problems. Report dirty/dangerous problems and send open feedback to routesetter. <a href="#" class="text-y" onclick="problemHelpScreen.close();">Got it!</a>'
+	},
       ];
       var options = {
-        'bgcolor': '#30312e',
-        'fontcolor': '#fff'
+	'bgcolor': '#30312e',
+	'fontcolor': '#fff'
       }
       $.jStorage.set("problemhelpshown"+ver,true);
       window.problemHelpScreen = myApp.welcomescreen(problemsHelp, options);
@@ -1565,183 +1632,183 @@ var addSingleProblemListeners = function(pagename) {
       console.log("SINGLE PROBLEM LISTENERS ADDED ONCE");
 
       $(document).on("click",".savetick",function() {
-        // First, disable this button...
-        window.tickSaved = true; // Save global tickSaved state
-        var self = $(this);
-        $(this).attr("disabled","disabled");
-        var pid = $(this).data("id");
+	// First, disable this button...
+	window.tickSaved = true; // Save global tickSaved state
+	var self = $(this);
+	$(this).attr("disabled","disabled");
+	var pid = $(this).data("id");
 
-        saveTickFunction(this,"savetick",function(back,opt) {
-          self.removeAttr("disabled");
-          if (back.error) {
-            myApp.alert(back.message);
-          }
-          mainView.router.refreshPage();
-          mainView.router.refreshPreviousPage();
-        });
-        return false;
+	saveTickFunction(this,"savetick",function(back,opt) {
+	  self.removeAttr("disabled");
+	  if (back.error) {
+	    myApp.alert(back.message);
+	  }
+	  mainView.router.refreshPage();
+	  mainView.router.refreshPreviousPage();
+	});
+	return false;
       });
       // SHow global ascents
       $(document).on("click",".show_global_ascents",function(e) {
-        var clickedLink = this;
-        var pid = $(this).data("id");
-        var url = window.api.apicallbase + "global_ascents/?pid="+pid;
-        $.jsonp(url,{pid : pid},function(back) {
-          var ctpl = myApp.templates.global_ascents_popover;
-          //var tpl = $("script#global_ascents_popover").html();
-          //var ctpl = Template7.compile(tpl);
-          var html = ctpl(back);    
-          myApp.popover(html, clickedLink);
+	var clickedLink = this;
+	var pid = $(this).data("id");
+	var url = window.api.apicallbase + "global_ascents/?pid="+pid;
+	$.jsonp(url,{pid : pid},function(back) {
+	  var ctpl = myApp.templates.global_ascents_popover;
+	  //var tpl = $("script#global_ascents_popover").html();
+	  //var ctpl = Template7.compile(tpl);
+	  var html = ctpl(back);    
+	  myApp.popover(html, clickedLink);
 
-        });
+	});
       });
       $(document).on("click",".spinnerminus",function() {
-        var cur = parseInt($(this).siblings("input").val());
-        cur--;
-        if (cur <= 0) {
-          cur = 1;
-        }
-        $(this).siblings("input").val(cur);
+	var cur = parseInt($(this).siblings("input").val());
+	cur--;
+	if (cur <= 0) {
+	  cur = 1;
+	}
+	$(this).siblings("input").val(cur);
       });
       $(document).on("click",".spinnerplus",function() {
-        console.log("spinner plus");
-        var cur = parseInt($(this).siblings("input").val());
-        cur++;
-        $(this).siblings("input").val(cur);
+	console.log("spinner plus");
+	var cur = parseInt($(this).siblings("input").val());
+	cur++;
+	$(this).siblings("input").val(cur);
       });
 
       $$(document).on("click",".mark_dangerous",function() {
-        // Ask reason and send straight.
-        var pid = $(this).data("pid");
-        myApp.prompt('What makes the problem dangerous?','Send feedback', function (value) {
-          var url = window.api.apicallbase + "savefeedback/?msgtype=dangerous";
-          $.jsonp(url,{"text" : value, "pid":pid},function(back) {
-            myApp.alert(back,"Message");
-          });
-        });
+	// Ask reason and send straight.
+	var pid = $(this).data("pid");
+	myApp.prompt('What makes the problem dangerous?','Send feedback', function (value) {
+	  var url = window.api.apicallbase + "savefeedback/?msgtype=dangerous";
+	  $.jsonp(url,{"text" : value, "pid":pid},function(back) {
+	    myApp.alert(back,"Message");
+	  });
+	});
       });
       $$(document).on("click",".mark_dirty",function() {
-        // Ask reason and send straight.
-        var pid = $(this).data("pid");
-        myApp.prompt('Describe dirtyness, if you can. It makes our life easier.','Send feedback', function (value) {
-          var url = window.api.apicallbase + "savefeedback/?msgtype=dirty";
-          $.jsonp(url,{"text" : value, "pid":pid},function(back) {
-            myApp.alert(back);
-          });
-        });
+	// Ask reason and send straight.
+	var pid = $(this).data("pid");
+	myApp.prompt('Describe dirtyness, if you can. It makes our life easier.','Send feedback', function (value) {
+	  var url = window.api.apicallbase + "savefeedback/?msgtype=dirty";
+	  $.jsonp(url,{"text" : value, "pid":pid},function(back) {
+	    myApp.alert(back);
+	  });
+	});
       });
       $$(document).on("click",'.prompt-feedback', function () {
-        var pid = $(this).data("pid");
-        myApp.prompt('You can enter your feedback about the problem, what problems you would like to have or something in general','Send feedback', function (value) {
-          var url = window.api.apicallbase + "savefeedback/?msgtype=message";
-          $.jsonp(url,{"text" : value, "pid":pid},function(back) {
-            myApp.alert(back);
-          });
-        });
+	var pid = $(this).data("pid");
+	myApp.prompt('You can enter your feedback about the problem, what problems you would like to have or something in general','Send feedback', function (value) {
+	  var url = window.api.apicallbase + "savefeedback/?msgtype=message";
+	  $.jsonp(url,{"text" : value, "pid":pid},function(back) {
+	    myApp.alert(back);
+	  });
+	});
       });
       $(document).on('click','.open_betavideos_actionsheet', function () {
-        var _pid = $(this).attr("pid");
-        $.jsonp(window.api.apicallbase+"betavideos/",{pid : _pid},function(betavideos) {
-          var buttons = [
-            {
-              text: 'Choose a betavideo',
-              label: true
-            },
-          ];
-          // ADd videos
-          for (var idx in betavideos) {
-            var v = betavideos[idx];
-            var txt = '<a href="'+v.video_url+'" class="external">'+v.video_url+'</a>';
-            if (v.userid == $("#userid").val()) {
-              txt += '&nbsp; <a class="del_betavideo" href="#" data-vid="'+v.id+'" data-href="#">del</a>';
-            }
+	var _pid = $(this).attr("pid");
+	$.jsonp(window.api.apicallbase+"betavideos/",{pid : _pid},function(betavideos) {
+	  var buttons = [
+	    {
+	      text: 'Choose a betavideo',
+	      label: true
+	    },
+	  ];
+	  // ADd videos
+	  for (var idx in betavideos) {
+	    var v = betavideos[idx];
+	    var txt = '<a href="'+v.video_url+'" class="external">'+v.video_url+'</a>';
+	    if (v.userid == $("#userid").val()) {
+	      txt += '&nbsp; <a class="del_betavideo" href="#" data-vid="'+v.id+'" data-href="#">del</a>';
+	    }
 
-            buttons.push({
-              text : txt,
-              label : true,
-            }); 
-          }
+	    buttons.push({
+	      text : txt,
+	      label : true,
+	    }); 
+	  }
 
-          // Add cancel
-          buttons.push({
-            text: 'Cancel',
-            color: 'yellow'
-          });
+	  // Add cancel
+	  buttons.push({
+	    text: 'Cancel',
+	    color: 'yellow'
+	  });
 
-          myApp.actions(buttons);
-        });
-        return false;
+	  myApp.actions(buttons);
+	});
+	return false;
       }); 
 
       $(document).on("click",".add_video",function() {
-        var pid = $(this).attr("pid");
-        myApp.prompt('Paste video url here. Note that you can link video starting from a certain point.<br /><br /><strong>Vimeo:</strong> Click share, click Link and add timecode if needed.<br /><br /><strong>Youtube:</strong> Right click and "Copy video at URL" or "Copy video URL at current time"','Add a betavideo', function (value) {
-          var url = window.api.apicallbase + "savebetavideo/";
-          $.jsonp(url,{"url" : value, "pid":pid},function(back) {
-            myApp.alert(back.message);
-            if (!JSON.stringify(back).match(/error/i)) {
-              mainView.router.refreshPage();
-            }
-          });
-        });
-        return false;
+	var pid = $(this).attr("pid");
+	myApp.prompt('Paste video url here. Note that you can link video starting from a certain point.<br /><br /><strong>Vimeo:</strong> Click share, click Link and add timecode if needed.<br /><br /><strong>Youtube:</strong> Right click and "Copy video at URL" or "Copy video URL at current time"','Add a betavideo', function (value) {
+	  var url = window.api.apicallbase + "savebetavideo/";
+	  $.jsonp(url,{"url" : value, "pid":pid},function(back) {
+	    myApp.alert(back.message);
+	    if (!JSON.stringify(back).match(/error/i)) {
+	      mainView.router.refreshPage();
+	    }
+	  });
+	});
+	return false;
       });
 
       $(document).on('click','.del_betavideo', function () {
-        var url = window.api.apicallbase +"delbetavideo/";
-        var vid = $(this).data("vid");
-        $.jsonp(url,{vid : vid},function(back) {
-          // Close the action sheet also
-          myApp.closeModal();
-          myApp.alert(back);
-          mainView.router.refreshPage();
-        }); 
-        return false;
+	var url = window.api.apicallbase +"delbetavideo/";
+	var vid = $(this).data("vid");
+	$.jsonp(url,{vid : vid},function(back) {
+	  // Close the action sheet also
+	  myApp.closeModal();
+	  myApp.alert(back);
+	  mainView.router.refreshPage();
+	}); 
+	return false;
       });
 
       //
       //
       // Untick from single problem
       $(document).on("click",".manageticks",function(e) {
-        var self = this;
-        var pid = $(this).data("pid");
-        var url = window.api.apicallbase + "userticks/"; 
-        $.jsonp(url,{pid : pid},function(ticks) {
+	var self = this;
+	var pid = $(this).data("pid");
+	var url = window.api.apicallbase + "userticks/"; 
+	$.jsonp(url,{pid : pid},function(ticks) {
 
-          var buttons = [
-            {
-              text: 'Tick(s) for the problem',
-              label: true
-            },
-          ];
-          // ADd ticks
-          var now = moment();
-          for (var idx in ticks) {
-            var t = ticks[idx];
-            var mt = moment(t.tstamp);
-            var txt = "<span class='text-w'>";
-            if (t.routetype == 'sport') {
-              txt += ascent_types[t.ascent_type] + " ";
-            }
-            //txt += mt.from(now)+" with "+t.tries+" tries ";
-            txt += mt.format("DD.MM.YYYY")+" with "+t.tries+" tries ";
-            txt += '&nbsp; </span><a data-from="manageticks" class="untick" data-id="'+t.id+'" pid="'+t.problemid+'" href="#" ><span class="fa fa-times"></span></a>';
+	  var buttons = [
+	    {
+	      text: 'Tick(s) for the problem',
+	      label: true
+	    },
+	  ];
+	  // ADd ticks
+	  var now = moment();
+	  for (var idx in ticks) {
+	    var t = ticks[idx];
+	    var mt = moment(t.tstamp);
+	    var txt = "<span class='text-w'>";
+	    if (t.routetype == 'sport') {
+	      txt += ascent_types[t.ascent_type] + " ";
+	    }
+	    //txt += mt.from(now)+" with "+t.tries+" tries ";
+	    txt += mt.format("DD.MM.YYYY")+" with "+t.tries+" tries ";
+	    txt += '&nbsp; </span><a data-from="manageticks" class="untick" data-id="'+t.id+'" pid="'+t.problemid+'" href="#" ><span class="fa fa-times"></span></a>';
 
-            buttons.push({
-              text : txt,
-              label : true,
-            });
-          }
+	    buttons.push({
+	      text : txt,
+	      label : true,
+	    });
+	  }
 
-          // Add cancel
-          buttons.push({
-            text: 'Cancel',
-            color: 'yellow'
-          });
+	  // Add cancel
+	  buttons.push({
+	    text: 'Cancel',
+	    color: 'yellow'
+	  });
 
-          myApp.actions(buttons);
-        });
-        return false;
+	  myApp.actions(buttons);
+	});
+	return false;
 
       });
 
@@ -1804,19 +1871,19 @@ var addRegisterToCompPageListeners = function(pagename) {
       var formData = myApp.formToJSON($(this).parents("form"));
       // Check that serie is selected
       if ($(".regcategory:checked").length ==0) {
-        myApp.alert("Please choose a category first!");
-        return false;
+	myApp.alert("Please choose a category first!");
+	return false;
       }
       var url = window.api.apicallbase + "joincomp";
       $.jsonp(url,formData,function(back) {
-        self.removeAttr("disabled");
-        mainView.router.refreshPreviousPage();
+	self.removeAttr("disabled");
+	mainView.router.refreshPreviousPage();
 
-        myApp.alert(back.message,function() {
-          if (!back.error) {
-            mainView.router.back();
-          }
-        });
+	myApp.alert(back.message,function() {
+	  if (!back.error) {
+	    mainView.router.back();
+	  }
+	});
       });
     });
     $(document).on("click",".regcategory",function() {
@@ -1825,9 +1892,9 @@ var addRegisterToCompPageListeners = function(pagename) {
       var maxparticipants = opt.data("maxparticipants");
       var info = opt.data("info");
       var data = {
-        price : price,
-        info : info,
-        maxparticipants: maxparticipants
+	price : price,
+	info : info,
+	maxparticipants: maxparticipants
       };
       var ctpl = myApp.templates.regcatinfo;
       var html = ctpl(data);
@@ -1889,7 +1956,7 @@ var initializeTemplates = function(myApp) {
   myApp.templates.single_group_search_item = ctpl;
 
   // Template for tickarchive ticks in a day
-  t1 = '<div class="content-block-title">{{sizeof ticksinday}} tick(s)</div> <ul> {{#if ticksinday}}{{#each ticksinday}} <li class="swipeout"> <div class="swipeout-content"> <a data-problemid="{{problemid}}" href="static/problem.html?id={{problemid}}" class="item-link item-content" > <div class="item-media"> <h5>{{gradename}}</h5> </div> <div class="item-inner"> <div class="item-title"> <span  class="fa fa-square" style="color : {{code}};"></span> <span class="body-text-w">{{substr tag 7}}</span> <span class="body-text">| {{date_format tstamp "HH:MM"}} {{#js_compare "this.routetype==\'sport\'"}}| {{ascent_type_text}}{{else}}| boulder{{/js_compare}}| {{default tries "N/A"}} {{#js_compare "this.tries==1"}}try{{else}}tries{{/js_compare}}</span> </div> <div class="item-after"> <small>{{idx}}</small> <span class="fa fa-chevron-right text-w"></span> </div> </div><!--- end of item-inner --> </a> </div><!-- end of swipeout-content--> <div class="swipeout-actions-right"> <a href="#" data-tag="{{tagshort}}" data-tickid="{{tickid}}" class="swipeuntick swipeout-delete action1">Untick</a> </div> </li> {{else}}<li>No ticks for today</li>{{/each}}{{/if}}</ul>';
+  t1 = '<button type="button" class="facebook-button body-text-w button sharetodayticks" data-date="{{date_format tstamp "YYYY-MM-DD"}}">Share day\'s ticks</button><div class="content-block-title">{{sizeof ticksinday}} tick(s)</div> <ul> {{#if ticksinday}}{{#each ticksinday}} <li class="swipeout"> <div class="swipeout-content"> <a data-problemid="{{problemid}}" href="static/problem.html?id={{problemid}}" class="item-link item-content" > <div class="item-media"> <h5>{{gradename}}</h5> </div> <div class="item-inner"> <div class="item-title"> <span  class="fa fa-square" style="color : {{code}};"></span> <span class="body-text-w">{{substr tag 7}}</span> <span class="body-text">| {{date_format tstamp "HH:MM"}} {{#js_compare "this.routetype==\'sport\'"}}| {{ascent_type_text}}{{else}}| boulder{{/js_compare}}| {{default tries "N/A"}} {{#js_compare "this.tries==1"}}try{{else}}tries{{/js_compare}}</span> </div> <div class="item-after"> <small>{{idx}}</small> <span class="fa fa-chevron-right text-w"></span> </div> </div><!--- end of item-inner --> </a> </div><!-- end of swipeout-content--> <div class="swipeout-actions-right"> <a href="#" data-tag="{{tagshort}}" data-tickid="{{tickid}}" class="swipeuntick swipeout-delete action1">Untick</a> </div> </li> {{else}}<li>No ticks for today</li>{{/each}}{{/if}}</ul>';
   var ctpl = Template7.compile(t1);
   myApp.templates.tickarchive_list = ctpl;
 

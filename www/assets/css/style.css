@@ -1333,6 +1333,15 @@ hr {
 .latest_tick_item {
   padding-left : 0px !important;
 }
+.facebook-button {
+  background-color : #3b5998;
+  border : 0;
+  color : white;
+  width : 100%;
+  padding : 8px;
+  border-radius : 0;
+  height : auto;
+}
 #facebook-login{
   background-color : #3b5998;
   border : 0;
