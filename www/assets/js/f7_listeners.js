@@ -652,10 +652,6 @@ var addTickArchivePageListeners = function(pagename) {
 
     if (!tickArchivePageListenerInitialized) {
       $(document).on("click",".sharetodayticks",function() {
-        if ($.jStorage.get("showed_sharetodayticks")) {
-	 alert("Share window might not work on first try, please try clicking the share button a couple times.");
-	 $.jStorage.set("showed_sharetodayticks",moment());
-	}
 	var sessionDate = moment(date);
 	var sessionStart = moment(date);
 	var sessionEnd = moment(date);
@@ -705,8 +701,12 @@ var addTickArchivePageListeners = function(pagename) {
 	  alert("Nothing climbed, nothing to share...");
 	  return;
 	}
+        if ($.jStorage.get("showed_sharetodayticks")==null) {
+	 alert("Share window might not work on first try, please try clicking the share button a couple times.");
+	 $.jStorage.set("showed_sharetodayticks",moment());
+	}
 	var targeturl = window.api.server + "/t/problemator/profile/"+uid+"/training_log/#"+date;
-	var _caption = "Training session ("+diff+"minutes) on "+sessionDate.format("DD.MM.YYYY") + " "+ gradeString;
+	var _caption = "Training session ("+diff+" minutes) on "+sessionDate.format("DD.MM.YYYY") + " "+ gradeString;
 	console.log(_caption);
 	facebookConnectPlugin.showDialog({
 	  method: "share",
