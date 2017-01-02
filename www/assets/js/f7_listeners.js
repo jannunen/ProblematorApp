@@ -651,7 +651,8 @@ var addTickArchivePageListeners = function(pagename) {
     });//jsonp
 
     if (!tickArchivePageListenerInitialized) {
-      $(document).on("click",".sharetodayticks",function() {
+      $(document).on("click",".sharetodayticks",function(e) {
+	e.preventDefault();
 	var sessionDate = moment(date);
 	var sessionStart = moment(date);
 	var sessionEnd = moment(date);
@@ -673,7 +674,7 @@ var addTickArchivePageListeners = function(pagename) {
 	  var grades = [];
 	  var string = "";
 	  $("#tickContainer .item-media").map(function() {
-	    var grade = $(this).text().toLowerCase().trim();
+	    var grade = $(this).text().trim();
 	    if (grades[grade]==undefined) {
 	      grades[grade] = 0;
 	    }
@@ -708,15 +709,18 @@ var addTickArchivePageListeners = function(pagename) {
 	var targeturl = window.api.server + "/t/problemator/profile/"+uid+"/training_log/#"+date;
 	var _caption = "Training session ("+diff+" minutes) on "+sessionDate.format("DD.MM.YYYY") + " "+ gradeString;
 	console.log(_caption);
-	facebookConnectPlugin.showDialog({
-	  method: "share",
-	  href : targeturl,
-	  caption : _caption ,
-	}, function onShareSuccess (result) {
-	  console.log("Posted. ", result);
-	}, function onShareFail(results) {
-	  console.log(result);
-	});
+	setTimeout(function() {
+	  facebookConnectPlugin.showDialog({
+	    method: "share",
+	    href : targeturl,
+	    caption : _caption ,
+	  }, function onShareSuccess (result) {
+	    console.log("Posted. ", result);
+	  }, function onShareFail(results) {
+	    console.log(result);
+	  });
+	  },100);
+	return false;
       });
 
       // These should be initialized only once
