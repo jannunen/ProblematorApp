@@ -673,7 +673,7 @@ var addTickArchivePageListeners = function(pagename) {
 	  var grades = [];
 	  var string = "";
 	  $("#tickContainer .item-media").map(function() {
-	    var grade = $(this).text().trim();
+	    var grade = $(this).text().toLowerCase().trim();
 	    if (grades[grade]==undefined) {
 	      grades[grade] = 0;
 	    }
