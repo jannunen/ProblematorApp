@@ -6,7 +6,7 @@ In a perfect world it should be enought to git clone, cordova platform add andro
 cordova platform add ios, phonegap build android, phonegap build ios. But it
 wont' probably be that easy.
 
-#And the license is as follow
+#And the license is as follows
 
 
 I Couldn't Care Less Even If You Stuff It Up Your Ass - ICCLEIYSIUYA
