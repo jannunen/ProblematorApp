@@ -11,7 +11,7 @@
       * Enable inline JS: add 'unsafe-inline' to default-src
     -->
 
-    <meta http-equiv="Content-Security-Policy" content="frame-src  *.facebook.com; default-src 'self' https://*.facebook.com https://*.problemator.fi gap://ready file:; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.problemator.fi https://*.facebook.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' http://*.facebook.net https://*.facebook.com https://*.problemator.fi; connect-src 'self' wss://localhost:3000 ws://localhost:3000 https://*.problemator.fi">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.facebook.com https://*.problemator.fi gap://ready file:; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.problemator.fi https://*.facebook.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' http://*.facebook.net https://*.facebook.com https://*.problemator.fi; connect-src 'self' wss://localhost:3000 ws://localhost:3000 https://*.problemator.fi">
 
     <!-- Required meta tags-->
     <meta charset="utf-8">
@@ -23,10 +23,6 @@
 
     <!-- Your app title -->
     <title>Problemator</title>
-
-    <!-- This template defaults to the iOS CSS theme. To support both iOS and material design themes, see the Framework7 Tutorial at the link below:
-      http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-themes-in-single-app.html
-    -->
 
     <link rel="stylesheet" href="bower_components/framework7/dist/css/framework7.ios.min.css">
     <link rel="stylesheet" href="bower_components/framework7/dist/css/framework7.ios.colors.min.css">
@@ -87,27 +83,27 @@
 	    </div>
 	  </div>
 	</div>
-      <!-- Bottom Toolbar-->
-      <div class="toolbar">
-        <div class="toolbar-inner">
-          <!-- Toolbar links -->
-          <a href="static/dashboard.html" class="">
-            <span class="fa fa-dashboard"></span> <span class="title">Dashboard</span>
-          </a>
-          <a href="static/problems.html" class="">
-            <span  class="fa fa-list-ul fa-1x"></span> <span class="title">Problems</span>
-          </a>
-          <a href="static/circuits.html" class="">
-            <span class="fa fa-bicycle fa-1x"></span> <span class="title">Circuits</span>
-          </a>
-          <a href="static/groups.html"  class="">
-            <span class="fa fa-users fa-1x"></span> <span class="title">Groups</span>
-          </a>
-          <a href="static/tickarchive.html" class="">
-            <span  class="fa fa-calendar fa-1x"></span> <span class="title">Tick Archive</span>
-          </a>
-        </div>
-      </div>
+	<!-- Bottom Toolbar-->
+	<div class="toolbar">
+	  <div class="toolbar-inner">
+	    <!-- Toolbar links -->
+	    <a href="static/dashboard.html" class="">
+	      <span class="fa fa-dashboard"></span> <span class="title">Dashboard</span>
+	    </a>
+	    <a href="static/problems.html" class="">
+	      <span  class="fa fa-list-ul fa-1x"></span> <span class="title">Problems</span>
+	    </a>
+	    <a href="static/circuits.html" class="">
+	      <span class="fa fa-bicycle fa-1x"></span> <span class="title">Circuits</span>
+	    </a>
+	    <a href="static/groups.html"  class="">
+	      <span class="fa fa-users fa-1x"></span> <span class="title">Groups</span>
+	    </a>
+	    <a href="static/tickarchive.html" class="">
+	      <span  class="fa fa-calendar fa-1x"></span> <span class="title">Tick Archive</span>
+	    </a>
+	  </div>
+	</div>
 	<!-- Pages container, because we use fixed-through navbar and toolbar, it has additional appropriate classes-->
 	<div class="pages navbar-through toolbar-through">
 	  <!-- Page, "data-page" contains page name -->
@@ -175,12 +171,7 @@
 		  <div class="row" style="margin-top : 10px;">
 		    <div class="col-100 text-left ">
 		      <a href="#" id="facebook-login" class="button color-facebook body-text-w">Facebook login</a>
-                    </div>
-                    <!--
-                    <div class="col-50 text-left ">
-		      <a href="#" id="google-login" class=" button color-google body-text-w">Google login</a>
 		    </div>
-                    -->
 		  </div>
 		  <div class="list-block">
 		    <div class="list-block-label">
@@ -200,21 +191,21 @@
       </div>
     </div><!-- end of login screen -->
 
-        <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript" src="bower_components/framework7/dist/js/framework7.min.js"></script>
-        <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
-        <script type="text/javascript" src="bower_components/js-cookie/src/js.cookie.js"></script>
-        <script type="text/javascript" src="bower_components/moment/min/moment.min.js"></script>
-        <script type="text/javascript" src="bower_components/jStorage/jstorage.min.js"></script>
-        <script type="text/javascript" src="bower_components/raphael/raphael.min.js"></script>
-        <script type="text/javascript" src="bower_components/morris.js/morris.min.js"></script>
-        <script type="text/javascript" src="bower_components/js-cookie/src/js.cookie.js"></script>
-        <script type="text/javascript" src="bower_components/chart.js/dist/Chart.js"></script>
-        <script type="text/javascript" src="assets/js/template7_helpers.js"></script>
-        <script type="text/javascript" src="assets/js/f7_listeners.js"></script>
-        <script type="text/javascript" src="assets/js/welcomescreen.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="bower_components/framework7/dist/js/framework7.min.js"></script>
+    <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="bower_components/js-cookie/src/js.cookie.js"></script>
+    <script type="text/javascript" src="bower_components/moment/min/moment.min.js"></script>
+    <script type="text/javascript" src="bower_components/jStorage/jstorage.min.js"></script>
+    <script type="text/javascript" src="bower_components/raphael/raphael.min.js"></script>
+    <script type="text/javascript" src="bower_components/morris.js/morris.min.js"></script>
+    <script type="text/javascript" src="bower_components/js-cookie/src/js.cookie.js"></script>
+    <script type="text/javascript" src="bower_components/chart.js/dist/Chart.js"></script>
+    <script type="text/javascript" src="assets/js/template7_helpers.js"></script>
+    <script type="text/javascript" src="assets/js/f7_listeners.js"></script>
+    <script type="text/javascript" src="assets/js/welcomescreen.js"></script>
 
-        <script type="text/javascript" src="assets/js/my-app.js"></script>
+    <script type="text/javascript" src="assets/js/my-app.js"></script>
 
 
 
