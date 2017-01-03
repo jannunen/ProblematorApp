@@ -774,6 +774,17 @@ var addGymInfoPageListeners = function(pagename) {
     }
 
     if (!gymInfoPageListenersInitialized) {
+      $(document).on("click",".openfloorplan",function() {
+	var gymid = $.jStorage.get("nativeproblematorlocation");
+	var myPhotoBrowser = myApp.photoBrowser({
+	  backLinkText : '',
+	  toolbar : false,
+	  zoom: true,
+	  photos: [window.api.server+'/problemator/assets/images/floorplans/floorplan_'+gymid+'.png']
+	});   
+	myPhotoBrowser.open(); // open photo browser
+	return false;
+      });
       gymInfoPageListenersInitialized = true;
     }
   }
