@@ -169,6 +169,7 @@ myApp.onPageBack('*', function(page) {
   }
 });
 
+console.log("App init");
 myApp.init(); // init app manually after you've attached all handlers
 
 // Initialize templates. 

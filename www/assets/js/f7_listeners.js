@@ -390,6 +390,7 @@ var addGlobalListeners = function() {
     });
 
     $(document).on("click","#facebook-login",function() {
+      console.log("Trying facebook login");
       facebookConnectPlugin.login(["public_profile"],function(userData) {
 
 	var fbuid = userData.authResponse.userID;
@@ -654,21 +655,24 @@ var addTickArchivePageListeners = function(pagename) {
       $(document).on("click",".sharetodayticks",function(e) {
 	e.preventDefault();
 	var sessionDate = moment(date);
-	var sessionStart = moment(date);
-	var sessionEnd = moment(date);
-	var first = $("#tickContainer .item-title").last();
-	var firstMatch = first.text().match(/(\d+:\d+)/);
-	var hoursmins = firstMatch[1].split(/:/);
-	sessionStart.hour(hoursmins[0]);
-	sessionStart.minute(hoursmins[1]);
+	var sessionStart = moment();
+	var sessionEnd = moment();
+	$("#tickContainer .item-title").each(function() {
+	  var tmp = moment(date);
+	  var timestr = $(this).text();
+	  var firstMatch = timestr.match(/(\d+:\d+)/);
+	  var hoursmins = firstMatch[1].split(/:/);
+	  tmp.hour(hoursmins[0]);
+	  tmp.minute(hoursmins[1]);
+	  if (tmp.isBefore(sessionStart)) {
+	    sessionStart = tmp;
+	  }
+	  if (tmp.isAfter(sessionEnd)) {
+	    sessionEnd = tmp;
+	  }
+	});
 
-	var last = $("#tickContainer .item-title").first();
-	var lastMatch = last.text().match(/(\d+:\d+)/);
-	hoursmins = lastMatch[1].split(/:/);
-	sessionEnd.hour(hoursmins[0]);
-	sessionEnd.minute(hoursmins[1]);
-
-	var diff = Math.abs(sessionStart.diff(sessionEnd,'minutes'));
+	var diff = sessionEnd.diff(sessionStart,'minutes');
 
 	this.createGradeString = function(source) {
 	  var grades = [];
@@ -1973,7 +1977,7 @@ var initializeTemplates = function(myApp) {
   myApp.templates.single_group_search_item = ctpl;
 
   // Template for tickarchive ticks in a day
-  t1 = '<button type="button" class="facebook-button body-text-w button sharetodayticks" data-date="{{date_format tstamp "YYYY-MM-DD"}}">Share day\'s ticks</button><div class="content-block-title">{{sizeof ticksinday}} tick(s)</div> <ul> {{#if ticksinday}}{{#each ticksinday}} <li class="swipeout"> <div class="swipeout-content"> <a data-problemid="{{problemid}}" href="static/problem.html?id={{problemid}}" class="item-link item-content" > <div class="item-media"> <h5>{{gradename}}</h5> </div> <div class="item-inner"> <div class="item-title"> <span  class="fa fa-square" style="color : {{code}};"></span> <span class="body-text-w">{{substr tag 7}}</span> <span class="body-text">| {{date_format tstamp "HH:MM"}} {{#js_compare "this.routetype==\'sport\'"}}| {{ascent_type_text}}{{else}}| boulder{{/js_compare}}| {{default tries "N/A"}} {{#js_compare "this.tries==1"}}try{{else}}tries{{/js_compare}}</span> </div> <div class="item-after"> <small>{{idx}}</small> <span class="fa fa-chevron-right text-w"></span> </div> </div><!--- end of item-inner --> </a> </div><!-- end of swipeout-content--> <div class="swipeout-actions-right"> <a href="#" data-tag="{{tagshort}}" data-tickid="{{tickid}}" class="swipeuntick swipeout-delete action1">Untick</a> </div> </li> {{else}}<li>No ticks for today</li>{{/each}}{{/if}}</ul>';
+  t1 = '<button type="button" class="facebook-button body-text-w button sharetodayticks" data-date="{{date_format tstamp "YYYY-MM-DD"}}">Share day\'s ticks</button><div class="content-block-title">{{sizeof ticksinday}} tick(s)</div> <ul> {{#if ticksinday}}{{#each ticksinday}} <li class="swipeout"> <div class="swipeout-content"> <a data-problemid="{{problemid}}" href="static/problem.html?id={{problemid}}" class="item-link item-content" > <div class="item-media"> <h5>{{gradename}}</h5> </div> <div class="item-inner"> <div class="item-title"> <span  class="fa fa-square" style="color : {{code}};"></span> <span class="body-text-w">{{substr tag 7}}</span> <span class="body-text">| {{date_format tstamp "HH:mm"}} {{#js_compare "this.routetype==\'sport\'"}}| {{ascent_type_text}}{{else}}| boulder{{/js_compare}}| {{default tries "N/A"}} {{#js_compare "this.tries==1"}}try{{else}}tries{{/js_compare}}</span> </div> <div class="item-after"> <small>{{idx}}</small> <span class="fa fa-chevron-right text-w"></span> </div> </div><!--- end of item-inner --> </a> </div><!-- end of swipeout-content--> <div class="swipeout-actions-right"> <a href="#" data-tag="{{tagshort}}" data-tickid="{{tickid}}" class="swipeuntick swipeout-delete action1">Untick</a> </div> </li> {{else}}<li>No ticks for today</li>{{/each}}{{/if}}</ul>';
   var ctpl = Template7.compile(t1);
   myApp.templates.tickarchive_list = ctpl;
 
