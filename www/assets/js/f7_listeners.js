@@ -1130,8 +1130,18 @@ window.updateDoneAmount = function() {
 var addCompetitionPageListeners = function(pagename) {
   if ("competition-page"==pagename) {
     // On every comp page listeners should be placed here.
-    window.setupTimeLeftTimer();
-    window.updateDoneAmount();
+    var start = $("span.timeleft").data("starts");
+    var startMom = moment(start);
+    if (moment().isBefore(startMom)) {
+      // Remove also the buttons
+      $("span.timeleft").text("Competition starts "+moment().to(startMom)+" @"+startMom.format("DD.MM.YYYY HH:mm"));
+      $(".item-title button").attr("disabled","disabled");
+      $(".item-after button").attr("disabled","disabled");
+      window.compEnded = true;
+    } else {
+      window.setupTimeLeftTimer();
+      window.updateDoneAmount();
+    }
 
     // Only once initialized should be here
     if (!competitionPageListenersInitialized) {
