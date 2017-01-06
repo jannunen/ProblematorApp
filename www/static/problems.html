@@ -85,11 +85,13 @@
                           {{else}}
                           <small>| <span style="color : red;">REMOVED</span></small>
                           {{/js_compare}}
-                          {{#if tick}}
-                          <span class="fa fa-check problemator-link"></span>
-                          {{/if}}
                         </div>
                         <div class="item-after">
+                          {{#if tick}}
+                          <span class="fa fa-check problemator-link"></span>
+                          {{else}}
+                          <span class="fa fa-close text-g"></span>
+                          {{/if}}
                           {{#js_compare "this.soontoberemoved!=0"}}<span class="fa fa-recycle text-y"></span>{{/js_compare}}
                           {{#js_compare "this.hasbetavideos==1"}}<span class="fa fa-video-camera text-w"></span>&nbsp;{{/js_compare}}
                           <span class="body-text-w likes">

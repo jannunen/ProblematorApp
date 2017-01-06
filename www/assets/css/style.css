@@ -1441,3 +1441,22 @@ ul.action-buttons li {
   font-size : 10px; 
   text-transform : uppercase;
 }
+#tickarchive .row {
+ margin-bottom: 5px;
+
+}
+#tickarchive button.feeling {
+ padding : 6px 0 0 0;
+}
+#tickarchive .feeling img {
+width : 30px;
+-webkit-filter: invert(100%); filter: invert(100%);
+
+}
+#tickarchive input.checktime {
+display : inline;
+height : 20px;
+}
+button.fullwidth {
+width : 100%;
+}

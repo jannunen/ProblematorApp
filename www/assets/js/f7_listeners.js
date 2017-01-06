@@ -25,6 +25,21 @@ var pieBoulder = pieSport = null;
 var randomColorGenerator = function () { 
   return '#' + (Math.random().toString(16) + '0000000').slice(2, 8); 
 };
+ 
+String.prototype.pad = function(len,char) {
+ if (char == undefined) {
+  char = " ";
+  }
+  var padAmount = len - this.length;
+  var padStr = "";
+  if (padAmount > 0) {
+     
+     for (var i=0;i<padAmount;i++) {
+      padStr += char;
+     }
+  }
+  return padStr+this.toString();
+}
 Date.prototype.getWeek = function() {
   var date = new Date(this.getTime());
   date.setHours(0, 0, 0, 0);
@@ -34,6 +49,41 @@ Date.prototype.getWeek = function() {
   var week1 = new Date(date.getFullYear(), 0, 4);
   // Adjust to Thursday in week 1 and count number of weeks from date to week1.
   return 1 + Math.round(((date.getTime() - week1.getTime()) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
+}
+// Pre-set checkin and checkout if they are not set
+var presetCheckinCheckout = function() {
+  var session = calculateTrainingSession();
+  if (session.start != null) {
+    $("#checkin").val(session.start.format("HH:mm"));
+  }
+  if (session.end != null) {
+    $("#checkout").val(session.end.format("HH:mm"));
+  }
+
+};
+var calculateTrainingSession = function() {
+  var date = $(".sharetodayticks").data("date");
+  var sessionDate = moment(date);
+  var sessionStart = null;
+  var sessionEnd = null;
+  $("#tickContainer .item-title").each(function() {
+    var tmp = moment(date);
+    var timestr = $(this).text();
+    var firstMatch = timestr.match(/(\d+:\d+)/);
+    if (firstMatch) {
+      var hoursmins = firstMatch[1].split(/:/);
+      tmp.hour(hoursmins[0]);
+      tmp.minute(hoursmins[1]);
+    if (sessionStart == null || tmp.isBefore(sessionStart)) {
+      sessionStart = tmp;
+    }
+    if (sessionEnd == null || tmp.isAfter(sessionEnd)) {
+      sessionEnd = tmp;
+    }
+      }
+  });
+
+  return { start : sessionStart, end : sessionEnd };
 }
 
 var doPreprocess = function(content,url,next) {
@@ -237,10 +287,9 @@ var doPreprocess = function(content,url,next) {
     $.jsonp(url, {date : date}, function (data){ 
       // Compile ticks for today, and put them into content
       var ctpl = window.myApp.templates.tickarchive_list;
-      var html = ctpl({ticksinday : data});
+      var html = ctpl(data);
       var compiledTemplate = Template7.compile(content);
       next(compiledTemplate({ticksToday : html}));
-
     });
   } else if ((matches=url.match(/circuits.html/))) {
     // Load problems page data and compile the template
@@ -340,6 +389,11 @@ var doPreprocess = function(content,url,next) {
 
 var addGlobalListeners = function() {
   if (!globalListenersAdded) {
+    $(document).on("click",".toggle",function(e) {
+      var target = $(this).data("target");
+      $(target).toggle();
+      return false;
+    });
     // Untick from single problem
     $(document).on("click",".untick",function(e) {
       var tickid = $(this).attr("data-id");
@@ -621,13 +675,15 @@ var addTickArchivePageListeners = function(pagename) {
 	onDayClick : function(p,dayContainer,year,month,day) {
 	  // Find events for clicked day.
 	  month = parseInt(month) + 1;
-	  var date = year+"-"+month+"-"+day;
+	  var date = year.toString()+"-"+month.toString().pad(2,"0")+"-"+day.pad(2,"0");
 	  var url = window.api.apicallbase + "tickarchive";	 
 	  $("#tickContainer").empty().append('<div class="text-w"><span class="fa fa-spinner "></span>  Loading...</div>');
 	  $.jsonp(url,{date : date},function(back) {
 	    var ctpl = window.myApp.templates.tickarchive_list;
-	    var html = ctpl({ticksinday : back});
+	    back.tstamp = date;
+	    var html = ctpl(back);
 	    $("#tickContainer").empty().append(html);
+	    presetCheckinCheckout();
 	  });
 	},
 	onOpen: function (p) {
@@ -652,27 +708,87 @@ var addTickArchivePageListeners = function(pagename) {
     });//jsonp
 
     if (!tickArchivePageListenerInitialized) {
+
+      $(document).on("click",".savetrainingsession",function(e) {
+	var formData = myApp.formToJSON($(".form_trainingsession"));
+	var url = window.api.apicallbase + "savetrainingsession";	 
+	// Get the active training day
+	formData.added =  $(".sharetodayticks").data("date");
+	var date = moment(formData.added); 
+        var arr = formData.checkin.split(/:/);
+	date.hour(arr[0]);
+	date.minute(arr[1]);
+	formData.checkin = date.format("YYYY-MM-DD HH:mm:00");
+
+        arr = formData.checkout.split(/:/);
+	date.hour(arr[0]);
+	date.minute(arr[1]);
+	formData.checkout = date.format("YYYY-MM-DD HH:mm:00");
+	$.jsonp(url,formData,function(data) {
+	  myApp.addNotification({message : data.message});
+	  debugger;
+	});
+      });
+      $(document).on("click",".feeling",function(e) {
+	$(".input_feeling").val($(this).data("feeling"));
+      });
+      $(document).on("click",".hourpicker",function(e) {
+	e.stopPropagation();
+	var _input = $(this).data("target");
+	var hours =  [];
+	var mins = [];
+	for (var i=0; i < 24; i++) {
+	  if (i < 10) {
+	    i = "0"+i;
+	  }
+	  hours.push(i);
+	}
+	for (var i=0; i < 60; i++) {
+	  if (i < 10) {
+	    i = "0"+i;
+	  }
+	  mins.push(i);
+	}
+	var today = new Date();
+	var hourPicker = myApp.picker({
+	  input:_input,
+	  rotateEffect: true,
+	  value : [ (today.getHours() < 10 ? '0' + today.getHours() : today.getHours()), (today.getMinutes() < 10 ? '0' + today.getMinutes() : today.getMinutes())],
+	  formatValue: function (p, values, displayValues) {
+	   return values[0] + ':' + values[1];
+	  },
+	  /*
+	  onChange: function (p, values, displayValues) {
+	     this.value[0] = values[0];
+	     this.value[1] = values[1];
+	    //return values[0] + ':' + values[1];
+	  },
+	  */
+	  cols: [
+	    {
+	      textAlign: 'left',
+	      values: hours
+	    },
+	    // Divider
+	    {
+	      divider: true,
+	      content: ':'
+	    },
+	    {
+	      values: mins
+	    },
+	  ]
+	});       
+	hourPicker.open();
+      });
       $(document).on("click",".sharetodayticks",function(e) {
 	e.preventDefault();
-	var sessionDate = moment(date);
-	var sessionStart = moment();
-	var sessionEnd = moment();
-	$("#tickContainer .item-title").each(function() {
-	  var tmp = moment(date);
-	  var timestr = $(this).text();
-	  var firstMatch = timestr.match(/(\d+:\d+)/);
-	  var hoursmins = firstMatch[1].split(/:/);
-	  tmp.hour(hoursmins[0]);
-	  tmp.minute(hoursmins[1]);
-	  if (tmp.isBefore(sessionStart)) {
-	    sessionStart = tmp;
-	  }
-	  if (tmp.isAfter(sessionEnd)) {
-	    sessionEnd = tmp;
-	  }
-	});
-
-	var diff = sessionEnd.diff(sessionStart,'minutes');
+	var session = calculateTrainingSession();
+	debugger;
+	var diff = 0;
+	if (session.start != null && session.end != null) {
+	  diff = session.end.diff(session.start,'minutes');
+	}
 
 	this.createGradeString = function(source) {
 	  var grades = [];
@@ -707,25 +823,28 @@ var addTickArchivePageListeners = function(pagename) {
 	  return;
 	}
 	/*
-        if ($.jStorage.get("showed_sharetodayticks")==null) {
+	if ($.jStorage.get("showed_sharetodayticks")==null) {
 	 alert("Share window might not work on first try, please try clicking the share button a couple times.");
 	 $.jStorage.set("showed_sharetodayticks",moment());
 	}
 	*/
 	var targeturl = window.api.server + "/t/problemator/profile/"+uid+"/training_log/#"+date;
 	var _caption = "Training session ("+diff+" minutes) on "+sessionDate.format("DD.MM.YYYY") + " "+ gradeString;
+	debugger;
 	console.log(_caption);
+	var url = window.api.apicallbase + "savetrainingsession";	 
+	$.jsonp(url,{date : date,ispublic : 1});
 	setTimeout(function() {
 	  facebookConnectPlugin.showDialog({
 	    method: "share",
 	    href : targeturl,
-	    caption : _caption ,
+	    caption : _caption,
 	  }, function onShareSuccess (result) {
 	    console.log("Posted. ", result);
 	  }, function onShareFail(results) {
 	    console.log(result);
 	  });
-	  },100);
+	},100);
 	return false;
       });
 
@@ -740,6 +859,7 @@ var addTickArchivePageListeners = function(pagename) {
 
       tickArchivePageListenerInitialized = true;
     }
+    presetCheckinCheckout();
   }
 }
 var addGymInfoPageListeners = function(pagename) {
@@ -795,6 +915,7 @@ var addGymInfoPageListeners = function(pagename) {
 }
 
 var initializeRankingProgressChart = function(load) {
+
   if (load == undefined) {
     load = true;
   }
@@ -1987,7 +2108,110 @@ var initializeTemplates = function(myApp) {
   myApp.templates.single_group_search_item = ctpl;
 
   // Template for tickarchive ticks in a day
-  t1 = '<button type="button" class="facebook-button body-text-w button sharetodayticks" data-date="{{date_format tstamp "YYYY-MM-DD"}}">Share day\'s ticks</button><div class="content-block-title">{{sizeof ticksinday}} tick(s)</div> <ul> {{#if ticksinday}}{{#each ticksinday}} <li class="swipeout"> <div class="swipeout-content"> <a data-problemid="{{problemid}}" href="static/problem.html?id={{problemid}}" class="item-link item-content" > <div class="item-media"> <h5>{{gradename}}</h5> </div> <div class="item-inner"> <div class="item-title"> <span  class="fa fa-square" style="color : {{code}};"></span> <span class="body-text-w">{{substr tag 7}}</span> <span class="body-text">| {{date_format tstamp "HH:mm"}} {{#js_compare "this.routetype==\'sport\'"}}| {{ascent_type_text}}{{else}}| boulder{{/js_compare}}| {{default tries "N/A"}} {{#js_compare "this.tries==1"}}try{{else}}tries{{/js_compare}}</span> </div> <div class="item-after"> <small>{{idx}}</small> <span class="fa fa-chevron-right text-w"></span> </div> </div><!--- end of item-inner --> </a> </div><!-- end of swipeout-content--> <div class="swipeout-actions-right"> <a href="#" data-tag="{{tagshort}}" data-tickid="{{tickid}}" class="swipeuntick swipeout-delete action1">Untick</a> </div> </li> {{else}}<li>No ticks for today</li>{{/each}}{{/if}}</ul>';
+  t1 = `
+  <button type="button" class="facebook-button body-text-w button sharetodayticks" data-date="{{date_format tstamp "YYYY-MM-DD"}}">Share day\'s ticks</button>
+
+  <div class="content-block">
+  <div class="row ">
+   <div class="col-100">
+  <button type="button" class="button color-yellow toggle fullwidth" data-target=".trainingsession">Climbing session log details (click to expand) <span class="fa fa-caret-down"></span>
+  </div>
+   </div> <!-- //row-->
+   </div><!-- //content-block-->
+  <form method="POST" class="form_trainingsession">
+  {{#with session}}
+  <div class="trainingsession" style="display : none;">
+  <div class="content-block" >
+  <div class="row ">
+   <div class="col-25">
+    <span class="checkin text-center"><span class="fa fa-clock-o"></span> in: 
+   </div>
+   <div class="col-25">
+    <input class="checktime" type="text" name="checkin" id="checkin" value="{{date_format checkin "HH:mm"}}" /></span>
+   </div>
+   <div class="col-25">
+<span class="checkout text-center"><span class="fa fa-clock-o"></span> out: 
+   </div>
+   <div class="col-25">
+    <input class="checktime" type="text" name="checkout" id="checkout" value="{{date_format checkout "HH:mm"}}" /></span>
+   </div>
+  </div>
+  <div class="row ">
+   <div class="col-50">
+    <button type="button" data-target="#checkin" class="hourpicker problemator-button body-text-w button ">Check-in <span class="fa fa-clock-o"></span></button>
+   </div>
+   <div class="col-50">
+    <button type="button"  data-target="#checkout" class="hourpicker problemator-button body-text-w button ">Check-out <span class="fa fa-clock-o"></span></button>
+    </div>
+  </div>
+
+  <div class="row ">
+   <div class="col-30">
+    <span class="checkin text-center">Feeling: </span>
+   </div>
+   <div class="col-70">
+    <span class="text-center"><input type="text" class="feeling input_feeling" name="feeling" placeholder="Not set" value="{{feeling}}" /></span>
+   </div>
+ </div>
+  <div class="row ">
+   <div class="col-20">
+    <button type="button" data-feeling="1" class="problemator-button body-text-w button feeling"><img src="assets/images/smileys/smile1.png" /></button>
+   </div>
+   <div class="col-20">
+    <button type="button" data-feeling="2" class="problemator-button body-text-w button feeling"><img src="assets/images/smileys/smile2.png" /></button>
+   </div>
+   <div class="col-20">
+    <button type="button" data-feeling="3" class="problemator-button body-text-w button feeling"><img src="assets/images/smileys/smile3.png" /></button>
+   </div>
+   <div class="col-20">
+    <button type="button" data-feeling="4" class="problemator-button body-text-w button feeling"><img src="assets/images/smileys/smile4.png" /></button>
+   </div>
+   <div class="col-20">
+    <button type="button" data-feeling="5" class="problemator-button body-text-w button feeling"><img src="assets/images/smileys/smile5.png" /></button>
+   </div>
+   </div> <!-- // row -->
+  <!-- public notes -->
+  <div class="row ">
+   <div class="col-50">
+    <span class="checkin text-center">Public notes: </span>
+   </div>
+   </div>
+  <div class="row ">
+   <div class="col-100">
+    <textarea name="publicnotes">{{publicnotes}}</textarea>
+   </div>
+ </div><!-- // row -->
+ <!-- //publicnotes -->
+  <!-- private notes -->
+  <div class="row ">
+   <div class="col-50">
+    <span class="checkin text-center">Private notes: </span>
+   </div>
+   </div>
+  <div class="row ">
+   <div class="col-100">
+    <textarea name="privatenotes">{{privatenotes}}</textarea>
+   </div>
+ </div><!-- // row -->
+ <!-- //privatenotes -->
+  <div class="row ">
+   <div class="col-10">
+      <input id="ispublic" type="checkbox" name="ispublic" {{#js_compare "this.ispublic==1"}}checked="checked"{{/js_compare}}  value="1" />
+   </div>
+   <div class="col-90">
+      Show in public profile?
+   </div>
+   </div>
+  <div class="row ">
+   <div class="col-100">
+   <button type="button" class="savetrainingsession problemator-button button">Save training session</button>
+   </div>
+   </div> <!-- // row-->
+  </div><!-- content-block-->
+  </div><!-- trainingsession-->
+  {{/with}}
+  </form>
+  <div class="content-block-title">{{sizeof ticksinday}} tick(s)</div> <ul> {{#if ticksinday}}{{#each ticksinday}} <li class="swipeout"> <div class="swipeout-content"> <a data-problemid="{{problemid}}" href="static/problem.html?id={{problemid}}" class="item-link item-content" > <div class="item-media"> <h5>{{gradename}}</h5> </div> <div class="item-inner"> <div class="item-title"> <span  class="fa fa-square" style="color : {{code}};"></span> <span class="body-text-w">{{substr tag 7}}</span> <span class="body-text">| {{date_format tstamp "HH:mm"}} {{#js_compare "this.routetype==\'sport\'"}}| {{ascent_type_text}}{{else}}| boulder{{/js_compare}}| {{default tries "N/A"}} {{#js_compare "this.tries==1"}}try{{else}}tries{{/js_compare}}</span> </div> <div class="item-after"> <small>{{idx}}</small> <span class="fa fa-chevron-right text-w"></span> </div> </div><!--- end of item-inner --> </a> </div><!-- end of swipeout-content--> <div class="swipeout-actions-right"> <a href="#" data-tag="{{tagshort}}" data-tickid="{{tickid}}" class="swipeuntick swipeout-delete action1">Untick</a> </div> </li> {{else}}<li>No ticks for today</li>{{/each}}{{/if}}</ul></form>`;
   var ctpl = Template7.compile(t1);
   myApp.templates.tickarchive_list = ctpl;
 

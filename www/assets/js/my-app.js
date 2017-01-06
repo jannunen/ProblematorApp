@@ -15,6 +15,7 @@ var myApp = new Framework7({
   pushState: true,
   template7Pages: false,
   precompileTemplates : false,
+  notificationHold : 4000,
   init : false,
 });
 
@@ -80,7 +81,7 @@ $.jsonp = function(url,_data,callback,options) {
      if (!url.match(/dologin/)) {
        loginCheck(xhr.responseJSON);
      }
-     if (xhr.responseJSON['authenticationfailed'] != undefined ) {
+     if (xhr.responseJSON != undefined && xhr.responseJSON['authenticationfailed'] != undefined ) {
         // Login failed, unset auth stuff and redirect to index
        $.jStorage.deleteKey("loginok");
        $.jStorage.deleteKey("uid");
@@ -91,7 +92,6 @@ $.jsonp = function(url,_data,callback,options) {
          document.location.href="index.html";
        },500);
        return; 
-
      }
      // Check if we have new jwt available. Save it if it exists...
      if (xhr.responseJSON['jwt']) {
