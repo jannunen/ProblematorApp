@@ -1783,6 +1783,18 @@ var addSingleProblemListeners = function(pagename) {
 
       console.log("SINGLE PROBLEM LISTENERS ADDED ONCE");
 
+      $(document).on("click",".rating_ok",function() {
+	var pid = $(this).data("pid");
+	var val = $(this).val();
+	var title = $(this).attr("title");
+	myApp.confirm('Are you sure you want to '+title+'?', function () {
+	  var url = window.api.apicallbase + "saveopinion/?opinion="+val;
+	  $.jsonp(url,{"opinion" : val, "targetid":pid},function(back) {
+	    myApp.alert(back.message);
+	  });
+	});
+      });
+
       $(document).on("click",".savetick",function() {
 	// First, disable this button...
 	window.tickSaved = true; // Save global tickSaved state
@@ -1973,32 +1985,16 @@ var addSingleProblemListeners = function(pagename) {
 }
 var saveTickFunction = function(self,action, callback) {
   var pid = $(self).attr("data-id");
-
   var grade_opinion = $(self).parents(".page-problem").find(".grade_opinion").val();
   var ascent_type = $(self).parents(".page-problem").find(".ascent_type").val();
   var like = $(self).parents(".page-problem").find("input[name=rating]:checked").val();
   var tickdate = $(self).parents(".page-problem").find(".tickdate").val();
   var tries = $(self).parents(".page-problem").find(".tries").val();
-  var dislike = 0;
-  var love = 0;
-  if (like == 0) {
-    dislike = 1;
-  }
-  if (like == 2) {
-    love = 1;
-    like = 0;
-  }
-  if (like == undefined) {
-    like = 0;
-  }
   if (action == undefined) {
     action = "savetick";
   }
   var url = window.api.apicallbase+action+"/";
   var data = {
-    "a_like" : like,
-    "a_love" : love,
-    "a_dislike": dislike,
     "problemid": pid,
     "grade_opinion" : grade_opinion,
     "userid" : $("#userid").val(),

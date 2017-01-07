@@ -138,19 +138,19 @@
       <div class="row no-gutter buttons problemactionbuttons">
         <div class="col-15 body-text-w problemactionbutton">
           <div class="icon_container">
-            <input name="rating" id="rating_ok" class="rating_ok" type="radio" value="1" {{#js_compare "this.problem.tick.a_like==1"}}checked="checked"{{/js_compare}}   />
+            <button name="rating" id="rating_ok" title="like" data-pid="{{problem.problemid}}" class="rating_ok"  value="1"><span class="fa fa-thumbs-up text-w fa-3x"></span></button>
             <label for="rating_ok"> </label>
           </div>
         </div>
         <div class="col-15 body-text-w problemactionbutton">
           <div class="icon_container">
-            <input name="rating" id="rating_better" class="rating_ok" type="radio" value="2" {{#js_compare "this.problem.tick.a_like==2"}}checked="checked"{{/js_compare}} />
+            <button name="rating" id="rating_better" title="love" data-pid="{{problem.problemid}}" class="rating_ok"  value="2" ><span class="fa fa-heart text-w fa-3x"></span></button>
             <label for="rating_better"></label>
           </div>
         </div>
         <div class="col-15 body-text-w problemactionbutton">
           <div class="icon_container">
-            <input name="rating" id="rating_bad" class="rating_ok" type="radio" value="0" {{#js_compare "this.problem.tick.a_dislike==1"}}checked="checked"{{/js_compare}}  />
+            <button name="rating" id="rating_bad" title="dislike" data-pid="{{problem.problemid}}" class="rating_ok"  value="0"  ><span class="fa fa-thumbs-down text-w fa-3x"></span></button>
             <label for="rating_bad"></label>
           </div>
         </div>
