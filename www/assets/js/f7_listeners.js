@@ -1257,6 +1257,7 @@ window.updateDoneAmount = function() {
 }
 var addCompetitionPageListeners = function(pagename) {
   if ("competition-page"==pagename) {
+    console.log("Adding competition-page listeners");
     // On every comp page listeners should be placed here.
     var start = $("span.timeleft").data("starts");
     var startMom = moment(start);
@@ -1322,6 +1323,7 @@ var addCompetitionPageListeners = function(pagename) {
       });
 
       $(document).on("click",".done, .notdone",function() {
+	console.log("clicking done/notdone for problem");
 	var tries = $(this).parent().parent().find("input.tries").val();
 	var problemid = $(this).parent().parent().find("input.tries").data("pid");
 	var self = $(this);
@@ -1329,6 +1331,7 @@ var addCompetitionPageListeners = function(pagename) {
 	if ($(this).hasClass("notdone")) {
 	  var url = window.api.apicallbase + "comp_savetick/";
 	  $.jsonp(url,{compid : $("#compid").val(), problemid : problemid, tries : tries},function(back) {
+	    console.log("Saved comp tick");
 	    if (back.error) {
 	      myApp.alert(back.message);
 	      return false;
@@ -1390,7 +1393,7 @@ var addCompetitionsPageListeners = function(pagename) {
 	  });
 	}
       });
-      competitionPageListenersInitialized = true;
+       competitionsPageListenersInitialized = true;
     }
   }
 }
