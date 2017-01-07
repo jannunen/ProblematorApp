@@ -780,15 +780,17 @@ var addTickArchivePageListeners = function(pagename) {
 	  ]
 	});       
 	hourPicker.open();
+
       });
       $(document).on("click",".sharetodayticks",function(e) {
 	e.preventDefault();
 	var session = calculateTrainingSession();
-	debugger;
 	var diff = 0;
 	if (session.start != null && session.end != null) {
 	  diff = session.end.diff(session.start,'minutes');
 	}
+	var sessionDate = session.start;
+	window.sevens = 0;
 
 	this.createGradeString = function(source) {
 	  var grades = [];
@@ -797,6 +799,9 @@ var addTickArchivePageListeners = function(pagename) {
 	    var grade = $(this).text().trim();
 	    if (grades[grade]==undefined) {
 	      grades[grade] = 0;
+	    }
+	    if (grade.substring(0,1)=="7") {
+	    window.sevens++;
 	    }
 	    grades[grade]++;
 	  });
@@ -822,22 +827,24 @@ var addTickArchivePageListeners = function(pagename) {
 	  alert("Nothing climbed, nothing to share...");
 	  return;
 	}
-	/*
 	if ($.jStorage.get("showed_sharetodayticks")==null) {
-	 alert("Share window might not work on first try, please try clicking the share button a couple times.");
+	 alert("Share window might not work on first try (especially on Android), please try clicking the share button a couple times.");
 	 $.jStorage.set("showed_sharetodayticks",moment());
 	}
-	*/
 	var targeturl = window.api.server + "/t/problemator/profile/"+uid+"/training_log/#"+date;
 	var _caption = "Training session ("+diff+" minutes) on "+sessionDate.format("DD.MM.YYYY") + " "+ gradeString;
-	debugger;
 	console.log(_caption);
 	var url = window.api.apicallbase + "savetrainingsession";	 
+	var picture = null;
+	if (window.sevens >=  7) {
+	 picture = window.api.server + "/assets/images/feedimages/danny"+Math.floor(Math.random()*12)+".jpg";
+	}
 	$.jsonp(url,{date : date,ispublic : 1});
 	setTimeout(function() {
 	  facebookConnectPlugin.showDialog({
 	    method: "share",
 	    href : targeturl,
+	    picture : picture,
 	    caption : _caption,
 	  }, function onShareSuccess (result) {
 	    console.log("Posted. ", result);
