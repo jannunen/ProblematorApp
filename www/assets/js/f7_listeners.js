@@ -834,19 +834,22 @@ var addTickArchivePageListeners = function(pagename) {
 	var targeturl = window.api.server + "/t/problemator/profile/"+uid+"/training_log/#"+date;
 	var _caption = "Training session ("+diff+" minutes) on "+sessionDate.format("DD.MM.YYYY") + " "+ gradeString;
 	console.log(_caption);
-	var url = window.api.apicallbase + "savetrainingsession";	 
 	var picture = null;
-	if (window.sevens >=  7) {
-	 picture = window.api.server + "/assets/images/feedimages/danny"+Math.floor(Math.random()*12)+".jpg";
+
+	var dlgData = {
+	  method: "share",
+	  href : targeturl,
+	  caption : _caption,
 	}
+	if (window.sevens >=  7) {
+	 dlgData.picture = window.api.server + "/assets/images/feedimages/danny"+Math.floor(Math.random()*12)+".jpg";
+	}
+	// Make training session public (because it's shared)
+	var url = window.api.apicallbase + "savetrainingsession";	 
 	$.jsonp(url,{date : date,ispublic : 1});
+
 	setTimeout(function() {
-	  facebookConnectPlugin.showDialog({
-	    method: "share",
-	    href : targeturl,
-	    picture : picture,
-	    caption : _caption,
-	  }, function onShareSuccess (result) {
+	  facebookConnectPlugin.showDialog(dlgData, function onShareSuccess (result) {
 	    console.log("Posted. ", result);
 	  }, function onShareFail(results) {
 	    console.log(result);
@@ -2184,7 +2187,7 @@ var initializeTemplates = function(myApp) {
    </div>
   <div class="row ">
    <div class="col-100">
-    <textarea name="publicnotes">{{publicnotes}}</textarea>
+    <textarea id="publicnotes" name="publicnotes">{{publicnotes}}</textarea>
    </div>
  </div><!-- // row -->
  <!-- //publicnotes -->

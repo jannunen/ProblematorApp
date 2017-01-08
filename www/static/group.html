@@ -80,26 +80,38 @@
                         </div>
                     </div>
                   </li>
+                </ul>
+                  <table width="100%">
                   {{#if group.membersboulder}}
                   {{#each group.membersboulder}}
-                  <li>
-                   <div  class="item-content">
-                     <div class="item-media"><h5 class="rankingnumber">{{#if rank}}{{#if rank.rank}}{{rank.rank}}.{{else}}?.{{/if}}{{/if}}</h5></div>
-                     <div class="item-inner">
-                       <div class="item-title body-text-w">{{etunimi}} {{sukunimi}}</div>
-                       <div class="item-after body-text-g"><span class="body-text-g">{{#if rank}}{{rank.rankpoints}}{{/if}}</span></div>
-                     </div>
-                   </div>
-                  </li>
+                  <tr>
+                    <td> <h5 class="rankingnumber">{{#if rank}}{{#if rank.rank}}{{rank.rank}}.{{else}}?.{{/if}}{{/if}}</h5></td>
+                    <td>{{etunimi}} {{sukunimi}}
+                    </td>
+                    <td><span class="body-text-g">{{#if rank}}{{rank.rankpoints}}{{/if}}</span></td>
+                    <td>
+                      {{#js_compare "this.rank.rankpoints<this.rank.lastrankpoints"}}
+                      <span class="fa fa-caret-down color-red"></span>
+                      {{else}}
+                      {{#js_compare "this.rank.rankpoints==this.rank.lastrankpoints"}}
+                      <span class="text-w">=</span>
+                      {{else}}
+                      <span class="fa fa-caret-up color-green"></span>
+                      {{/js_compare}}
+                      {{/js_compare}}
+                    </td>
+                  </tr>
                   {{else}}
-                  <li class="item-content">
-                    <div class="item-inner">
-                      <div class="item-title">No ticks yet, so no ranking.</div>
-                    </div>
-                  </li>
+                  <ul>
+                    <li class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title">No ticks yet, so no ranking.</div>
+                      </div>
+                    </li>
+                  </ul>
                   {{/each}}
                   {{/if}}
-                </ul>
+                  </table>
               </div>
             </div>
           </li><!-- end of accordion item -->
@@ -122,24 +134,38 @@
                         </div>
                     </div>
                   </li>
+                </ul>
+                  <table width="100%">
                   {{#if group.memberssport}}
                   {{#each group.memberssport}}
-                  <li class="item-content">
-                    <div class="item-media"><h5 class="rankingnumber">{{#if this.rank.rank}}{{this.rank.rank}}.{{else}}?.{{/if}}</h5></div>
-                    <div class="item-inner">
-                      <div class="item-title body-text-w">{{etunimi}} {{sukunimi}}</div>
-                      <div class="item-after"><span class="body-text-g">{{rank.rankpoints}}</span></div>
-                    </div>
-                  </li>
+                  <tr>
+                    <td> <h5 class="rankingnumber">{{#if rank}}{{#if rank.rank}}{{rank.rank}}.{{else}}?.{{/if}}{{/if}}</h5></td>
+                    <td>{{etunimi}} {{sukunimi}}
+                    </td>
+                    <td><span class="body-text-g">{{#if rank}}{{rank.rankpoints}}{{/if}}</span></td>
+                    <td>
+                      {{#js_compare "this.rank.rankpoints<this.rank.lastrankpoints"}}
+                      <span class="fa fa-caret-down color-red"></span>
+                      {{else}}
+                      {{#js_compare "this.rank.rankpoints==this.rank.lastrankpoints"}}
+                      <span class="text-w">=</span>
+                      {{else}}
+                      <span class="fa fa-caret-up color-green"></span>
+                      {{/js_compare}}
+                      {{/js_compare}}
+                    </td>
+                  </tr>
                   {{else}}
-                  <li class="item-content">
-                    <div class="item-inner">
-                      <div class="item-title">No ticks yet, so no ranking.</div>
-                    </div>
-                  </li>
+                  <ul>
+                    <li class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title">No ticks yet, so no ranking.</div>
+                      </div>
+                    </li>
+                  </ul>
                   {{/each}}
                   {{/if}}
-                </ul>
+                  </table>
               </div>
             </div>
           </li><!-- end of accordion item -->
