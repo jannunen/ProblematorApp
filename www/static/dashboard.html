@@ -76,13 +76,13 @@
                   </div>
                   <div class="row">
                     <div class="col-25 body-text-w text-right" >
-                      {{#if climbinfo}}{{climbinfo.today.boulder.points}}{{/if}}
+                      <a href="#" class="showtop10 text-y" data-routetype="boulder" data-timespan="today">{{#if climbinfo}}{{climbinfo.today.boulder.points}}{{/if}}</a>
                     </div>
                       <div class="col-25 body-text-g ">
                         Points
                       </div>
                       <div class="col-25 body-text-w padleft text-right">
-                        {{#if climbinfo}}{{climbinfo.today.sport.points}}{{/if}}
+                        <a href="#" class="showtop10 text-y" data-routetype="sport" data-timespan="today">{{#if climbinfo}}{{climbinfo.today.sport.points}}{{/if}}</a>
                       </div>
                       <div class="col-25 body-text-g ">
                         Points
@@ -129,13 +129,13 @@
                   </div>
                   <div class="row">
                     <div class="col-25 body-text-w text-right" >
-                      {{#if climbinfo}}{{climbinfo.month.boulder.points}}{{/if}}
+                      <a href="#" class="showtop10 text-y" data-routetype="boulder" data-timespan="1mo">{{#if climbinfo}}{{climbinfo.month.boulder.points}}{{/if}}</a>
                     </div>
                       <div class="col-25 body-text-g ">
                         Points
                       </div>
                       <div class="col-25 body-text-w padleft text-right">
-                        {{#if climbinfo}}{{climbinfo.month.sport.points}}{{/if}}
+                        <a href="#" class="showtop10 text-y" data-routetype="sport" data-timespan="1mo">{{#if climbinfo}}{{climbinfo.month.sport.points}}{{/if}}</a>
                       </div>
                       <div class="col-25 body-text-g ">
                         Points
@@ -183,13 +183,13 @@
                   </div>
                   <div class="row">
                     <div class="col-25 body-text-w text-right" >
-                      {{#if climbinfo}}{{climbinfo.alltime.boulder.points}}{{/if}}
+                      <a href="#" class="showtop10 text-y" data-routetype="boulder" data-timespan="alltime">{{#if climbinfo}}{{climbinfo.alltime.boulder.points}}{{/if}}</a>
                     </div>
                       <div class="col-25 body-text-g ">
                         Points
                       </div>
                       <div class="col-25 body-text-w padleft text-right">
-                        {{#if climbinfo}}{{climbinfo.alltime.sport.points}}{{/if}}
+                        <a href="#" class="showtop10 text-y" data-routetype="sport" data-timespan="alltime">{{#if climbinfo}}{{climbinfo.alltime.sport.points}}{{/if}}</a>
                       </div>
                       <div class="col-25 body-text-g ">
                         Points
@@ -260,7 +260,7 @@
           </div>
         </div><!-- end of row -->
         <div id="running6mobars" style="height : 150px;"></div>
-        <div class="body-text-w">Progression (based on top10)</div>
+        <div class="body-text-w">Progression (based on <a href="#" class="text-y showtop10" data-timespan="1w">top10</a>)</div>
         <div id="running6mo" style="height: 200px;"></div>
 
 	<div class="body-text-w ">Ranking progress</div>

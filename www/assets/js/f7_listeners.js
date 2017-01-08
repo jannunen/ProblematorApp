@@ -389,6 +389,69 @@ var doPreprocess = function(content,url,next) {
 
 var addGlobalListeners = function() {
   if (!globalListenersAdded) {
+    $(document).on("click",".showtop10",function(e) {
+      var time = $(this).data("timespan");
+      var routetype = $(this).data("routetype");
+      var active = $(this).data("active");
+      var uid = $(this).data("uid");
+      var url = window.api.apicallbase + "mytop10";
+      $.jsonp(url,{timespan : time,routetype : routetype,active : active,uid: uid},function(data) {
+        
+        var tpl = `<div class="popup">
+          <div class="content-block">
+          <p><a href="#" class="text-w close-popup">Close</a></p>
+          <h2>Top 10 ascents</h2>
+          <div class="list-block">
+            <ul>
+
+          {{#each top10.problems}}
+            <li >
+                <a data-problemid="{{problemid}}" href="static/problem.html?id={{problemid}}" class="item-link item-content {{#js_compare "this.visible==0"}}strikethrough{{/js_compare}}" >
+                  <div class="item-media" style="width : 30px;">
+                    <h5 tag="{{tagshort}}" problemid="{{problemid}}" class="probtitle  grade">{{gradename}}</h5>
+                  </div>
+                  <div class="item-inner">
+                    <div class="item-title">
+                      <span  class="fa fa-square" style="color : {{code}};"></span>
+                      <span class="body-text-w">{{tagshort}}</span> 
+                      {{#js_compare "this.visible==1"}}
+                      <small>| {{addedrelative}}</small>
+                      {{else}}
+                      <small>| <span style="color : red;">REMOVED</span></small>
+                      {{/js_compare}}
+                      {{score}}
+                      | <small class="text-g">{{routetype}}</small>
+                    </div>
+                    <div class="item-after">
+                      <span class="body-text-w likes">
+                        <span data-count="{{c_like}}" class="fa fa-thumbs-up"></span> {{c_like}}
+                        <span data-count="{{c_love}}" class="fa fa-heart"></span> {{c_love}}
+                      </span>
+                      <span class="fa fa-chevron-right"></span>
+                    </div>
+
+                  </div> <!--- item-inner -->
+                </a>
+            </li>
+
+          {{/each}}
+          <li>
+                  <div class="item-inner">
+                    <div class="item-title">
+              Total {{top10.totalscore}}
+              </div>
+              </div>
+          </li>
+          </ul>
+          </div>
+          <p><a href="#" class="text-w close-popup">Close</a></p>
+          </div>
+          </div>`;
+        ctpl = Template7.compile(tpl);
+        var html = ctpl(data);
+        myApp.popup(html);
+      });
+    });
     $(document).on("click",".toggle",function(e) {
       var target = $(this).data("target");
       $(target).toggle();
@@ -1146,7 +1209,8 @@ var addProblemsPageListeners = function(pagename) {
 	$.jsonp(url,{"problemid" : pid,gymid : gymid},function(back) {
 	  myApp.swipeoutClose(parentli); 
 	  $("h5[tag="+tag+"]").removeClass("white").addClass("text-y");
-	  $("#swipe"+pid+" .item-title").append('<span class="fa fa-check problemator-link"></span>');
+	  $("#swipe"+pid+" .item-after").prepend('<span class="fa fa-check problemator-link"></span>');
+	  $("#swipe"+pid+" .item-after .fa-close").remove();
 	  $(self).removeAttr("disabled");
 	});
 
@@ -1832,8 +1896,6 @@ var addSingleProblemListeners = function(pagename) {
 	var url = window.api.apicallbase + "global_ascents/?pid="+pid;
 	$.jsonp(url,{pid : pid},function(back) {
 	  var ctpl = myApp.templates.global_ascents_popover;
-	  //var tpl = $("script#global_ascents_popover").html();
-	  //var ctpl = Template7.compile(tpl);
 	  var html = ctpl(back);    
 	  myApp.popover(html, clickedLink);
 
