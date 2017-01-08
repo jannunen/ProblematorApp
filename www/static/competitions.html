@@ -63,9 +63,41 @@
         </li>
         {{else}}
         <li>
-          <div class="item-inner">
-            <div class="item-title-row">
-              <div class="item-title text-w">You have not registered to any comps</div>
+          <div class="item-content">
+            <div class="item-inner">
+              <div class="item-title-row">
+                <div class="item-title text-w">You have not registered to any comps</div>
+              </div>
+            </div>
+          </div>
+        </li>
+        {{/each}}
+      </ul>
+    </div>
+
+
+    <div id="competitionslistcontainer" class="list-block media-list">
+      <div class="content-block-title text-y">Past competitions</div>
+      <ul>
+        {{#if pastcomps}}
+        {{#each pastcomps}}
+        <li>
+          <a href="#" data-compid="{{compid}}" class="opencompetitionpage item-content item-link">
+            <div class="item-inner">
+              <div class="item-title-row">
+                <div class="item-title text-w">{{name}}</div>
+                <div class="item-after"><span class="fa fa-users"></span>{{usercount}}</div>
+              </div>
+            </div>
+          </a>
+        </li>
+        {{else}}
+        <li>
+          <div class="item-content">
+            <div class="item-inner">
+              <div class="item-title-row">
+                <div class="item-title text-w">You haven't attented any competitions</div>
+              </div>
             </div>
           </div>
         </li>

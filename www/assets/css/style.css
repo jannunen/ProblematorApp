@@ -1460,3 +1460,12 @@ height : 20px;
 button.fullwidth {
 width : 100%;
 }
+.table tr:nth-of-type(odd) { 
+  background: #30312e; 
+}
+.table th { 
+  padding : 2px;
+  background: #333; 
+  color: white; 
+  font-weight: bold; 
+}

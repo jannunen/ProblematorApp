@@ -999,6 +999,9 @@ var initializeRankingProgressChart = function(load) {
       xkey: 'y',
       hideHover : 'always',
       pointSize : 0,
+      xLabelAngle : 45,
+      xLabelMargin: 1,
+      xLabels : 'month',
       lineColors : ['#decc00','#fff'],
       lineWidth : "2px",
       smooth : true,
@@ -1006,13 +1009,6 @@ var initializeRankingProgressChart = function(load) {
 	return -y;
       },
 
-      xLabelFormat : function(x) {
-	var objDate = new Date(x);
-	var locale = "en-us";
-	var short = objDate.toLocaleString(locale, { month: "short" });
-	return short.toUpperCase();
-
-      },
       ykeys: ['a','b'],
 
       labels: ['BOULDER','SPORT']
@@ -1293,7 +1289,7 @@ window.setupTimeLeftTimer = function() {
     var duration = moment.duration(endTime.diff(now));
     var hours = Math.floor(duration.asHours());
     var minutes = Math.floor(duration.minutes());
-    if (hours > 0) {
+    if (hours > 0 || now.isAfter(endTime)) {
       if (minutes < 10) {
 	minutes = "0"+minutes;
       }

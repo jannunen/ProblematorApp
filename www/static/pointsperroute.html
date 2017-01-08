@@ -35,24 +35,29 @@
 {{#each points}}
 <div id="tab{{index}}" class="{{#js_compare "this.index==0"}}active{{/js_compare}} tab">
   <div class="content-block">
-    <div class="row">
-      <div class="col-10 text-w">&nbsp;</div>
-      <div class="col-20 text-w"> # </div>
-      <div class="col-20 text-w">Tag</div>
-      <div class="col-30 text-w"> Points </div>
-    </div>
-    <br />
+  <table width="100%" class="table text-center">
+    <thead>
+    <tr>
+      <th>#</th>
+      <th>tag</th>
+      <th>colour</th>
+      <th>points</th>
+      <th>ascents</th>
+    </tr>
+    </thead>
+    <tbody>
     {{#each problems}}
 
-    <div class="row" style="border-width : 0 0 1px 0;border-style : dotted; border-color : #a0a0a0;">
-      <div class="col-10 text-w">&nbsp;</div>
-      <div class="col-20 text-w"> {{problem.num}} </div>
-      <div class="col-20 text-w"><span class="fa fa-square" style="color : {{problem.htmlcode}}"></span> {{substr problem.tag 7}} </div>
-      <div class="col-30">
-        <span style="color : white;">{{points}}</span>
-      </div>
-    </div>
+    <tr>
+      <td class="text-y">{{problem.num}}</td>
+      <td class="text-w">{{substr problem.tag 7}}</td>
+      <td><span class="fa fa-square" style="color : {{problem.htmlcode}}"></span></td>
+      <td>{{points}}</td>
+      <td>{{default ascents 0}}</td>
+    </tr>
     {{/each}}
+    </tbody>
+  </table>
   </div>
 </div>
 {{/each}}
