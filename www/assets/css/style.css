@@ -50,18 +50,10 @@ font-size:17px;
 font-weight:300;
 }
 
-#sidebarnav ul li a {
- margin-left : 4px;
-}
-#sidebarnav.list-nav {
-  padding : 0;
+#sidebar a {
+  color : #30312e; 
 }
 
-
-#sidebarnav ul li span {
- width : 24px;
-color: #636159;
-}
 
 .gradedist li {
 		font-size : 10px;
@@ -1416,15 +1408,8 @@ color : white;
 ul.action-buttons li {
   margin-bottom : 2px;
 }
-#sidebar li:first-child {
-  border : none;
-}
-#sidebar li {
-   border-width : 1px 0 0 0;
-   border-style : solid;
-   border-color : #ccbb00;
-   padding : 0px 0 0 2px;
-   margin-bottom : 6px;
+#sidebar {
+  background-color : #decc00;
 }
 .view-main .toolbar  {
   background-color : #30312e;
@@ -1459,6 +1444,9 @@ height : 20px;
 }
 button.fullwidth {
 width : 100%;
+}
+.table tr {
+  line-height : 14px;
 }
 .table tr:nth-of-type(odd) { 
   background: #30312e; 

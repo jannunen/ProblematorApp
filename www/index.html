@@ -44,24 +44,51 @@
     <div class="panel panel-left panel-reveal">
       <div class="content-block">
 
-	<nav id="sidebarnav" class="list-nav">
-	  <div class="row">
-	    <div class="col-100 text-center">
-	      <img src="assets/images/Problemator_logo_big_grey.svg" />
-	    </div>
-	  </div>
-	  <ul id="sidebar">
-	    <li><span  class="fa fa-newspaper-o fa-1x"></span><a href="static/newproblems.html"  class="close-panel" >New problems</a></li>
-	    <li><span  class="fa fa-info fa-1x"></span><a href="static/faq.html"  class="close-panel" >FAQ</a> </li>
-	    <li><span class="fa fa-signal fa-1x "></span><a href="static/ranking.html" class="close-panel" >Ranking</a></li>
-	    <li ><span   class="fa fa-trophy fa-1x"></span><a href="static/competitions.html"  class="close-panel ">Competitions</a></li>
-	    <li ><span   class="fa fa-info fa-1x"></span><a href="static/gyminfo.html"  class="close-panel ">Gym info</a></li>
-	    <li><span class=" fa fa-cogs fa-1x"></span><a href="static/settings.html"  class="close-panel">Settings</a></li>
-
-	    <li ><span   class="fa fa-sign-out fa-1x"></span><a href="#"  class="close-panel btn_logout">Logout</a></li>
-	    <li><br /><br /></li>
-	  </ul>
-	</nav>
+        <div class="row">
+          <div class="col-100 text-center">
+            <img src="assets/images/Problemator_logo_big_grey.svg" />
+          </div>
+        </div>
+        <div class="list-block">
+          <ul id="sidebar">
+            <li>
+              <a href="static/newproblems.html"  class="close-panel item-content" >
+                <div class="item-inner"> <div class="item-title"> <span  class="fa fa-newspaper-o fa-1x"></span> New problems</div>
+                </div>
+              </a>
+            </li>
+            <li>
+                <a href="static/faq.html"  class="close-panel item-content" >
+                  <div class="item-inner"><div class="item-title"><span  class="fa fa-newspaper-o fa-1x"></span> FAQ</div></div>
+                </a>
+            </li>
+            <li>
+                <a href="static/ranking.html"  class="close-panel item-content" >
+                  <div class="item-inner"><div class="item-title"><span  class="fa fa-newspaper-o fa-1x"></span> Ranking</div></div>
+                </a>
+            </li>
+            <li>
+                <a href="static/competitions.html"  class="close-panel item-content" >
+                  <div class="item-inner"><div class="item-title"><span  class="fa fa-newspaper-o fa-1x"></span> Competitions</div></div>
+                </a>
+            </li>
+            <li>
+                <a href="static/gyminfo.html"  class="close-panel item-content" >
+                  <div class="item-inner"><div class="item-title"><span  class=" fa fa-newspaper-o fa-1x"></span> Gym info</div></div>
+                </a>
+            </li>
+            <li>
+                <a href="static/settings.html"  class="close-panel item-content" >
+                  <div class="item-inner"><div class="item-title"><span  class="fa fa-newspaper-o fa-1x"></span> Settings</div></div>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="close-panel btn_logout item-content" >
+                  <div class="item-inner"><div class="item-title"><span  class=" fa fa-newspaper-o fa-1x"></span> Logout</div></div>
+                </a>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
 
@@ -69,59 +96,59 @@
     <div class="views">
       <!-- Your main view, should have "view-main" class -->
       <div class="view view-main">
-	<!-- Top Navbar-->
-	<div class="navbar">
-	  <div class="navbar-inner">
-	    <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
-	    <div class="center sliding">Problemator</div>
-	    <div class="right">
-	      <!--
-	 Right link contains only icon - additional "icon-only" class
-	 Additional "open-panel" class tells app to open panel when we click on this link
-	      -->
-	      <a href="#" class="link icon-only open-panel"><i class="fa fa-bars"></i></a>
-	    </div>
-	  </div>
-	</div>
-	<!-- Bottom Toolbar-->
-	<div class="toolbar">
-	  <div class="toolbar-inner">
-	    <!-- Toolbar links -->
-	    <a href="static/dashboard.html" class="">
-	      <span class="fa fa-dashboard"></span> <span class="title">Dashboard</span>
-	    </a>
-	    <a href="static/problems.html" class="">
-	      <span  class="fa fa-list-ul fa-1x"></span> <span class="title">Problems</span>
-	    </a>
-	    <a href="static/circuits.html" class="">
-	      <span class="fa fa-bicycle fa-1x"></span> <span class="title">Circuits</span>
-	    </a>
-	    <a href="static/groups.html"  class="">
-	      <span class="fa fa-users fa-1x"></span> <span class="title">Groups</span>
-	    </a>
-	    <a href="static/tickarchive.html" class="">
-	      <span  class="fa fa-calendar fa-1x"></span> <span class="title">Tick Archive</span>
-	    </a>
-	  </div>
-	</div>
-	<!-- Pages container, because we use fixed-through navbar and toolbar, it has additional appropriate classes-->
-	<div class="pages navbar-through toolbar-through">
-	  <!-- Page, "data-page" contains page name -->
-	  <div data-page="index" class="page">
-	    <!-- Scrollable page content -->
-	    <div class="page-content">
-	      <div class="content-block" >
+        <!-- Top Navbar-->
+        <div class="navbar">
+          <div class="navbar-inner">
+            <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
+            <div class="center sliding">Problemator</div>
+            <div class="right">
+              <!--
+                Right link contains only icon - additional "icon-only" class
+                Additional "open-panel" class tells app to open panel when we click on this link
+              -->
+              <a href="#" class="link icon-only open-panel"><i class="fa fa-bars"></i></a>
+            </div>
+          </div>
+        </div>
+        <!-- Bottom Toolbar-->
+        <div class="toolbar">
+          <div class="toolbar-inner">
+            <!-- Toolbar links -->
+            <a href="static/dashboard.html" class="">
+              <span class="fa fa-dashboard"></span> <span class="title">Dashboard</span>
+            </a>
+            <a href="static/problems.html" class="">
+              <span  class="fa fa-list-ul fa-1x"></span> <span class="title">Problems</span>
+            </a>
+            <a href="static/circuits.html" class="">
+              <span class="fa fa-bicycle fa-1x"></span> <span class="title">Circuits</span>
+            </a>
+            <a href="static/groups.html"  class="">
+              <span class="fa fa-users fa-1x"></span> <span class="title">Groups</span>
+            </a>
+            <a href="static/tickarchive.html" class="">
+              <span  class="fa fa-calendar fa-1x"></span> <span class="title">Tick Archive</span>
+            </a>
+          </div>
+        </div>
+        <!-- Pages container, because we use fixed-through navbar and toolbar, it has additional appropriate classes-->
+        <div class="pages navbar-through toolbar-through">
+          <!-- Page, "data-page" contains page name -->
+          <div data-page="index" class="page">
+            <!-- Scrollable page content -->
+            <div class="page-content">
+              <div class="content-block" >
 
-		<!-- this is actually dashboard.html -->
-		<div style="height : 100%; margin-top : 50%;" class="text-w text-center">
-		  <h2 class="text-w"><span class="fa fa-spinner fa-2x"></span>  Loading...</h2>
-		</div>
+                <!-- this is actually dashboard.html -->
+                <div style="height : 100%; margin-top : 50%;" class="text-w text-center">
+                  <h2 class="text-w"><span class="fa fa-spinner fa-2x"></span>  Loading...</h2>
+                </div>
 
 
-	      </div>
-	    </div>
-	  </div>
-	</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div><!-- //views-->
 
@@ -129,65 +156,65 @@
     <!-- Login screen -->
     <div class="login-screen">
       <div class="view view-main">
-	<div data-page="login-page" class="page">
-	  <div class="page-content login-screen-content">
-	    <form id="check-user"    method="post" action="">
+        <div data-page="login-page" class="page">
+          <div class="page-content login-screen-content">
+            <form id="check-user"    method="post" action="">
 
-	      <div class="list-block">
-		<div class="content-block-title text-center"><img height="50" src="assets/images/Problemator_logo_big_yellow.svg" /></div>
-		<div class="login-screen-title"><h2>Problemator</h2></div>
-		<div class="content-block-title text-center body-text-w text-center" style="margin : 0;">Climbing is dangerous.<br />You may also get addicted to it!</div>
-		<ul>
-		  <li class="item-content">
-		    <div class="item-inner">
-		      <div class="item-input">
-			<input type="text" name="username" placeholder="Your e-mail" value=""  />
-		      </div>
-		    </div>
-		  </li>
-		  <li class="item-content">
-		    <div class="item-inner">
-		      <div class="item-input">
-			<input type="password" name="password" id="password" placeholder="Your password" value="" />
-		      </div>
-		    </div>
-		  </li>
+              <div class="list-block">
+                <div class="content-block-title text-center"><img height="50" src="assets/images/Problemator_logo_big_yellow.svg" /></div>
+                <div class="login-screen-title"><h2>Problemator</h2></div>
+                <div class="content-block-title text-center body-text-w text-center" style="margin : 0;">Climbing is dangerous.<br />You may also get addicted to it!</div>
+                <ul>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-input">
+                        <input type="text" name="username" placeholder="Your e-mail" value=""  />
+                      </div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-input">
+                        <input type="password" name="password" id="password" placeholder="Your password" value="" />
+                      </div>
+                    </div>
+                  </li>
 
 
-		</ul>
-	      </div>
+                </ul>
+              </div>
 
-	      <div class="list-block">
-		<div class="list-block-label">
-		  <div class="row">
-		    <div class="col-50 text-left">
-		      <button type="button" class="button loginbutton color-problematoryellow body-text-w">Log in</button>
-		    </div>
-		    <div class="col-50 text-center vcenter pad20">
-		      <span class="text-g">or</span> <a class="problemator-link " date-ignore-cache="true" data-reload="true" href="static/signup.html">Sign up</a>
-		    </div>
-		  </div>
+              <div class="list-block">
+                <div class="list-block-label">
+                  <div class="row">
+                    <div class="col-50 text-left">
+                      <button type="button" class="button loginbutton color-problematoryellow body-text-w">Log in</button>
+                    </div>
+                    <div class="col-50 text-center vcenter pad20">
+                      <span class="text-g">or</span> <a class="problemator-link " date-ignore-cache="true" data-reload="true" href="static/signup.html">Sign up</a>
+                    </div>
+                  </div>
 
-		  <div class="row" style="margin-top : 10px;">
-		    <div class="col-100 text-left ">
-		      <a href="#" id="facebook-login" class="button color-facebook body-text-w">Facebook login</a>
-		    </div>
-		  </div>
-		  <div class="list-block">
-		    <div class="list-block-label">
-		      <div class="row">
-			<div class="col-50 text-g">By registering/logging in you accept the <a href="https://www.problemator.fi/tos.html" class="external text-y">Terms of Use</a></div>
-			<div class="col-50 text-left padtop"><a href="static/forgot.html" class="text-w ">Forgot password?</a></div>
-		      </div>
-		    </div>
-		  </div>
+                  <div class="row" style="margin-top : 10px;">
+                    <div class="col-100 text-left ">
+                      <a href="#" id="facebook-login" class="button color-facebook body-text-w">Facebook login</a>
+                    </div>
+                  </div>
+                  <div class="list-block">
+                    <div class="list-block-label">
+                      <div class="row">
+                        <div class="col-50 text-g">By registering/logging in you accept the <a href="https://www.problemator.fi/tos.html" class="external text-y">Terms of Use</a></div>
+                        <div class="col-50 text-left padtop"><a href="static/forgot.html" class="text-w ">Forgot password?</a></div>
+                      </div>
+                    </div>
+                  </div>
 
-		</div>
-	      </div>
+                </div>
+              </div>
 
-	    </form>
-	  </div><!-- //page-content-->
-	</div>
+            </form>
+          </div><!-- //page-content-->
+        </div>
       </div>
     </div><!-- end of login screen -->
 
