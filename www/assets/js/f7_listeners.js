@@ -21,6 +21,13 @@ var moreStatsPageListenersInitialized = false;
 var signupPageListenersInitialized = false;
 var forgotPageListenersInitialized = false;
 
+var strength = {
+    0: "Worst",
+    1: "Bad",
+    2: "Weak",
+    3: "Good",
+    4: "Strong"
+}
 var pieBoulder = pieSport = null;
 var randomColorGenerator = function () { 
   return '#' + (Math.random().toString(16) + '0000000').slice(2, 8); 
@@ -389,6 +396,23 @@ var doPreprocess = function(content,url,next) {
 
 var addGlobalListeners = function() {
   if (!globalListenersAdded) {
+
+    $("#password").on("keyup",function() {
+      var meter = document.getElementById('password-strength-meter');
+      var text = document.getElementById('password-strength-text');
+      var val = $(this).val();
+      var result = zxcvbn(val);
+
+      // Update the password strength meter
+      meter.value = result.score;
+
+      // Update the text indicator
+      if (val !== "") {
+        text.innerHTML = "<span class='text-w'>Your password is <strong>" + strength[result.score] + "</strong></span><br />" + "<span class='password-feedback'>" + result.feedback.warning + " " + result.feedback.suggestions + "</span><br /><span class='text-w'>This password would be cracked in "+result.crack_times_display.offline_slow_hashing_1e4_per_second+"</span>"; 
+      } else {
+        text.innerHTML = "";
+      }
+    });
     $(document).on("click",".showtop10",function(e) {
       var time = $(this).data("timespan");
       var routetype = $(this).data("routetype");
