@@ -21,13 +21,6 @@ var moreStatsPageListenersInitialized = false;
 var signupPageListenersInitialized = false;
 var forgotPageListenersInitialized = false;
 
-var strength = {
-    0: "Worst",
-    1: "Bad",
-    2: "Weak",
-    3: "Good",
-    4: "Strong"
-}
 var pieBoulder = pieSport = null;
 var randomColorGenerator = function () { 
   return '#' + (Math.random().toString(16) + '0000000').slice(2, 8); 
@@ -397,7 +390,14 @@ var doPreprocess = function(content,url,next) {
 var addGlobalListeners = function() {
   if (!globalListenersAdded) {
 
-    $("#password").on("keyup",function() {
+    var strength = {
+      0: "Worst",
+      1: "Bad",
+      2: "Weak",
+      3: "Good",
+      4: "Strong"
+    }
+    $(document).on("keyup",".signup_password",function() {
       var meter = document.getElementById('password-strength-meter');
       var text = document.getElementById('password-strength-text');
       var val = $(this).val();
