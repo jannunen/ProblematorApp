@@ -1322,11 +1322,19 @@ var addCompetitionPageListeners = function(pagename) {
   if ("competition-page"==pagename) {
     console.log("Adding competition-page listeners");
     // On every comp page listeners should be placed here.
+    var end = $("span.timeleft").data("ends");
+    var endMom = moment(end);
     var start = $("span.timeleft").data("starts");
     var startMom = moment(start);
+    debugger;
     if (moment().isBefore(startMom)) {
       // Remove also the buttons
       $("span.timeleft").text("Competition starts "+moment().to(startMom)+" @"+startMom.format("DD.MM.YYYY HH:mm"));
+      $(".item-title button").attr("disabled","disabled");
+      $(".item-after button").attr("disabled","disabled");
+      window.compEnded = true;
+    } else if (moment().isAfter(endMom)) {
+      $("span.timeleft").text("Competition has ended");
       $(".item-title button").attr("disabled","disabled");
       $(".item-after button").attr("disabled","disabled");
       window.compEnded = true;
