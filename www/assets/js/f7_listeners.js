@@ -626,10 +626,11 @@ var addGlobalListeners = function() {
 	return false;
       }
       var username = $(this).parents("form").find('input[name="username"]').val();
+      username = username.trim().toLowerCase();
       var password = $(this).parents("form").find('input[name="password"]').val();
       //var loc = $(this).parents("form").find("#problematorlocation").val();
       // Handle username and password
-      console.log("Loggin in with "+username+" and password "+password);
+      console.log("Loggin in with '"+username+"' and password "+password);
       var url = window.api.apicallbase + "dologin?native=true"; 
       var opt = {"username": username,"password":password, "authenticate" : true};
       if ($.jStorage.get("nativeproblematorlocation")) {
@@ -1178,6 +1179,44 @@ var addDashBoardListeners = function(pagename) {
     if (!dashBoardListenersInitialized) {
 
       initializeDashBoardCharts(); 
+
+      $(document).on("click",".upcoming_competitions",function() {
+	var clickedLink = this;
+	var gymid = $("#location").val();
+	var url = window.api.apicallbase+"upcoming_competitions";
+	$.jsonp(url,{gymid : gymid},function(data) {
+	  var buttons = [];
+	  var compData = "";
+	  for(var idx in data) {
+	    var comp = data[idx];
+	    var mom = moment(comp.compdate);
+	    var compDate = mom.format("DD.MM.YYYY");
+	    comp.compdate = compDate;
+	    var tpl = '<a class="close-picker text-y opencompetitionpage" data-compid="{{compid}}" data-ignore-cache="true" date-reload="true" href="#" >{{compdate}} {{compname}} @{{name}}</a><hr />';
+	    var ctpl = Template7.compile(tpl);
+	    compData += ctpl(comp);
+
+	  }
+	  myApp.pickerModal(
+	    '<div class="picker-modal">' +
+	    '<div class="toolbar">' +
+	    '<div class="toolbar-inner">' +
+	    '<div class="left"></div>' +
+	    '<div class="right"><a href="#" class="close-picker">Close</a></div>' +
+	    '</div>' +
+	    '</div>' +
+	    '<div class="picker-modal-inner">' +
+	    '<div class="content-block">' +
+	    '<h3 class="text-w">Open competition page</h3><br />' +
+	    compData +
+	    '</div>' +
+	    '</div>' +
+	    '</div>'
+	  );
+	  //myApp.actions(buttons);
+	});
+      });
+
 
 
       myApp.hidePreloader();
@@ -2122,19 +2161,14 @@ var addRegisterToCompPageListeners = function(pagename) {
       var formData = myApp.formToJSON($(this).parents("form"));
       // Check that serie is selected
       if ($(".regcategory:checked").length ==0) {
+	self.removeAttr("disabled");
 	myApp.alert("Please choose a category first!");
 	return false;
       }
       var url = window.api.apicallbase + "joincomp";
       $.jsonp(url,formData,function(back) {
 	self.removeAttr("disabled");
-	mainView.router.refreshPreviousPage();
-
-	myApp.alert(back.message,function() {
-	  if (!back.error) {
-	    mainView.router.back();
-	  }
-	});
+	myApp.alert(back.message);
       });
     });
     $(document).on("click",".regcategory",function() {
@@ -2152,7 +2186,7 @@ var addRegisterToCompPageListeners = function(pagename) {
       $("#catinfo").empty().html(html);
     });
 
-    registerToCompListenersInitialized = false;
+    registerToCompListenersInitialized = true;
   }
 }
 var addForgotPageListeners = function(pagename) {
