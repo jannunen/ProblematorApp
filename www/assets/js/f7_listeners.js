@@ -929,7 +929,9 @@ var addTickArchivePageListeners = function(pagename) {
 	  href : targeturl,
 	  caption : _caption,
 	}
-	if (window.sevens >=  7) {
+        // Check if current gym is located in Finland (because we don't know about the users)
+	var locinfo = $.jStorage.get("locinfo");
+	if (locinfo.country == "Finland"  && window.sevens >=  7) {
 	 dlgData.picture = window.api.server + "/assets/images/feedimages/danny"+Math.floor(Math.random()*12)+".jpg";
 	}
 	// Make training session public (because it's shared)
