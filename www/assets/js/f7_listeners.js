@@ -1055,6 +1055,59 @@ var initializeRankingProgressChart = function(load) {
   }
 } // initializeChart
 
+var initializeRadarChart = function(load) {
+
+  if (load == undefined) {
+    load = true;
+  }
+  load=true; // Muista poistaa
+  var loadChart = function(_data) {
+    Chart.defaults.global.defaultFontColor = '#fff';
+    var options = { 
+    //scaleShowLabels : false,
+      scale: {
+	// Color for lines going towards the origo
+	angleLines : {
+	 color : "rgba(255,255,255,0.2)",
+	},
+	// Color and size for problem attribute names
+	pointLabels : { 
+	 fontColor : "#fff",
+	 fontSize : 12,
+	},
+	// Ticks, this is the 'y-axis' for grid. This hides the y-axis labels and backdrop
+	ticks: {
+	backdropColor : "rgba(255,255,255,0)",
+	  userCallback: function(value, index, values) {
+	    return "";
+	  }
+	}
+      }
+    };
+    var myRadarChart = new Chart($("#radarchart"), {
+      type: 'radar',
+      data: _data,
+      options: options
+    });
+    Chart.Scale.prototype.buildYLabels = function () {
+      this.yLabelWidth = 0;
+      };
+  } //loadChart()
+
+  if (load) {
+
+    var url = window.api.apicallbase + "radarchart?jsonp=true";
+    $.jsonp(url,{},function(_data) {
+      $.jStorage.set("lastLoaded_dashboardcharts",moment()); 
+      $.jStorage.set("lastLoaded_radarchart",moment());
+      $.jStorage.set("lastLoaded_radarchartdata",_data);
+      loadChart(_data);
+    });
+  } else {
+    loadChart($.jStorage.get("lastLoaded_radarchartdata"));
+  }
+} // initializeRadarChart
+
 var initializeRunningProgressChart = function(load) {
   if (load == undefined) {
     load = true;
@@ -1166,6 +1219,7 @@ var initializeDashBoardCharts = function(load) {
   initializeRankingProgressChart(doLoad);
   initializeRunningProgressChart(doLoad);
   initializeGradeBarsChart(doLoad);
+  initializeRadarChart(doLoad);
 
 }
 var addDashBoardListeners = function(pagename) {
