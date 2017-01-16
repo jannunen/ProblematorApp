@@ -1064,20 +1064,25 @@ var initializeRadarChart = function(load) {
   var loadChart = function(_data) {
     Chart.defaults.global.defaultFontColor = '#fff';
     var options = { 
-    //scaleShowLabels : false,
       scale: {
+	elements : {
+	 line : {
+	   borderColor : "rgba(255,255,255,0.8)",  
+	   backgroundColor : "rgba(255,255,255,0.8)",  
+	 }
+	},
 	// Color for lines going towards the origo
 	angleLines : {
-	 color : "rgba(255,255,255,0.2)",
+	  color : "rgba(255,255,255,0.2)",
 	},
 	// Color and size for problem attribute names
 	pointLabels : { 
-	 fontColor : "#fff",
-	 fontSize : 12,
+	  fontColor : "#fff",
+	  fontSize : 12,
 	},
 	// Ticks, this is the 'y-axis' for grid. This hides the y-axis labels and backdrop
 	ticks: {
-	backdropColor : "rgba(255,255,255,0)",
+	  backdropColor : "rgba(255,255,255,0)",
 	  userCallback: function(value, index, values) {
 	    return "";
 	  }
@@ -1089,9 +1094,6 @@ var initializeRadarChart = function(load) {
       data: _data,
       options: options
     });
-    Chart.Scale.prototype.buildYLabels = function () {
-      this.yLabelWidth = 0;
-      };
   } //loadChart()
 
   if (load) {
@@ -1583,7 +1585,7 @@ var addCompetitionsPageListeners = function(pagename) {
 	  });
 	}
       });
-       competitionsPageListenersInitialized = true;
+      competitionsPageListenersInitialized = true;
     }
   }
 }
