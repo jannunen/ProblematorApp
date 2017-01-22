@@ -66,12 +66,14 @@ var calculateTrainingSession = function() {
   var sessionDate = moment(date);
   var sessionStart = null;
   var sessionEnd = null;
+  var hoursmins = "";
+  var tmp = moment(date);
   $("#tickContainer .item-title").each(function() {
-    var tmp = moment(date);
+    tmp = moment(date);
     var timestr = $(this).text();
     var firstMatch = timestr.match(/(\d+:\d+)/);
     if (firstMatch) {
-      var hoursmins = firstMatch[1].split(/:/);
+      hoursmins = firstMatch[1].split(/:/);
       tmp.hour(hoursmins[0]);
       tmp.minute(hoursmins[1]);
     if (sessionStart == null || tmp.isBefore(sessionStart)) {
@@ -82,6 +84,23 @@ var calculateTrainingSession = function() {
     }
       }
   });
+
+  var inputStart = $(".checkin_time").val();
+  var inputEnd = $(".checkout_time").val();
+  if ((m=inputStart.match(/(\d\d:\d\d)/))) {
+    var startmom = moment(date);
+    hoursmins = m[1].split(/:/);
+    startmom.hour(hoursmins[0]);
+    startmom.minute(hoursmins[1]);
+    sessionStart = startmom;
+  }
+  if ((m=inputEnd.match(/(\d\d:\d\d)/))) {
+    var endmom = moment(date);
+    hoursmins = m[1].split(/:/);
+    endmom.hour(hoursmins[0]);
+    endmom.minute(hoursmins[1]);
+    sessionEnd = endmom;
+  }
 
   return { start : sessionStart, end : sessionEnd };
 }
@@ -1060,7 +1079,6 @@ var initializeRadarChart = function(load) {
   if (load == undefined) {
     load = true;
   }
-  load=true; // Muista poistaa
   var loadChart = function(_data) {
     Chart.defaults.global.defaultFontColor = '#fff';
     var options = { 
@@ -1291,6 +1309,7 @@ var addDashBoardListeners = function(pagename) {
 	initializeRankingProgressChart(false);
 	initializeRunningProgressChart(false);
 	initializeGradeBarsChart(false);
+	initializeRadarChart(false);
       },200);
     }
 
@@ -2318,13 +2337,13 @@ var initializeTemplates = function(myApp) {
     <span class="checkin text-center"><span class="fa fa-clock-o"></span> in: 
    </div>
    <div class="col-25">
-    <input class="checktime" type="text" name="checkin" id="checkin" value="{{date_format checkin "HH:mm"}}" /></span>
+    <input class="checktime checkin_time" type="text" name="checkin" id="checkin" value="{{date_format checkin "HH:mm"}}" /></span>
    </div>
    <div class="col-25">
 <span class="checkout text-center"><span class="fa fa-clock-o"></span> out: 
    </div>
    <div class="col-25">
-    <input class="checktime" type="text" name="checkout" id="checkout" value="{{date_format checkout "HH:mm"}}" /></span>
+    <input class="checktime checkout_time" type="text" name="checkout" id="checkout" value="{{date_format checkout "HH:mm"}}" /></span>
    </div>
   </div>
   <div class="row ">
@@ -2402,7 +2421,7 @@ var initializeTemplates = function(myApp) {
   </div><!-- trainingsession-->
   {{/with}}
   </form>
-  <div class="content-block-title">{{sizeof ticksinday}} tick(s)</div> <ul> {{#if ticksinday}}{{#each ticksinday}} <li class="swipeout"> <div class="swipeout-content"> <a data-problemid="{{problemid}}" href="static/problem.html?id={{problemid}}" class="item-link item-content" > <div class="item-media"> <h5>{{gradename}}</h5> </div> <div class="item-inner"> <div class="item-title"> <span  class="fa fa-square" style="color : {{code}};"></span> <span class="body-text-w">{{substr tag 7}}</span> <span class="body-text">| {{date_format tstamp "HH:mm"}} {{#js_compare "this.routetype==\'sport\'"}}| {{ascent_type_text}}{{else}}| boulder{{/js_compare}}| {{default tries "N/A"}} {{#js_compare "this.tries==1"}}try{{else}}tries{{/js_compare}}</span> </div> <div class="item-after"> <small>{{idx}}</small> <span class="fa fa-chevron-right text-w"></span> </div> </div><!--- end of item-inner --> </a> </div><!-- end of swipeout-content--> <div class="swipeout-actions-right"> <a href="#" data-tag="{{tagshort}}" data-tickid="{{tickid}}" class="swipeuntick swipeout-delete action1">Untick</a> </div> </li> {{else}}<li>No ticks for today</li>{{/each}}{{/if}}</ul></form>`;
+  <div class="content-block-title">{{sizeof ticksinday}} tick(s)</div> <ul> {{#if ticksinday}}{{#each ticksinday}} <li class="swipeout"> <div class="swipeout-content"> <div data-problemid="{{problemid}}" class="item-content" > <div class="item-media"> <h5>{{gradename}}</h5> </div> <div class="item-inner"> <div class="item-title"> <span  class="fa fa-square" style="color : {{code}};"></span> <span class="body-text-w">{{substr tag 7}}</span> <span class="body-text">| {{date_format tstamp "HH:mm"}} {{#js_compare "this.routetype==\'sport\'"}}| {{ascent_type_text}}{{else}}| boulder{{/js_compare}}| {{default tries "N/A"}} {{#js_compare "this.tries==1"}}try{{else}}tries{{/js_compare}}</span> </div> <div class="item-after"> <small>{{idx}}</small>  </div> </div><!--- end of item-inner --> </div> </div><!-- end of swipeout-content--> <div class="swipeout-actions-right"> <a href="#" data-tag="{{tagshort}}" data-tickid="{{tickid}}" class="swipeuntick swipeout-delete action1">Untick</a> </div> </li> {{else}}<li>No ticks for today</li>{{/each}}{{/if}}</ul></form>`;
   var ctpl = Template7.compile(t1);
   myApp.templates.tickarchive_list = ctpl;
 
