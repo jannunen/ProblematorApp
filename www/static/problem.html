@@ -30,12 +30,20 @@
           {{#js_compare "this.problem.soontoberemoved==1"}}<small class="text-g"><br /><span class="fa fa-recycle text-y"></span> Problem will be replaced soon...</small>{{/js_compare}}
         </div>
       </div><!--end of row -->
+      <div class="row no-gutter attributes">
+        <div class="col-100">
+          <div class="problem_attributes">
+            {{#each problem.attributes}}<small class="att_item">{{this}}</small> {{/each}}
+          </div>
+        </div>
+      </div>
 
       <div class="row no-gutter infoandtick">
         <div class="col-50 text-left">
-          <span class="body-text text-w">Info</span><br />
-          <span class="body-text text-g">{{#js_compare "this.problem.addt!=''"}}{{problem.addt}}{{else}}No additional info{{/js_compare}}
-          </span>
+          <small class="body-text text-w">Start</small> <span class="body-text text-g">{{this.problem.startdefinition}}</span><br />
+          <small class="body-text text-w">End</small> <span class="body-text text-g">{{this.problem.enddefinition}}</span><br />
+          <small class="body-text text-w">Info</small><br />
+          <span class="body-text text-g">{{#js_compare "this.problem.addt!=''"}}{{problem.addt}}{{else}}No additional info{{/js_compare}}</span>
         </div>
         <div class="col-50 text-center padtick">
 
@@ -129,7 +137,9 @@
           <small>show ascents</small></a>
         </div>
         <div class="col-50 text-center" style="padding : 0; margin : 0;">
-          <div id="opinions{{problem.problemid}}" style="height : 80px;">
+          <div id="opinions{{problem.problemid}}" style="font-size : 12px; height : 80px;">
+            <br />
+            {{#each problem.opinions}}<span class="text-w">{{@key}}</span> x{{this}}{{else}}No opinions{{/each}}
           </div>
           <span class="body-text-g">Grade opinions</span>
         </div>

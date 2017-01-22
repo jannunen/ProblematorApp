@@ -887,6 +887,16 @@ width : 100%;
 .page-problem .row.triesandsuch { 
                                   height : 100px;
  }
+ .page-problem .row .problem_attributes {
+    padding : 8px;
+  }
+ .page-problem .att_item {
+    background-color : #decc00;
+    color : white;
+    border : 1px solid yellow;
+    padding : 1px 2px 1px 2px;
+    margin : 2px 0 2px 0;
+ }
 /* Morris **/
 .page-problem text[text-anchor="end"] { 
   display:none;
