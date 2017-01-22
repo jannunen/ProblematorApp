@@ -21,6 +21,15 @@ body {
 .panel-left { 
               background-color : #decc00;
  }
+#sidebar a.item-content {
+               color : #636169;
+}
+#sidebar span.fa {
+ width : 25px;
+}
+#sidebar:after {
+border : 0;
+}
 .list-nav{
 padding:20px 0 0 0px;
 width:100%;
