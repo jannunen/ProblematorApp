@@ -18,6 +18,11 @@ var myApp = new Framework7({
   notificationHold : 4000,
   init : false,
 });
+var ascent_types = {
+  0: "Lead",
+  1: "Top rope",
+  2: "Automatic belay"
+}
 
 var api = {
   server : "https://www.problemator.fi",
@@ -54,8 +59,8 @@ var loginCheck = function(data) {
   if (data && data.match(/Login.failed/i)) {
     // myApp.alert("Session expired");
     window.uid = null;
-    $.jStorage.remove("loginok");
-    $.jStorage.remove("uid");
+    $.jStorage.deleteKey("loginok");
+    $.jStorage.deleteKey("uid");
     myApp.loginScreen();
   }  else {
     window.uid = $.jStorage.get("uid");
@@ -94,11 +99,15 @@ $.jsonp = function(url,_data,callback,options) {
        return; 
      }
      // Check if we have new jwt available. Save it if it exists...
-     if (xhr.responseJSON['jwt']) {
+     if (xhr.responseJSON != undefined && xhr.responseJSON['jwt']) {
        $.jStorage.set("api-auth-token",xhr.responseJSON['jwt']);
      }
      if (callback != undefined) {
-       callback(xhr.responseJSON);
+       if (xhr.responseJSON == undefined) {
+	 alert("Something went wrong during communication with the server");
+       }  else {
+	 callback(xhr.responseJSON);
+       }
      }
    },
    error : function(data, status, thrown) {
