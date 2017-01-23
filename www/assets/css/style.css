@@ -1515,4 +1515,7 @@ meter[value="4"]::-moz-meter-bar { background: green; }
   margin-top: 1em;
 }
 
+.label-switch input[type=checkbox]:checked+.checkbox {
+  background : #decc00;
+}
 

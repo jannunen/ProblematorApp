@@ -341,7 +341,6 @@ var doPreprocess = function(content,url,next) {
     var to = $.jStorage.get("filter_toScore"); 
     var showboulder = $.jStorage.get("filter_showboulder"); 
     var showsport = $.jStorage.get("filter_showsport"); 
-    debugger;
     if (showboulder == undefined) {
       showboulder = 1;
     }
