@@ -34,7 +34,28 @@
           Click problem to open the problem page.<br />swipe left to quick tick problem. 
         </div>
       </div>
+      <div class="row">
+        <div class="col-100 pad10">
+          <a href="#" class="button problemator-button filter_problems">Filter problems <span class="fa fa-chevron-down"></span></a>
+          <div id="problem_filters" style="display : none;" class="bg-light">
+             <div class="row ">
+               <div class="col-100"> Show grades between</div>
+             </div>
+             <div class="row ">
+               <div class="col-100">
+                 <input type="text" name="grade_slide" id="grade_slider" />
+               </div>
+             </div>
 
+             <div class="row ">
+               <div class="col-100">
+                 <a href="#" class="button problemator-button apply_filter_problems">Apply <span class="fa fa-chevron-up"></span></a>
+               </div>
+             </div>
+
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="list-block accordion-list custom-accordion problems-accordion">
@@ -70,7 +91,7 @@
                 </li>
                 {{/js_compare}}
                 {{#each problems}}
-                <li class="swipeout" id="swipe{{problemid}}">
+                <li class="swipeout" id="swipe{{problemid}}" data-score="{{score}}">
                   <div class="swipeout-content ">
                     <a data-problemid="{{problemid}}" href="static/problem.html?id={{problemid}}" class="item-link item-content {{#js_compare "this.visible==0"}}strikethrough{{/js_compare}}" >
                       <div class="item-media">

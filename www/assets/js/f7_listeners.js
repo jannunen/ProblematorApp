@@ -337,8 +337,10 @@ var doPreprocess = function(content,url,next) {
   } else if ((matches=url.match(/problems.html/))) {
     // Load problems page data and compile the template
     //
+    var from = $.jStorage.get("filter_fromScore"); 
+    var to = $.jStorage.get("filter_toScore"); 
     var url = window.api.apicallbase + "problems/";
-    $.jsonp(url, {}, function (data){ 
+    $.jsonp(url, {fromscore : from, toscore: to}, function (data){ 
       var compiledTemplate = Template7.compile(content);
       next(compiledTemplate({walls : data}));
     });
@@ -833,7 +835,6 @@ var addTickArchivePageListeners = function(pagename) {
 	formData.checkout = date.format("YYYY-MM-DD HH:mm:00");
 	$.jsonp(url,formData,function(data) {
 	  myApp.addNotification({message : data.message});
-	  debugger;
 	});
       });
       $(document).on("click",".feeling",function(e) {
@@ -1333,7 +1334,64 @@ var addIndexPageListeners = function(pagename,page) {
 var addProblemsPageListeners = function(pagename) {
 
   if ("problems-page"==pagename) {
+    // Initialize ion slider
+    var grades = $.jStorage.get("grades");
+    var showGrades = $.map(grades, function(val,i) { return val.font; });
+    var fromIdx = 0;
+    var toIdx = 25;
+    var from = $.jStorage.get("filter_fromScore"); 
+    var to = $.jStorage.get("filter_toScore"); 
+
+    var i = 0;
+    for (var idx in grades) {
+      var g = grades[idx];
+      if (g.score == from) {
+        fromIdx = i;
+      }
+      if (g.score == to) {
+        toIdx = i;
+      }
+      i++;
+    }
+    $("#grade_slider").ionRangeSlider({
+      type: "double",
+      grid: true,
+      min: 0,
+      max: 25,
+      from: fromIdx,
+      to: toIdx,
+      values : showGrades
+    });
     if (!problemsPageListenersInitialized) {
+      $(document).on("click",".filter_problems",function() {
+        $("#problem_filters").toggle("slow");
+      });
+      $(document).on("click",".apply_filter_problems",function() {
+        $("#problem_filters").toggle("slow");
+        // Save settings
+        var slider = $("#grade_slider").data("ionRangeSlider");
+        var from = slider.result.from_value;
+        var to = slider.result.to_value;
+        var grades = $.jStorage.get("grades");
+        var fromScore = 0;
+        var toScore = 9999;
+        for (var idx in grades) {
+          var grade = grades[idx];
+          if (grade.font == from) {
+            fromScore = grade.score;
+          }
+          if (grade.font == to) {
+            toScore = grade.score;
+          }
+        }
+        $.jStorage.set("filter_fromScore",fromScore); 
+        $.jStorage.set("filter_toScore",toScore); 
+        
+        // Reload page (we could do DOM changing, but reloading should work also
+        mainView.router.refreshPage();
+        
+
+      });
       $(document).on("click",".swipetick",function(el) {
 	$(this).attr("disabled","disabled");
 	var self = this;
@@ -1466,7 +1524,6 @@ var addCompetitionPageListeners = function(pagename) {
     var endMom = moment(end);
     var start = $("span.timeleft").data("starts");
     var startMom = moment(start);
-    debugger;
     if (moment().isBefore(startMom)) {
       // Remove also the buttons
       $("span.timeleft").text("Competition starts "+moment().to(startMom)+" @"+startMom.format("DD.MM.YYYY HH:mm"));
