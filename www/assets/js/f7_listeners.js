@@ -339,10 +339,25 @@ var doPreprocess = function(content,url,next) {
     //
     var from = $.jStorage.get("filter_fromScore"); 
     var to = $.jStorage.get("filter_toScore"); 
+    var showboulder = $.jStorage.get("filter_showboulder"); 
+    var showsport = $.jStorage.get("filter_showsport"); 
+    debugger;
+    if (showboulder == undefined) {
+      showboulder = 1;
+    }
+    if (showsport == undefined) {
+      showsport = 1;
+    }
+    var _settings = {
+      showboulder : showboulder,
+      showsport : showsport,
+    };
+
+
     var url = window.api.apicallbase + "problems/";
-    $.jsonp(url, {fromscore : from, toscore: to}, function (data){ 
+    $.jsonp(url, {showboulder : showboulder,showsport : showsport,fromscore : from, toscore: to}, function (data){ 
       var compiledTemplate = Template7.compile(content);
-      next(compiledTemplate({walls : data}));
+      next(compiledTemplate({walls : data,settings : _settings}));
     });
   } else if ((matches=url.match(/competitions.html/))) {
     var url = window.api.apicallbase + "mycompetitions/";
@@ -1384,6 +1399,11 @@ var addProblemsPageListeners = function(pagename) {
             toScore = grade.score;
           }
         }
+        var showboulder = $("#showboulder").is(":checked") ? 1 : 0;
+        var showsport = $("#showsport").is(":checked") ? 1 : 0;
+
+        $.jStorage.set("filter_showboulder",showboulder); 
+        $.jStorage.set("filter_showsport",showsport); 
         $.jStorage.set("filter_fromScore",fromScore); 
         $.jStorage.set("filter_toScore",toScore); 
         

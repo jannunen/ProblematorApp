@@ -39,11 +39,33 @@
           <a href="#" class="button problemator-button filter_problems">Filter problems <span class="fa fa-chevron-down"></span></a>
           <div id="problem_filters" style="display : none;" class="bg-light">
              <div class="row ">
-               <div class="col-100"> Show grades between</div>
+               <div class="col-100">
+                 <br />
+               </div>
+             </div>
+             <div class="row ">
+               <div class="col-50 text-center">
+                 <div class="text-w text-center">Show boulders</div>
+                 <label class="label-switch body-text-w">
+                   <input id="showboulder" type="checkbox" name="showboulder" {{#js_compare "this.settings.showboulder==1"}}checked="checked"{{/js_compare}}  value="1" />
+                   <div class="checkbox"></div>
+                 </label>
+               </div> <!-- //col-50 --> 
+               <div class="col-50 text-center">
+                 <div class="text-w text-center">Show sport</div>
+                 <label class="label-switch body-text-w">
+                   <input id="showsport" type="checkbox" name="showsport" {{#js_compare "this.settings.showsport==1"}}checked="checked"{{/js_compare}}  value="1" />
+                   <div class="checkbox"></div>
+                 </label>
+               </div><!-- //col-50 -->
+             </div>
+             <div class="row ">
+               <div class="col-100 text-center text-w"><br />Show grades between</div>
              </div>
              <div class="row ">
                <div class="col-100">
                  <input type="text" name="grade_slide" id="grade_slider" />
+                 <br />
                </div>
              </div>
 
