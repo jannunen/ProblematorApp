@@ -90,9 +90,12 @@ var calculateTrainingSession = function() {
   if ((m=inputStart.match(/(\d\d:\d\d)/))) {
     var startmom = moment(date);
     hoursmins = m[1].split(/:/);
+    // Training session defaults to midnight (if not given)
+    if (hoursmins[0]!=0 && hoursmins[1] != 0) {
     startmom.hour(hoursmins[0]);
     startmom.minute(hoursmins[1]);
     sessionStart = startmom;
+    }
   }
   if ((m=inputEnd.match(/(\d\d:\d\d)/))) {
     var endmom = moment(date);
@@ -954,8 +957,7 @@ var addTickArchivePageListeners = function(pagename) {
 	 $.jStorage.set("showed_sharetodayticks",moment());
 	}
 	var targeturl = window.api.server + "/t/problemator/profile/"+uid+"/training_log/#"+date;
-	var _caption = "Training session ("+diff+" minutes) on "+sessionDate.format("DD.MM.YYYY") + " "+ gradeString;
-	console.log(_caption);
+	var _caption = "Training session on "+sessionDate.format("DD.MM.YYYY") + " "+ gradeString;
 	var picture = null;
 
 	var dlgData = {
@@ -970,7 +972,12 @@ var addTickArchivePageListeners = function(pagename) {
 	}
 	// Make training session public (because it's shared)
 	var url = window.api.apicallbase + "savetrainingsession";	 
-	$.jsonp(url,{date : date,ispublic : 1});
+
+        var session = calculateTrainingSession();
+        var inputStart = session.start.format("YYYY-MM-DD HH:mm:00");
+        var inputEnd = session.end.format("YYYY-MM-DD HH:mm:00");
+
+	$.jsonp(url,{date : date,ispublic : 1,checkin : inputStart,checkout : inputEnd});
 
 	setTimeout(function() {
 	  facebookConnectPlugin.showDialog(dlgData, function onShareSuccess (result) {
@@ -2082,12 +2089,12 @@ var addSingleProblemListeners = function(pagename) {
 
       $(document).on("click",".rating_ok",function() {
 	var pid = $(this).data("pid");
-	var val = $(this).val();
+	var val = $(this).attr("value");
 	var title = $(this).attr("title");
 	myApp.confirm('Are you sure you want to '+title+'?', function () {
 	  var url = window.api.apicallbase + "saveopinion/?opinion="+val;
 	  $.jsonp(url,{"opinion" : val, "targetid":pid},function(back) {
-	    myApp.alert(back.message);
+	    //myApp.alert(back.message);
 	  });
 	});
       });
@@ -2395,7 +2402,7 @@ var initializeTemplates = function(myApp) {
 
   // Template for tickarchive ticks in a day
   t1 = `
-  <button type="button" class="facebook-button body-text-w button sharetodayticks" data-date="{{date_format tstamp "YYYY-MM-DD"}}">Share day\'s ticks</button>
+  <button type="button" class="facebook-button body-text-w button sharetodayticks" data-date="{{date_format tstamp "YYYY-MM-DD"}}"><span class="fa fa-facebook"></span> Share day\'s ticks</button>
 
   <div class="content-block">
   <div class="row ">
