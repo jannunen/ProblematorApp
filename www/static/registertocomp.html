@@ -83,7 +83,7 @@
           <div class="col-60">
             {{#if categories}}
             {{#each categories}}
-            <input type="radio" name="category" data-maxparticipants="{{maxparticipants}}" data-price="{{price}}" data-info="{{info}}" class="regcategory" id="category" value="{{serieid}}" /> {{nimi}}<br /><br />
+            <input type="radio" name="category" data-maxparticipants="{{maxparticipants}}" data-price="{{price}}" data-info="{{info}}" class="regcategory" id="category{{serieid}}" value="{{serieid}}" /> <label for="category{{serieid}}">{{nimi}}</label><br /><br />
             {{/each}}
             {{else}}
             <label>No categories in the comp :/<br /><br />The registration is disabled if there are no categories added.</label>
@@ -97,7 +97,7 @@
         <div class="row">
           <div class="col-100">
             <input type="hidden" name="compid" value="{{comp.id}}" />
-            <a href="#"  data-compid="{{comp.compid}}" style="width : 100%" class=" body-text-w button button-fill joincomp color-yellow">Join the competition</a>
+            <a href="#"  data-compid="{{comp.id}}" style="width : 100%" class=" body-text-w button button-fill joincomp color-yellow">Join the competition</a>
           </div>
         </div>
 

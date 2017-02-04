@@ -2317,7 +2317,7 @@ var addRegisterToCompPageListeners = function(pagename) {
     $(document).on("click",".joincomp",function() {
       var self = $(this);
       self.attr("disabled","disabled");
-
+      var compid = self.data("compid");
       var formData = myApp.formToJSON($(this).parents("form"));
       // Check that serie is selected
       if ($(".regcategory:checked").length ==0) {
@@ -2329,6 +2329,11 @@ var addRegisterToCompPageListeners = function(pagename) {
       $.jsonp(url,formData,function(back) {
 	self.removeAttr("disabled");
 	myApp.alert(back.message);
+        // And navigate to the competition page.
+        debugger;
+        var url2 = "static/competition.html?compid=" + compid;
+        mainView.router.loadPage(url2);
+        
       });
     });
     $(document).on("click",".regcategory",function() {
