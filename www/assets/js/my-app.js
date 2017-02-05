@@ -1,5 +1,6 @@
 window.ver = "problemator_20161215";
 window.tickSaved = false;
+window.internet = true;
 
 // Initialize app
 var myApp = new Framework7({
@@ -49,6 +50,10 @@ var mainView = myApp.addView('.view-main', {
 $$(document).on('deviceready', function() {
     //alert("Device is ready!");
     console.log("Device is ready!");
+  document.addEventListener('online',function() { window.internet = true;},false);
+  document.addEventListener('offline',function() { window.internet = false;},false);
+
+
 });
 
 
@@ -68,6 +73,9 @@ var loginCheck = function(data) {
   }
 }
 $.jsonp = function(url,_data,callback,options) {
+  if (!window.internet) {
+    myApp.alert("Your internet connection seems to be off. Fix it and try again.");
+  }
   var _method = 'GET';
   if (options && options.method) {
     _method = options.method;

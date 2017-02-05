@@ -172,14 +172,17 @@ var doPreprocess = function(content,url,next) {
     },100);
   } else if ((matches=url.match(/dashboard.html/))) {
     var newgymid = undefined;
+    debugger;
     var apiurl = window.api.apicallbase+"dashinfo/?id="+$.jStorage.get("uid");
     // Check if new gym id is given here
     if ((matches=url.match(/dashboard.html.*?(\d+)/))) {
       newgymid = matches[1];
       apiurl += "&newgymid="+newgymid;
       // Cookie for location must be set, because it's changed
+      $.jStorage.deleteKey("nativeproblematorlocation");
       $.jStorage.set("nativeproblematorlocation",newgymid);
       document.location.href="index.html";
+      return false;
     }
 
     var initDash = function(content,next,data) {
@@ -724,6 +727,7 @@ var invokeLocationChangeActionSheet = function() {
     return false;
   }
   var gymid = $.jStorage.get("nativeproblematorlocation");
+  console.log("Active gym "+gymid);
   var buttons = [];
   var locs = $.jStorage.get("locations");
   buttons.push({
